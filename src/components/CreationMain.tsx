@@ -8,15 +8,22 @@ interface CreationMainProps {
 }
 
 const CreationMain: React.FC<CreationMainProps> = ({}) => {
+
+    const fontsizer = 'text-[calc(98vh/54)]';
+    const fontsizer2 = 'text-[calc(98vh/60)]';
+
     return (
-        <div className='w-[27rem] h-[34rem] bg-[#121418] mx-10 rounded-2xl p-4 text-white flex flex-col justify-between items-center'>
-            <div className='flex flex-col justify-between items-center w-full relative' >
+        <div 
+        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center'
+        >
+            <div className='flex flex-col justify-start items-center h-[90%] w-full relative' >
 
                 {/* Search feild */}
-                <input type="text" className='bg-[#121418] w-full py-1.5 px-3 text-xs font-semibold rounded-md border-[#3A4E70] border' placeholder='Search repositories' />
-                <SearchIcon className='h-4 w-4 absolute top-2 right-2' />
+                <input type="text" className={`bg-[#121418] w-full py-[2%] px-[4%] ${fontsizer2} font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search repositories' />
+                <SearchIcon className='w-[5%] absolute top-[1.5%] right-[3%]' />
 
                 {/* Repositories */}
+                <ReposOption/>
                 <ReposOption/>
                 <ReposOption/>
                 <ReposOption/>
@@ -24,7 +31,7 @@ const CreationMain: React.FC<CreationMainProps> = ({}) => {
             </div>
 
             {/* Submit Btn */}
-            <button className='bg-[#91A8ED] w-full py-1.5 text-xs font-semibold rounded-md' >
+            <button className={`bg-[#91A8ED] w-full py-[2%] ${fontsizer2} font-semibold rounded-md`} >
                 Choose Repository
             </button>
         </div>
