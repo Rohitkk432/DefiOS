@@ -21,7 +21,7 @@ const ReposOption: React.FC<ReposOptionProps> = ({}) => {
             <div className={`absolute top-[10%] right-[2%] border border-[#3A4E70] rounded px-[4%] py-[0.5%] ${fontsizer3} text-[#B5C3DB] `} >Public</div>
             {/* repo name */}
             <div className='flex flex-row'>
-                <div className='w-[2.5vh] h-[2.5vh] bg-white rounded-full'></div>
+                <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='w-[2.5vh] h-[2.5vh] rounded-full'/>
                 <div className={`ml-[1.5%] text-[#D7D7D7] ${fontsizer2}`}>never2average/defios-contracts</div>
             </div>
             {/* repo description */}

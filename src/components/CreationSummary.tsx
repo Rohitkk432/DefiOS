@@ -48,6 +48,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step}) => {
                     '#A7B9FC',
                 ],
                 borderWidth: 0,
+                rotation:-10,
             },
         ],
     };
@@ -62,6 +63,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step}) => {
                     '#A7B9FC',
                 ],
                 borderWidth: 0,
+                rotation:-10,
             },
         ],
     };
