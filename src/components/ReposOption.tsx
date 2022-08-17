@@ -10,7 +10,7 @@ interface ReposOptionProps {
 
 const ReposOption: React.FC<ReposOptionProps> = ({}) => {
 
-    const fontsizer = 'text-[calc(98vh/54)]';
+    // const fontsizer = 'text-[calc(98vh/54)]';
     const fontsizer2 = 'text-[calc(98vh/60)]';
     const fontsizer3 = 'text-[calc(98vh/85)]';
     const fontsizer4 = 'text-[calc(98vh/110)]';

@@ -3,13 +3,13 @@ import ReposOption from './ReposOption';
 
 import { SearchIcon } from '@heroicons/react/outline';
 
-interface CreationMainProps {
+interface CreationChooseRepoProps {
 
 }
 
-const CreationMain: React.FC<CreationMainProps> = ({}) => {
+const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
 
-    const fontsizer = 'text-[calc(98vh/54)]';
+    // const fontsizer = 'text-[calc(98vh/54)]';
     const fontsizer2 = 'text-[calc(98vh/60)]';
 
     return (
@@ -19,7 +19,7 @@ const CreationMain: React.FC<CreationMainProps> = ({}) => {
             <div className='flex flex-col justify-start items-center h-[90%] w-full relative' >
 
                 {/* Search feild */}
-                <input type="text" className={`bg-[#121418] w-full py-[2%] px-[4%] ${fontsizer2} font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search repositories' />
+                <input name='repoSearch' type="text" className={`bg-[#121418] w-full py-[2%] px-[4%] ${fontsizer2} font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search repositories' />
                 <SearchIcon className='w-[5%] absolute top-[1.5%] right-[3%]' />
 
                 {/* Repositories */}
@@ -38,4 +38,4 @@ const CreationMain: React.FC<CreationMainProps> = ({}) => {
     );
 }
 
-export default CreationMain;
+export default CreationChooseRepo;

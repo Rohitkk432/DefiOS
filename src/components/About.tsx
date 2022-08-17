@@ -35,7 +35,7 @@ const About = () => {
             rel="noreferrer"
           >
             <svg
-              className="fill-current text-gray-800 dark:text-white hover:text-primary"
+              className="fill-current text-gray-800 hover:text-primary"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -51,7 +51,7 @@ const About = () => {
             rel="noreferrer"
           >
             <svg
-              className="fill-current text-gray-800 dark:text-white hover:text-primary"
+              className="fill-current text-gray-800 hover:text-primary"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -67,7 +67,7 @@ const About = () => {
             rel="noreferrer"
           >
             <svg
-              className="fill-current text-gray-800 dark:text-white hover:text-primary"
+              className="fill-current text-gray-800 hover:text-primary"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -78,7 +78,7 @@ const About = () => {
           </a>
         </div>
         <div className="flex items-center mt-6">
-          <p className="mt-6 text-xs lg:text-sm leading-none text-gray-900 dark:text-gray-50">
+          <p className="mt-6 text-xs lg:text-sm leading-none text-gray-900">
             &copy; {new Date().getFullYear()} 
             
           </p>
