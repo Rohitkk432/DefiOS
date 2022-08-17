@@ -17,17 +17,17 @@ const CreationProcess: React.FC<CreationProcessProps> = ({}) => {
         >   
             {/* completed */}
             <div className='flex flex-row items-center justify-start w-full'>
-                <div className={`w-[calc(98vh/24)] h-[calc(98vh/24)] mx-[6%] ${fontsizer2} border rounded-full flex items-center justify-center bg-[#A7B9FC] border-[#A7B9FC]`}>
+                <div className={`w-[calc(83vh/24)] h-[calc(83vh/24)] mx-[6%] ${fontsizer2} border rounded-full flex items-center justify-center bg-[#A7B9FC] border-[#A7B9FC]`}>
                     <CheckIcon className="w-[60%]"/>
                 </div>
                 <div className={`${fontsizer2} font-semibold text-[#A7B9FC] w-[70%]`}>
                     Verifying connection of github username with public key 
                 </div>
             </div>
-            <div className={`w-[calc(98vh/48)] h-[calc(98vh/54)] mx-[6%] border-r border-solid border-[#A7B9FC]`}></div>
+            <div className={`w-[calc(83vh/48)] h-[calc(113vh/54)] mx-[6%] border-r border-solid border-[#A7B9FC]`}></div>
 
             <div className='flex flex-row items-center justify-start w-full'>
-                <div className={`w-[calc(98vh/24)] h-[calc(98vh/24)] mx-[6%] ${fontsizer2} border rounded-full flex items-center justify-center bg-[#A7B9FC] border-[#A7B9FC]`}>
+                <div className={`w-[calc(83vh/24)] h-[calc(83vh/24)] mx-[6%] ${fontsizer2} border rounded-full flex items-center justify-center bg-[#A7B9FC] border-[#A7B9FC]`}>
                     <CheckIcon className="w-[60%]"/>
                 </div>
                 <div className={`${fontsizer2} font-semibold text-[#A7B9FC] w-[70%]`}>
@@ -35,21 +35,21 @@ const CreationProcess: React.FC<CreationProcessProps> = ({}) => {
                     <div>&lt;hex of DefiOS.sol&gt;</div>
                 </div>
             </div>
-            <div className={`w-[calc(98vh/48)] h-[calc(98vh/54)] mx-[6%] border-r border-solid border-[#A7B9FC]`}></div>
+            <div className={`w-[calc(83vh/48)] h-[calc(113vh/54)] mx-[6%] border-r border-solid border-[#A7B9FC]`}></div>
 
             <div className='flex flex-row items-center justify-start w-full'>
-                <div className={`w-[calc(98vh/24)] h-[calc(98vh/24)] mx-[6%] ${fontsizer2} border rounded-full flex items-center justify-center bg-[#A7B9FC] border-[#A7B9FC]`}>
+                <div className={`w-[calc(83vh/24)] h-[calc(83vh/24)] mx-[6%] ${fontsizer2} border rounded-full flex items-center justify-center bg-[#A7B9FC] border-[#A7B9FC]`}>
                     <CheckIcon className="w-[60%]"/>
                 </div>
                 <div className={`${fontsizer2} font-semibold text-[#A7B9FC] w-[70%]`}>
                     Deploying DAO 
                 </div>
             </div>
-            <div className={`w-[calc(98vh/48)] h-[calc(98vh/54)] mx-[6%] border-r border-solid border-[#A7B9FC]`}></div>
+            <div className={`w-[calc(83vh/48)] h-[calc(113vh/54)] mx-[6%] border-r border-solid border-[#A7B9FC]`}></div>
 
             {/* processing */}
             <div className='flex flex-row items-center justify-start w-full'>
-                <div className={`w-[calc(98vh/24)] h-[calc(98vh/24)] mx-[6%] ${fontsizer2} rounded-full flex flex-row items-center justify-center`}>
+                <div className={`w-[calc(83vh/24)] h-[calc(83vh/24)] mx-[6%] ${fontsizer2} rounded-full flex flex-row items-center justify-center`}>
 
                     {/* loading spinner */}
                     <div className="lds-spinner">
@@ -62,20 +62,20 @@ const CreationProcess: React.FC<CreationProcessProps> = ({}) => {
                     Deploying Contract for token
                 </div>
             </div>
-            <div className={`w-[calc(98vh/48)] h-[calc(98vh/54)] mx-[6%] border-r border-dashed border-[#727272]`}></div>
+            <div className={`w-[calc(83vh/48)] h-[calc(113vh/54)] mx-[6%] border-r border-dashed border-[#727272]`}></div>
 
             {/* remaining */}
             <div className='flex flex-row items-center justify-start w-full'>
-                <div className={`w-[calc(98vh/24)] h-[calc(98vh/24)] mx-[6%] ${fontsizer2} border rounded-full border-dashed flex items-center justify-center border-[#727272]`}>
+                <div className={`w-[calc(83vh/24)] h-[calc(83vh/24)] mx-[6%] ${fontsizer2} border rounded-full border-dashed flex items-center justify-center border-[#727272]`}>
                 </div>
                 <div className={`${fontsizer2} font-semibold text-[#727272] w-[70%]`}>
                     Setting initial token distribution
                 </div>
             </div>
-            <div className={`w-[calc(98vh/48)] h-[calc(98vh/54)] mx-[6%] border-r border-dashed border-[#727272]`}></div>
+            <div className={`w-[calc(83vh/48)] h-[calc(113vh/54)] mx-[6%] border-r border-dashed border-[#727272]`}></div>
 
             <div className='flex flex-row items-center justify-start w-full'>
-                <div className={`w-[calc(98vh/24)] h-[calc(98vh/24)] mx-[6%] ${fontsizer2} border rounded-full border-dashed flex items-center justify-center border-[#727272]`}>
+                <div className={`w-[calc(83vh/24)] h-[calc(83vh/24)] mx-[6%] ${fontsizer2} border rounded-full border-dashed flex items-center justify-center border-[#727272]`}>
                 </div>
                 <div className={`${fontsizer2} font-semibold text-[#727272] w-[70%]`}>
                     <div>Completing call back to</div>
