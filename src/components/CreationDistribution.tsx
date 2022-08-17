@@ -18,18 +18,18 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({}) => {
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* input feild */}
                 <div className='w-full relative'>
-                    <input type="text" name='DaoFees' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] ${fontsizer2} font-semibold rounded-md border-[#373737] border`} placeholder='Enter DAO Fees' />
+                    <input type="text" name='DaoFees' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] ${fontsizer2} font-semibold rounded-md border-[#373737] border`} placeholder='Enter DAO Fees' />
                     <InformationCircleIcon className='w-[5%] absolute top-[30%] right-[3%]' />
                 </div>
                 <div className='w-full relative'>
-                    <input type="text" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] ${fontsizer2} font-semibold rounded-md border-[#373737] border`} placeholder='Enter Distribution %' />
+                    <input type="text" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] ${fontsizer2} font-semibold rounded-md border-[#373737] border`} placeholder='Enter Distribution %' />
                     <InformationCircleIcon className='w-[5%] absolute top-[30%] right-[3%]' />
                 </div>
 
                 {/* options */}
-                <div className={`${fontsizer} mt-[2%] font-semibold`} >Token Distribution Algorithm <InformationCircleIcon className='w-[3.5%] inline' /></div>
+                <div className={`${fontsizer} mt-[3%] font-semibold`} >Token Distribution Algorithm <InformationCircleIcon className='w-[3.5%] inline' /></div>
 
-                <div className={`${fontsizer2} mt-[4%] flex flex-row w-full justify-start items-center`}>
+                <div className={`${fontsizer2} mt-[2%] flex flex-row w-full justify-start items-center`}>
                     <div className="w-[2vh] h-[2vh] mr-[2%] relative">
                         <input type="radio" name="TokenAlgo" className='peer absolute opacity-0 w-full h-full cursor-pointer' />
                         <span className="rounded-full border-[#91A8ED] border w-full h-full bg-[#121418] 
@@ -67,7 +67,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({}) => {
                 </div>
 
                 {/* network */}
-                <div className={`${fontsizer} mt-[4%] font-semibold`} >Supported Networks</div>
+                <div className={`${fontsizer} mt-[3%] font-semibold`} >Supported Networks</div>
 
                 <div className={`${fontsizer2} mt-[2%] w-full flex flex-row w-full justify-between items-center`}>
                     <div className='flex flex-row w-full justify-start items-center'>
@@ -89,13 +89,14 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({}) => {
 
                 {/* Assign Distribution */}
                 {/* Search User */}
-                <div className='w-full relative mt-[4%]'>
-                    <input type="text" name='SearchUser' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] ${fontsizer2} font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search contributors by username' />
+                <div className='w-full relative mt-[3%]'>
+                    <input type="text" name='SearchUser' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] ${fontsizer2} font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search contributors by username' />
                     <SearchIcon className='w-[5%] absolute top-[30%] right-[3%] text-[#3A4E70]' />
                 </div>
                 {/* Contributor Assigned  */}
                 <UserOptions/>
                 {/* Contributor Assigning  */}
+                <UserOptions assigned={true}/>
 
             </div>
             {/* Submit Btn */}
