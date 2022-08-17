@@ -13,16 +13,18 @@ interface creationProps {
 
 const Creation: React.FC<creationProps> = ({}) => {
     return (
-        <div className='flex flex-row justify-center items-center bg-[#303C4A] w-screen h-screen relative'>
-            <Link
-                href="/"
-            >
-                <XIcon className="h-6 w-6 text-white absolute top-5 right-5"/>
-            </Link>
+        <div className='flex flex-row justify-center items-center w-screen h-screen bg-black'>
+            <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] relative rounded-2xl'>
+                <Link
+                    href="/"
+                >
+                    <XIcon className="h-[4vh] w-[4vh] text-white absolute top-[3vh] right-[3vh]"/>
+                </Link>
 
-            <CreationSteps />
-            <CreationMain />
-            <CreationSummary />
+                <CreationSteps />
+                <CreationMain />
+                <CreationSummary />
+            </div>
         </div>
     );
 }

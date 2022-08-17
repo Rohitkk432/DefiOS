@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-{/* #ec4755 #a12c34 #99a0a3*/}
+/* {#ec4755 #a12c34 #99a0a3} */
 :root {
   --color-primary: #ff0016;
   --color-secondary: #a12c34;
