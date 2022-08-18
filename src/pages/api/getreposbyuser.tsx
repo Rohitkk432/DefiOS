@@ -9,12 +9,8 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
             auth: session?.accessToken 
         }
     );
-    const userinfo = await octokit.request(`GET /user`, {})
-    const username = userinfo.data.login;
+    const response = await octokit.request(`GET /user/repos`, {})
 
-    const response = await octokit.request(`GET /users/${username}/repos`, {
-        username: `${username}`
-    })
     const results = response.data.map((repo:any) => ({
         name: repo.name,
         fullname: repo.full_name,
