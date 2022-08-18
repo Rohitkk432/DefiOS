@@ -1,13 +1,25 @@
 import React from 'react'
+import {useState,useEffect} from 'react'
 import ReposOption from './ReposOption';
 
 import { SearchIcon } from '@heroicons/react/outline';
 
 interface CreationChooseRepoProps {
-
 }
 
 const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
+
+    const [repos,setRepos] = useState([]);
+    const [isLoading,setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/api/getreposbyuser`).then(res => res.json()).then(data => {
+            setRepos(data);
+            setIsLoading(false);
+        }).catch(err => {
+            console.log(err);
+        })
+    },[])
 
     // const fontsizer = 'text-[calc(98vh/54)]';
     const fontsizer2 = 'text-[calc(98vh/60)]';
@@ -23,11 +35,14 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
                 <SearchIcon className='w-[5%] absolute top-[1.5%] right-[3%]' />
 
                 {/* Repositories */}
-                <ReposOption/>
-                <ReposOption/>
-                <ReposOption/>
-                <ReposOption/>
-                <ReposOption/>
+                <div className='flex flex-col justify-start items-center h-[100%] w-full relative overflow-y-scroll overflow-x-hidden customScrollbar'>
+                    {!isLoading?
+                        repos?.map((repo:any,idx:any) => (
+                            <ReposOption repo={repo} key={idx} />
+                        ))
+                        : <div className='m-auto'>Loading...</div>
+                    }
+                </div>
             </div>
 
             {/* Submit Btn */}
