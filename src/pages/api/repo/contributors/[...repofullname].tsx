@@ -9,7 +9,14 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
             auth: session?.accessToken 
         }
     );
-    const repoFullName = req.query.repofullname[0] +'/'+ req.query.repofullname[1];
+    let repoFullName = '';
+    if (req) {
+        if(req.query){
+            if(req.query.repofullname){
+                repoFullName = req.query.repofullname[0]+'/'+req.query.repofullname[1];
+            }
+        }
+    }
 
     const response = await octokit.request(`GET /repos/${repoFullName}/contributors`, {})
     
