@@ -1,4 +1,6 @@
 import React from 'react'
+import { useState,useEffect } from 'react'
+
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 
@@ -20,6 +22,18 @@ interface creationProps {
 const Creation: React.FC<creationProps> = ({}) => {
     const router = useRouter();
     let {step} = router.query;
+
+    //trigger to send refresh signal from one branch to another in component tree 
+    //triggers
+    const [triggerToMain,setTriggerToMain] = useState(1);
+    const [triggerToSummary,setTriggerToSummary] = useState(1);
+    //triggering mechanism
+    useEffect(() => {
+        if(triggerToMain>1){
+            setTriggerToSummary(triggerToSummary+1);
+        }
+    },[triggerToMain]);
+
     return (
         <div className='flex flex-row justify-center items-center w-screen h-screen bg-[#303C4A]'>
             <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] rounded-2xl'>
@@ -36,14 +50,18 @@ const Creation: React.FC<creationProps> = ({}) => {
                 :(Number(step)===2)?
                 <CreationChooseToken />
                 :(Number(step)===3)?
-                <CreationDistribution />
+                <CreationDistribution 
+                triggerToMain={triggerToMain} 
+                setTriggerToMain={setTriggerToMain} />
                 :(Number(step)===4)?
                 <CreationConfirm />
                 :null
                 }
 
                 {(Number(step)<4)?
-                <CreationSummary step={Number(step)} />
+                <CreationSummary step={Number(step)} 
+                triggerToSummary={triggerToSummary} 
+                setTriggerToSummary={setTriggerToSummary} />
                 :<CreationProcess/>
                 }
             </div>

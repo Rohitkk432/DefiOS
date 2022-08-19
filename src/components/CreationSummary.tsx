@@ -1,4 +1,6 @@
 import React from 'react'
+import {useState,useEffect} from 'react'
+
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
@@ -7,6 +9,8 @@ import { InformationCircleIcon } from '@heroicons/react/outline';
 
 interface CreationSummaryProps {
     step: number;
+    triggerToSummary: number;
+    setTriggerToSummary: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface PieChartProps{
@@ -24,7 +28,27 @@ const PieChart: React.FC<PieChartProps> = ({dataPie,optionsPie}) => {
     )
 }
 
-const CreationSummary: React.FC<CreationSummaryProps> = ({step}) => {
+const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}) => {
+
+    const [dataPie,setDataPie] = useState([100])
+    const [fullData,setFullData] = useState<any>({})
+    const [contriKeys,setContriKeys] = useState<any>([])
+
+    const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
+    useEffect(()=>{
+        const pieData=[100]
+        const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'')
+        const DistributionData = storageData.distribution
+        const data = Object.values(DistributionData).map((value:any)=>parseInt(value.replace('%','')))
+        const dataContributors = Object.keys(DistributionData);
+        data.map((value:any)=>{
+            pieData.push(value)
+            pieData[0]-=value
+        })
+        setDataPie(pieData)
+        setFullData(storageData)
+        setContriKeys(dataContributors)
+    },[triggerToSummary])
 
     const fontsizer = 'text-[calc(98vh/54)]';
     const fontsizer2 = 'text-[calc(98vh/60)]';
@@ -43,9 +67,6 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step}) => {
                 data: [100],
                 backgroundColor: [
                     '#7B7C7D',
-                    '#283F94',
-                    '#7082C3',
-                    '#A7B9FC',
                 ],
                 borderWidth: 0,
                 rotation:-10,
@@ -55,13 +76,8 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step}) => {
     const data2 = {
         datasets: [
             {
-                data: [25,25,25,25],
-                backgroundColor: [
-                    '#7B7C7D',
-                    '#283F94',
-                    '#7082C3',
-                    '#A7B9FC',
-                ],
+                data: dataPie,
+                backgroundColor: pieColors,
                 borderWidth: 0,
                 rotation:-10,
             },
@@ -82,20 +98,13 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step}) => {
                             <div className='font-semibold'>100%</div>
                         </div>
                     ):(
-                        <>
-                            <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} >
-                                <div className='text-[#283F94] font-semibold'>Never2average</div>
-                                <div className='font-semibold'>DAO Name 100%</div>
-                            </div>
-                            <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} >
-                                <div className='text-[#7082C3] font-semibold'>Never2average</div>
-                                <div className='font-semibold'>DAO Name 100%</div>
-                            </div>
-                            <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} >
-                                <div className='text-[#A7B9FC] font-semibold'>Never2average</div>
-                                <div className='font-semibold'>DAO Name 100%</div>
-                            </div>
-                        </>
+                        contriKeys.map((contriKey:any,index:number)=>{
+                            return (
+                                <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} >
+                                    <div className='text-[#6495ED] font-semibold' >{contriKey}</div>
+                                    <div className='font-semibold'>{fullData.daoName} {fullData.distribution[`${contriKey}`]} </div>
+                                </div>
+                            )})
                     )}
                 </div>
             ):null

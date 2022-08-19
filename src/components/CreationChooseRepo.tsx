@@ -1,5 +1,7 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
+import { useRouter } from 'next/router';
+
 import ReposOption from './ReposOption';
 
 import { SearchIcon } from '@heroicons/react/outline';
@@ -8,9 +10,13 @@ interface CreationChooseRepoProps {
 }
 
 const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
+    const router = useRouter()
 
     const [repos,setRepos] = useState([]);
     const [isLoading,setIsLoading] = useState(true);
+
+    const [repoChoosen,setRepoChoosen] = useState('');
+    const [errorMsg,setErrorMsg] = useState(false);
 
     useEffect(() => {
         fetch(`http://localhost:3000/api/getreposbyuser`).then(res => res.json()).then(data => {
@@ -21,6 +27,13 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
         })
     },[])
 
+    const submitPage = ()=>{
+        const data = {
+            "repoFullName": repoChoosen,
+        }
+        localStorage.setItem('DaoCreationData',JSON.stringify(data))
+        router.push('/creation/2')
+    }
     // const fontsizer = 'text-[calc(98vh/54)]';
     const fontsizer2 = 'text-[calc(98vh/60)]';
 
@@ -38,7 +51,7 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
                 <div className='flex flex-col justify-start items-center h-[100%] w-full relative overflow-y-scroll overflow-x-hidden customScrollbar'>
                     {!isLoading?
                         repos?.map((repo:any,idx:any) => (
-                            <ReposOption repo={repo} key={idx} />
+                            <ReposOption repo={repo} key={idx} repoChoosen={repoChoosen} setRepoChoosen={setRepoChoosen}  />
                         ))
                         : <div className='m-auto'>Loading...</div>
                     }
@@ -46,7 +59,13 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
             </div>
 
             {/* Submit Btn */}
-            <button className={`bg-[#91A8ED] w-full py-[2%] ${fontsizer2} font-semibold rounded-md`} >
+            <button onClick={()=>{
+                if(repoChoosen===''){
+                    setErrorMsg(true)
+                    return
+                }
+                submitPage()
+            }} className={`bg-[#91A8ED] w-full py-[2%] ${fontsizer2} ${errorMsg?'border-red-500 border-b-2 text-black':null} font-semibold rounded-md`} >
                 Choose Repository
             </button>
         </div>
