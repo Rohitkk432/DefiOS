@@ -32,7 +32,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
         setTokenImgPreview(objectUrl)
 
         // free memory when ever this component is unmounted
-        return () => URL.revokeObjectURL(objectUrl)
+        // return () => URL.revokeObjectURL(objectUrl)
     },[tokenImgFile])
 
     const submitPage = ()=>{
@@ -42,6 +42,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
             "tokenName": tokenName,
             "tokenSymbol": tokenSymbol,
             "tokenImgFile": tokenImgFile,
+            "tokenImgPreview":tokenImgPreview,
         }
         const data = {...dataBefore,...dataAdd}
         localStorage.setItem('DaoCreationData',JSON.stringify(data))

@@ -102,7 +102,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                             return (
                                 <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
                                     <div className='text-[#6495ED] font-semibold' >{contriKey}</div>
-                                    <div className='font-semibold'>{fullData.daoName} {fullData.distribution[`${contriKey}`]} </div>
+                                    <div className='font-semibold'>{fullData.distribution[`${contriKey}`]} </div>
                                 </div>
                             )})
                     )}

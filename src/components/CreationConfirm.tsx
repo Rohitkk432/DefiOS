@@ -79,10 +79,10 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* token details */}
                 <div className='flex flex-row justify-start items-center w-full'>
-                    <img src="https://res.cloudinary.com/rohitkk432/image/upload/v1660741087/Ellipse_4_xox67k.png" alt="token" className='w-[10vh] h-[10vh] mr-[4%] bg-white rounded-full' />
+                    <img src={fullData.tokenImgPreview} alt="token" className='w-[10vh] h-[10vh] mr-[4%] bg-white rounded-full' />
                     <div>
-                        <div className={`${fontsizer} font-semibold`}>defiOS token</div>
-                        <div className={`${fontsizer}`}>DOS</div>
+                        <div className={`${fontsizer} font-semibold`}>{fullData.tokenName} token</div>
+                        <div className={`${fontsizer}`}>{fullData.tokenSymbol}</div>
                     </div>
                 </div>
 
@@ -124,7 +124,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
                                 return (
                                     <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
                                         <div className='text-[#A7B9FC] font-semibold'>{contriKey}</div>
-                                        <div className='font-semibold'>{fullData.daoName} {fullData.distribution[`${contriKey}`]}</div>
+                                        <div className='font-semibold'>{fullData.distribution[`${contriKey}`]}</div>
                                     </div>
                                 )})
                         }

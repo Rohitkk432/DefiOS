@@ -2,11 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 /* {#ec4755 #a12c34 #99a0a3} */
 :root {
   --color-primary: #ff0016;
   --color-secondary: #a12c34;
   --color-tertiaty: #99a0a3;
+}
+
+.homepageGradient{
+  background: linear-gradient(85.28deg, #303C4A 4.09%, #000000 98%);
+}
+
+.workSansFont{
+  font-family: 'Work Sans', sans-serif;
+}
+.gradientText1{
+  background: linear-gradient(180deg, #000000, #FFFFFF 75%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
 }
 
 /* a { 
