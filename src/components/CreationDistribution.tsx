@@ -29,6 +29,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
         fetch(`http://localhost:3000/api/repo/contributors/${repoName}`)
         .then(res => res.json())
         .then(data => {
+            setTriggerToMain(triggerToMain+1);
             setContributors(data);
             setIsLoading(false);
             
@@ -46,7 +47,6 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
             if(oldData.distribution===undefined){
                 localStorage.setItem('DaoCreationData',JSON.stringify(newData));
             }
-            
         }).catch(err => {
             console.log(err);
         })

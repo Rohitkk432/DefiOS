@@ -49,7 +49,7 @@ const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setT
             <div className='bg-[#121418] w-full h-[20%] px-[2%] py-[2%] mt-[2%] text-xs font-semibold rounded-md border-[#2E2E2F] border flex flex-row align-center justify-between' >
                 {/* user name */}
                 <div className='flex flex-row'>
-                    <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
+                    <img src={contributor.avatar_url} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
                     <div className={`text-[#D7D7D7] ${fontsizer2}`}>{contributor.login}</div>
                 </div>
                 {/* user distribution */}
@@ -66,7 +66,7 @@ const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setT
                 <div className='flex flex-row align-center justify-between w-full mb-[3%]'>
                     {/* user name */}
                     <div className='flex flex-row'>
-                        <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
+                        <img src={contributor.avatar_url} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
                         <div className={`text-[#D7D7D7] ${fontsizer2}`}>{contributor.login}</div>
                     </div>
                     {/* user distribution */}
