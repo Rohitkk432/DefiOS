@@ -11,6 +11,12 @@
   --color-tertiaty: #99a0a3;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .homepageGradient{
   background: linear-gradient(85.28deg, #303C4A 4.09%, #000000 98%);
 }

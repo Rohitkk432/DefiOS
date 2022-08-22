@@ -36,7 +36,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
     },[tokenImgFile])
 
     const submitPage = ()=>{
-        const dataBefore = JSON.parse(localStorage.getItem('DaoCreationData')||'')
+        const dataBefore = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
         const dataAdd = {
             "daoName": DaoName,
             "tokenName": tokenName,

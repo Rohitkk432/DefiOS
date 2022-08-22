@@ -33,21 +33,42 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
 
     useEffect(()=>{
         const pieData=[100]
-        const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'')
+        const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
+
+        if(storageData===[] || storageData==={} || storageData==='') return
 
         const DistributionData = storageData.distribution
         const data = Object.values(DistributionData).map((value:any)=>parseInt(value.replace('%','')))
         const dataContributors = Object.keys(DistributionData);
 
-        data.map((value:any)=>{
-            pieData.push(value)
-            pieData[0]-=value
-        })
-
+        let totalValue=0
+        if(storageData.distributionPercentage!==undefined){
+            pieData[0] = 100 - storageData.distributionPercentage
+            data.map((value:any)=>{
+                totalValue+=value
+                const relativeVal = (value/100)*storageData.distributionPercentage
+                pieData.push(relativeVal)
+            })
+            console.log(totalValue)
+            if(totalValue===100){
+                pieData[0] += 0
+            }else if(totalValue<100){
+                pieData[0] += ((100-totalValue)/100)*storageData.distributionPercentage
+            }else if(totalValue>100){
+                console.log(((totalValue-100)/100)*storageData.distributionPercentage)
+                pieData[0] -= ((totalValue-100)/100)*storageData.distributionPercentage
+            }
+        }else{
+            pieData[0] = 100
+            data.map((value:any)=>{
+                totalValue+=value
+                pieData.push(value)
+            })
+        }
+        
         setDataPie(pieData)
         setFullData(storageData)
         setContriKeys(dataContributors)
-
     },[])
 
     const fontsizer = 'text-[calc(98vh/54)]';

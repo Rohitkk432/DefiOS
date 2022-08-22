@@ -2,7 +2,9 @@ import React from 'react'
 import {useState,useEffect} from 'react'
 import { useRouter } from 'next/router';
 import UserOptions from './UserOptions';
-import { InformationCircleIcon , SearchIcon } from '@heroicons/react/outline';
+import { InformationCircleIcon , SearchIcon , CheckIcon, PencilIcon } from '@heroicons/react/outline';
+
+import { CodeContributorStats,OptionRepoOwner } from '../utils/contributorStats';
 
 interface CreationDistributionProps {
     triggerToMain:number;
@@ -18,11 +20,13 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
     const [network,setNetwork] = useState('');
     const [errorMsg,setErrorMsg] = useState(false);
 
-    const [contributors,setContributors] = useState([]);
+    const [contributors,setContributors] = useState<any>([]);
     const [isLoading,setIsLoading]=useState(true);
 
+    const [editDistribution,setEditDistribution] = useState(true);
+
     useEffect(()=>{
-        const dataInStorage = JSON.parse(localStorage.getItem('DaoCreationData')||'');
+        const dataInStorage = JSON.parse(localStorage.getItem('DaoCreationData')||'{}');
         if (dataInStorage===''||dataInStorage===[] || dataInStorage==={}) return;
         const repoName = dataInStorage.repoFullName;
         if (repoName==='') return; 
@@ -36,12 +40,12 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
             const distributionInit:any = {}
 
             data.forEach((el:any) => {
-                const contri = el.login
+                const contri = el.author.login
                 distributionInit[`${contri}`] = '0%';
             })
             
 
-            const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'')
+            const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
             const newData = {...oldData,distribution:distributionInit}
 
             if(oldData.distribution===undefined){
@@ -55,11 +59,10 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
     const handlePageSubmit = () => {
         const newData = {
             "DaoFees": DaoFees,
-            "distributionPercentage": distributionPercentage,
             "algorithm": algorithm,
             "network": network,
         }
-        const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'')
+        const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
         const data = {...oldData,...newData}
         localStorage.setItem('DaoCreationData',JSON.stringify(data))
         router.push('/creation/4');
@@ -79,9 +82,25 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                     <InformationCircleIcon className='w-[5%] absolute top-[30%] right-[3%]' />
                 </div>
                 <div className='w-full relative'>
-                    <input type="text" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] ${fontsizer2} font-semibold rounded-md border-[#373737] border`} placeholder='Enter Distribution %' value={distributionPercentage} 
+                    <input type="number" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] ${fontsizer2} font-semibold rounded-md border-[#373737] border disabled:border-green-900`} placeholder='Enter Distribution %' value={distributionPercentage} disabled={!editDistribution}
                     onChange={(e)=>setDistributionPercentage(e.target.value)} required />
-                    <InformationCircleIcon className='w-[5%] absolute top-[30%] right-[3%]' />
+                    {editDistribution && <CheckIcon className='w-[5%] absolute top-[30%] right-[3%]'
+                    onClick={()=>{
+                        setEditDistribution(false)
+                        const storeData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
+                        if(distributionPercentage!==''){
+                            storeData.distributionPercentage = distributionPercentage;
+                        }else{
+                            storeData.distributionPercentage = '0';
+                            setDistributionPercentage('0');
+                        }
+                        localStorage.setItem('DaoCreationData',JSON.stringify(storeData))
+                        setTriggerToMain(triggerToMain+1);
+                    }} />}
+                    {!editDistribution && <PencilIcon className='w-[5%] absolute top-[30%] right-[3%]'
+                    onClick={()=>{
+                        setEditDistribution(true)
+                    }} />}
                 </div>
 
                 {/* options */}
@@ -92,6 +111,11 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         <input type="radio" name="TokenAlgo" className='peer absolute opacity-0 w-full h-full cursor-pointer' value='Repository creator' 
                         onChange={(e)=>{
                             if(e.target.checked){
+                                const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
+                                const newData = OptionRepoOwner(oldData,contributors);
+                                oldData.distribution = newData;
+                                localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
+                                setTriggerToMain(triggerToMain+1);
                                 setAlgorithm(e.target.value);
                             }
                         }} />
@@ -109,6 +133,12 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         <input type="radio" name="TokenAlgo" className='peer absolute opacity-0 w-full h-full cursor-pointer' value='By amount of code contributed ( minified )' 
                         onChange={(e)=>{
                             if(e.target.checked){
+                                const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
+                                const newData = CodeContributorStats(contributors);
+                                oldData.distribution = newData;
+                                localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
+                                setTriggerToMain(triggerToMain+1);
+
                                 setAlgorithm(e.target.value);
                             }
                         }} />
@@ -174,7 +204,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                 <div className='flex flex-col justify-start items-center h-[100%] w-full relative overflow-y-scroll overflow-x-hidden customScrollbar'>
 
                     {isLoading && <div className='m-auto'>Loading...</div>}
-                    {!isLoading && contributors.length > 0 && contributors.map((contributor, idx)=>{
+                    {!isLoading && contributors.length > 0 && contributors.map((contributor:any, idx:any)=>{
                         return (
                         <UserOptions contributor={contributor} key={idx}
                         triggerToMain={triggerToMain} 

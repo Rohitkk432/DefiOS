@@ -1,6 +1,7 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faSquareArrowUpRight} from '@fortawesome/free-solid-svg-icons'
+import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
+import {faTwitter} from '@fortawesome/free-brands-svg-icons'
 
 interface HomepageProps {
 
@@ -21,10 +22,7 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
                 <div className='flex flex-row justify-end items-center w-full h-full' >
                     <div className='mx-[2%] font-thin text-[2.5vh]'>Whiteboard Explainer</div>
                     <div className='mx-[2%] font-thin text-[2.5vh]'>Whitepaper</div>
-                    <div className='mx-[2%] font-thin text-[2.5vh] flex flex-row justify-center items-center'>
-                        <div>Contact Us</div>
-                        <img src="/assets/images/UpRightArrow.svg"  className='inline h-[3vh]'/>
-                    </div>
+                    <div className='mx-[2%] font-thin text-[2.5vh]'>Contact Us</div>
                 </div>
             </div>
 
@@ -41,22 +39,22 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
                     <div className='flex flex-col justify-center items-center text-[2.3vh] w-[100%] m-auto my-[8%]'>
                         <div className='flex flex-row justify-center items-center w-full mb-[1%]'>
                             <div>DefiOS converts open source repositories into DAOs with</div>
-                            <div className='ml-[1%] text-[#437FEC]'>project native</div>
+                            <div className='ml-[1%] text-[#7082C3] font-bold'>project native</div>
                         </div>
                         <div className='flex flex-row justify-center items-center w-full'>
-                            <div className='text-[#437FEC]'>tokens</div>
+                            <div className='text-[#7082C3] font-bold'>tokens</div>
                             <div className='mx-[1%]' >that enterprise users can use to</div>
-                            <div className='text-[#437FEC]'>incentivize developers.</div>
+                            <div className='text-[#7082C3] font-bold'>incentivize developers.</div>
                         </div>
                     </div>
                     <div className='flex flex-row justify-center items-center w-full text-[#1D242D] text-[2vh] font-semibold'>
                         <button className='bg-[#D1D2D2] py-[2.5%] w-[27%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
-                            <img src="/assets/images/UpRightArrow2.svg"  className='inline h-[3vh]'/>
                             <div>Get Started</div>
+                            <FontAwesomeIcon icon={faArrowRight} className='inline h-[2vh] ml-[3%]'/>
                         </button>
                         <button className='bg-[#7082C3] py-[2.5%] w-[27%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
-                            <img src="/assets/images/UpRightArrow2.svg"  className='inline h-[3vh]'/>
                             <div>Latest Updates</div>
+                            <FontAwesomeIcon icon={faTwitter} className='inline h-[3vh] ml-[2%]'/>
                         </button>
                     </div>
                 </div>
