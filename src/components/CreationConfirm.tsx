@@ -49,13 +49,11 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
                 const relativeVal = (value/100)*storageData.distributionPercentage
                 pieData.push(relativeVal)
             })
-            console.log(totalValue)
             if(totalValue===100){
                 pieData[0] += 0
             }else if(totalValue<100){
                 pieData[0] += ((100-totalValue)/100)*storageData.distributionPercentage
             }else if(totalValue>100){
-                console.log(((totalValue-100)/100)*storageData.distributionPercentage)
                 pieData[0] -= ((totalValue-100)/100)*storageData.distributionPercentage
             }
         }else{
@@ -144,7 +142,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
                             contriKeys.map((contriKey:any,index:number)=>{
                                 return (
                                     <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
-                                        <div className='text-[#A7B9FC] font-semibold'>{contriKey}</div>
+                                        <div className='font-semibold'>{contriKey}</div>
                                         <div className='font-semibold'>{fullData.distribution[`${contriKey}`]}</div>
                                     </div>
                                 )})
