@@ -56,17 +56,26 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
             })
             if(totalValue===100){
                 pieData[0] += 0
+                localStorage.setItem('distributionOk','true');
             }else if(totalValue<100){
                 pieData[0] += ((100-totalValue)/100)*storageData.distributionPercentage
+                localStorage.setItem('distributionOk','false');
             }else if(totalValue>100){
                 pieData[0] -= ((totalValue-100)/100)*storageData.distributionPercentage
+                localStorage.setItem('distributionOk','false');
             }
         }else{
             pieData[0] = 100
             data.map((value:any)=>{
                 totalValue+=value
+                pieData[0]-=value
                 pieData.push(value)
             })
+            if(totalValue===100){
+                localStorage.setItem('distributionOk','true');
+            }else{
+                localStorage.setItem('distributionOk','false');
+            }
         }
         
         setDataPie(pieData)

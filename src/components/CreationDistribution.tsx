@@ -18,7 +18,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
     const [distributionPercentage,setDistributionPercentage] = useState('');
     const [algorithm,setAlgorithm] = useState('');
     const [network,setNetwork] = useState('');
-    const [errorMsg,setErrorMsg] = useState(false);
+    const [errorMsg,setErrorMsg] = useState('');
 
     const [contributors,setContributors] = useState<any>([]);
     const [isLoading,setIsLoading]=useState(true);
@@ -43,7 +43,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                 const contri = el.author.login
                 distributionInit[`${contri}`] = '0%';
             })
-            
+            localStorage.setItem('distributionOk','true');
 
             const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
             const newData = {...oldData,distribution:distributionInit}
@@ -216,15 +216,18 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
 
             </div>
             {/* Submit Btn */}
-            <button className={`bg-[#91A8ED] w-full py-[2%] ${fontsizer2} ${errorMsg?'border-red-500 border-b-2 text-black':null} font-semibold rounded-md`}
+            <button className={`bg-[#91A8ED] w-full py-[2%] ${fontsizer2} ${(errorMsg!=='')?'border-red-500 border-b-2 text-black':null} font-semibold rounded-md`}
             onClick={()=>{
-                if(DaoFees==='' || distributionPercentage==='' || algorithm==='' || network===''){
-                    setErrorMsg(true)
+                if(DaoFees==='' || distributionPercentage==='' || algorithm==='' || network==='' || editDistribution){
+                    setErrorMsg("- fill all fields")
+                    return
+                }else if(localStorage.getItem('distributionOk')==='false'){
+                    setErrorMsg("- % doesn't add upto 100")
                     return
                 }
                 handlePageSubmit()
             }} >
-                Confirm Token Distribution {errorMsg?'- fill all fields':null}
+                Confirm Token Distribution {errorMsg}
             </button>
         </div>
     );

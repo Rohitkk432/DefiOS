@@ -26,11 +26,7 @@ const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setT
     const handleEditSumbit = ()=>{
         if(newValue==="") return
         const data = JSON.parse(localStorage.getItem('DaoCreationData')||'{}');
-        if(newValue[newValue.length-1]!=='%'){
-            data.distribution[`${contributor.author.login}`] = newValue + '%'
-        }else{
-            data.distribution[`${contributor.author.login}`] = newValue
-        }
+        data.distribution[`${contributor.author.login}`] = Math.floor(parseInt(newValue)) + '%'
         localStorage.setItem('DaoCreationData',JSON.stringify(data))
         if(triggerToMain>=1){
             setTriggerToMain(triggerToMain+1);
@@ -77,7 +73,7 @@ const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setT
                     </div>
                 </div>
                 <div className='flex flex-row align-center justify-between w-full'>
-                    <input type="text" name='newPercentage' className={`bg-[#121418] w-full py-[1%] px-[4%] ${fontsizer2} font-semibold rounded-l-md border-[#3A4E70] border border-r-0`} placeholder='Enter New %' value={newValue} onChange={(e)=>setNewValue(e.target.value)} />
+                    <input type="number" name='newPercentage' className={`bg-[#121418] w-full py-[1%] px-[4%] ${fontsizer2} font-semibold rounded-l-md border-[#3A4E70] border border-r-0`} placeholder='Enter New %' value={newValue} onChange={(e)=>setNewValue(e.target.value)} />
                     {/* user distribution */}
                     <button onClick={handleEditSumbit} className={`${fontsizer2} px-[5%] rounded-sm bg-[#91A8ED]`} >Update</button>
                 </div>
