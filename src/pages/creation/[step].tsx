@@ -38,7 +38,7 @@ const Creation: React.FC<creationProps> = ({}) => {
         <div className='flex flex-row justify-center items-center w-screen h-screen bg-[#303C4A]'>
             <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] rounded-2xl'>
                 <Link
-                    href="/"
+                    href="/dashboard"
                 >
                     <XIcon className="h-[4vh] w-[4vh] text-white absolute top-[3vh] right-[3vh]"/>
                 </Link>
