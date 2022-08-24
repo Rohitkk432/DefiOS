@@ -37,8 +37,13 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
 
         if(storageData===[] || storageData==={} || storageData==='') return
 
-        const DistributionData = storageData.distribution
-        const data = Object.values(DistributionData).map((value:any)=>parseInt(value.replace('%','')))
+        const DistributionDataOld = storageData.distribution
+
+        const DistributionData = Object.entries(DistributionDataOld)
+        .sort(([,a]:any,[,b]:any) =>parseInt(b)-parseInt(a))
+        .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+
+        const data = Object.values(DistributionData).map((value:any)=>parseInt(value))
         const dataContributors = Object.keys(DistributionData);
 
         // let totalValue=0

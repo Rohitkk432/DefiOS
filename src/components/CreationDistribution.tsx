@@ -36,18 +36,14 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
             setTriggerToMain(triggerToMain+1);
             setContributors(data);
             setIsLoading(false);
-            
             const distributionInit:any = {}
-
             data.forEach((el:any) => {
                 const contri = el.author.login
                 distributionInit[`${contri}`] = '0%';
             })
             localStorage.setItem('distributionOk','true');
-
             const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
             const newData = {...oldData,distribution:distributionInit}
-
             if(oldData.distribution===undefined){
                 localStorage.setItem('DaoCreationData',JSON.stringify(newData));
             }
@@ -55,6 +51,22 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
             console.log(err);
         })
     },[])
+
+    const AlgoOwner =()=>{
+        const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
+        const newData = OptionRepoOwner(oldData,contributors,distributionPercentage);
+        oldData.distribution = newData;
+        localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
+        setTriggerToMain(triggerToMain+1);
+    } 
+
+    const AlgoCode = ()=>{
+        const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
+        const newData = CodeContributorStats(contributors,distributionPercentage);
+        oldData.distribution = newData;
+        localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
+        setTriggerToMain(triggerToMain+1);
+    }
 
     const handlePageSubmit = () => {
         const newData = {
@@ -95,7 +107,13 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                             setDistributionPercentage('0');
                         }
                         localStorage.setItem('DaoCreationData',JSON.stringify(storeData))
-                        setTriggerToMain(triggerToMain+1);
+                        if(algorithm==='Repository creator'){
+                            AlgoOwner();
+                        }else if(algorithm==='By amount of code contributed ( minified )'){
+                            AlgoCode();
+                        }else{
+                            setTriggerToMain(triggerToMain+1);
+                        }
                     }} />}
                     {!editDistribution && <PencilIcon className='w-[5%] absolute top-[30%] right-[3%]'
                     onClick={()=>{
@@ -111,11 +129,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         <input type="radio" name="TokenAlgo" className='peer absolute opacity-0 w-full h-full cursor-pointer' value='Repository creator' 
                         onChange={(e)=>{
                             if(e.target.checked){
-                                const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
-                                const newData = OptionRepoOwner(oldData,contributors,distributionPercentage);
-                                oldData.distribution = newData;
-                                localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
-                                setTriggerToMain(triggerToMain+1);
+                                AlgoOwner();
                                 setAlgorithm(e.target.value);
                             }
                         }} />
@@ -133,12 +147,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         <input type="radio" name="TokenAlgo" className='peer absolute opacity-0 w-full h-full cursor-pointer' value='By amount of code contributed ( minified )' 
                         onChange={(e)=>{
                             if(e.target.checked){
-                                const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
-                                const newData = CodeContributorStats(contributors,distributionPercentage);
-                                oldData.distribution = newData;
-                                localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
-                                setTriggerToMain(triggerToMain+1);
-
+                                AlgoCode();
                                 setAlgorithm(e.target.value);
                             }
                         }} />
