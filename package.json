@@ -14,12 +14,14 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@fortawesome/free-brands-svg-icons": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.4.1",
     "@heroicons/react": "^1.0.5",
     "caniuse-lite": "^1.0.30001357",
     "chart.js": "^3.9.1",
+    "ethers": "^5.7.0",
     "framer-motion": "^7.2.0",
     "near-api-js": "^0.45.1",
     "next": "^12.0.0",

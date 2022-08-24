@@ -11,6 +11,12 @@
   --color-tertiaty: #99a0a3;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .homepageGradient{
   background: linear-gradient(85.28deg, #303C4A 4.09%, #000000 98%);
 }
@@ -25,16 +31,6 @@
   background-clip: text;
   text-fill-color: transparent;
 }
-
-/* a { 
-  @apply text-red-700;
-}
-
-a:hover {
-  @apply border-b-2 border-red-700;
-} */
-
-
 
 .content p {
   @apply my-6;

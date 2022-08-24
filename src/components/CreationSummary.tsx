@@ -37,14 +37,47 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
     const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
     useEffect(()=>{
         const pieData=[100]
-        const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'')
+        const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
+
+        if(storageData==={}) return
+        if(storageData.distribution===undefined) return
+
         const DistributionData = storageData.distribution
         const data = Object.values(DistributionData).map((value:any)=>parseInt(value.replace('%','')))
         const dataContributors = Object.keys(DistributionData);
-        data.map((value:any)=>{
-            pieData.push(value)
-            pieData[0]-=value
-        })
+
+        let totalValue=0
+        if(storageData.distributionPercentage!==undefined){
+            pieData[0] = 100 - storageData.distributionPercentage
+            data.map((value:any)=>{
+                totalValue+=value
+                const relativeVal = (value/100)*storageData.distributionPercentage
+                pieData.push(relativeVal)
+            })
+            if(totalValue===100){
+                pieData[0] += 0
+                localStorage.setItem('distributionOk','true');
+            }else if(totalValue<100){
+                pieData[0] += ((100-totalValue)/100)*storageData.distributionPercentage
+                localStorage.setItem('distributionOk','false');
+            }else if(totalValue>100){
+                pieData[0] -= ((totalValue-100)/100)*storageData.distributionPercentage
+                localStorage.setItem('distributionOk','false');
+            }
+        }else{
+            pieData[0] = 100
+            data.map((value:any)=>{
+                totalValue+=value
+                pieData[0]-=value
+                pieData.push(value)
+            })
+            if(totalValue===100){
+                localStorage.setItem('distributionOk','true');
+            }else{
+                localStorage.setItem('distributionOk','false');
+            }
+        }
+        
         setDataPie(pieData)
         setFullData(storageData)
         setContriKeys(dataContributors)
@@ -101,7 +134,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                         contriKeys.map((contriKey:any,index:number)=>{
                             return (
                                 <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
-                                    <div className='text-[#6495ED] font-semibold' >{contriKey}</div>
+                                    <div className='font-semibold' >{contriKey}</div>
                                     <div className='font-semibold'>{fullData.distribution[`${contriKey}`]} </div>
                                 </div>
                             )})
