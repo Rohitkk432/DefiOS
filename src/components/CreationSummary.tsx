@@ -48,20 +48,19 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
 
         let totalValue=0
         if(storageData.distributionPercentage!==undefined){
-            pieData[0] = 100 - storageData.distributionPercentage
+            pieData[0] = 100 - parseInt(storageData.distributionPercentage)
             data.map((value:any)=>{
                 totalValue+=value
-                const relativeVal = (value/100)*storageData.distributionPercentage
-                pieData.push(relativeVal)
+                pieData.push(value)
             })
-            if(totalValue===100){
+            if(totalValue===parseInt(storageData.distributionPercentage)){
                 pieData[0] += 0
                 localStorage.setItem('distributionOk','true');
-            }else if(totalValue<100){
-                pieData[0] += ((100-totalValue)/100)*storageData.distributionPercentage
+            }else if(totalValue<parseInt(storageData.distributionPercentage)){
+                pieData[0] += (parseInt(storageData.distributionPercentage) - totalValue)
                 localStorage.setItem('distributionOk','false');
-            }else if(totalValue>100){
-                pieData[0] -= ((totalValue-100)/100)*storageData.distributionPercentage
+            }else if(totalValue>parseInt(storageData.distributionPercentage)){
+                pieData[0] -= (totalValue - parseInt(storageData.distributionPercentage))
                 localStorage.setItem('distributionOk','false');
             }
         }else{
@@ -131,6 +130,15 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                             <div className='font-semibold'>100%</div>
                         </div>
                     ):(
+                        <>
+                        <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} >
+                            <div className='font-semibold' >{fullData.daoName} DAO</div>
+                            <div className='font-semibold'>
+                                {fullData.distributionPercentage!==undefined ?
+                                `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
+                            </div>
+                        </div>
+                        {
                         contriKeys.map((contriKey:any,index:number)=>{
                             return (
                                 <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
@@ -138,6 +146,8 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                                     <div className='font-semibold'>{fullData.distribution[`${contriKey}`]} </div>
                                 </div>
                             )})
+                        }
+                        </>
                     )}
                 </div>
             ):null

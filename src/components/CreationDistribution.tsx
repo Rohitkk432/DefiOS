@@ -112,7 +112,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         onChange={(e)=>{
                             if(e.target.checked){
                                 const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
-                                const newData = OptionRepoOwner(oldData,contributors);
+                                const newData = OptionRepoOwner(oldData,contributors,distributionPercentage);
                                 oldData.distribution = newData;
                                 localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
                                 setTriggerToMain(triggerToMain+1);
@@ -134,7 +134,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         onChange={(e)=>{
                             if(e.target.checked){
                                 const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
-                                const newData = CodeContributorStats(contributors);
+                                const newData = CodeContributorStats(contributors,distributionPercentage);
                                 oldData.distribution = newData;
                                 localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
                                 setTriggerToMain(triggerToMain+1);
@@ -202,6 +202,20 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                     <SearchIcon className='w-[5%] absolute top-[30%] right-[3%] text-[#3A4E70]' />
                 </div>
                 <div className='flex flex-col justify-start items-center h-[100%] w-full relative overflow-y-scroll overflow-x-hidden customScrollbar'>
+                    <div className='bg-[#121418] w-full h-[20%] px-[2%] py-[2%] mt-[2%] text-xs font-semibold rounded-md border-[#2E2E2F] border flex flex-row align-center justify-between' >
+                        {/* user name */}
+                        <div className='flex flex-row'>
+                            <img src={JSON.parse(localStorage.getItem('DaoCreationData')||'{}').tokenImgPreview} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
+                            <div className={`text-[#D7D7D7] ${fontsizer2}`}>{JSON.parse(localStorage.getItem('DaoCreationData')||'{}').daoName} DAO</div>
+                        </div>
+                        {/* user distribution */}
+                        <div className={`px-[1%] ${fontsizer2} text-[#B5C3DB]
+                        flex flex-row align-center justify-center`} >
+                            <div>{
+                            (JSON.parse(localStorage.getItem('DaoCreationData')||'{}').distributionPercentage)!==undefined 
+                            ?`${100 - parseInt(JSON.parse(localStorage.getItem('DaoCreationData')||'{}').distributionPercentage)}%`:'100%'}</div> 
+                        </div>
+                    </div>
 
                     {isLoading && <div className='m-auto'>Loading...</div>}
                     {!isLoading && contributors.length > 0 && contributors.map((contributor:any, idx:any)=>{
@@ -222,7 +236,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                     setErrorMsg("- fill all fields")
                     return
                 }else if(localStorage.getItem('distributionOk')==='false'){
-                    setErrorMsg("- % doesn't add upto 100")
+                    setErrorMsg("- % doesn't add upto 100%")
                     return
                 }
                 handlePageSubmit()

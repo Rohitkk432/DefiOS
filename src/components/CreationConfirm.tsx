@@ -41,25 +41,18 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
         const data = Object.values(DistributionData).map((value:any)=>parseInt(value.replace('%','')))
         const dataContributors = Object.keys(DistributionData);
 
-        let totalValue=0
+        // let totalValue=0
         if(storageData.distributionPercentage!==undefined){
             pieData[0] = 100 - storageData.distributionPercentage
             data.map((value:any)=>{
-                totalValue+=value
-                const relativeVal = (value/100)*storageData.distributionPercentage
-                pieData.push(relativeVal)
+                // totalValue+=value
+                pieData.push(value)
             })
-            if(totalValue===100){
-                pieData[0] += 0
-            }else if(totalValue<100){
-                pieData[0] += ((100-totalValue)/100)*storageData.distributionPercentage
-            }else if(totalValue>100){
-                pieData[0] -= ((totalValue-100)/100)*storageData.distributionPercentage
-            }
         }else{
             pieData[0] = 100
             data.map((value:any)=>{
-                totalValue+=value
+                // totalValue+=value
+                pieData[0]-=value
                 pieData.push(value)
             })
         }
@@ -138,7 +131,16 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
                 <div className='flex flex-row justify-center items-center w-full'>
                     <PieChart optionsPie={options} dataPie={data} />
                     <div className='flex flex-col items-center justify-between w-[70%]'>
-                        {
+                        {   
+                            <>
+                            <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`}>
+                                <div className='font-semibold'>{fullData.daoName} DAO</div>
+                                <div className='font-semibold'>
+                                    {fullData.distributionPercentage!==undefined ?
+                                    `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
+                                </div>
+                            </div>
+                            {
                             contriKeys.map((contriKey:any,index:number)=>{
                                 return (
                                     <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
@@ -146,6 +148,8 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
                                         <div className='font-semibold'>{fullData.distribution[`${contriKey}`]}</div>
                                     </div>
                                 )})
+                            }
+                            </>
                         }
                     </div>
                 </div>
