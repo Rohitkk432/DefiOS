@@ -130,24 +130,24 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                             <div className='font-semibold'>100%</div>
                         </div>
                     ):(
-                        <>
-                        <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} >
-                            <div className='font-semibold' >{fullData.daoName} DAO</div>
-                            <div className='font-semibold'>
-                                {fullData.distributionPercentage!==undefined ?
-                                `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
-                            </div>
-                        </div>
-                        {
-                        contriKeys.map((contriKey:any,index:number)=>{
-                            return (
-                                <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
-                                    <div className='font-semibold' >{contriKey}</div>
-                                    <div className='font-semibold'>{fullData.distribution[`${contriKey}`]} </div>
+                        <div className='w-[100%] h-[15vh] flex flex-col items-center justify-between  customScrollbar overflow-y-scroll'>
+                            <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} >
+                                <div className='font-semibold' >{fullData.daoName} DAO</div>
+                                <div className='font-semibold'>
+                                    {fullData.distributionPercentage!==undefined ?
+                                    `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
                                 </div>
-                            )})
-                        }
-                        </>
+                            </div>
+                            {
+                            contriKeys.map((contriKey:any,index:number)=>{
+                                return (
+                                    <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
+                                        <div className='font-semibold' >{contriKey}</div>
+                                        <div className='font-semibold'>{fullData.distribution[`${contriKey}`]} </div>
+                                    </div>
+                                )})
+                            }
+                        </div>
                     )}
                 </div>
             ):null

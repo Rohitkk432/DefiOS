@@ -128,9 +128,9 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
 
                 {/* distribution details */}
                 <div className={`${fontsizer} font-semibold mb-[2%]`} >Token Distribution</div>
-                <div className='flex flex-row justify-center items-center w-full'>
+                <div className='flex flex-row justify-center items-center w-full h-[38%]'>
                     <PieChart optionsPie={options} dataPie={data} />
-                    <div className='flex flex-col items-center justify-between w-[70%]'>
+                    <div className='flex flex-col items-center justify-between w-[70%] h-full customScrollbar overflow-y-scroll'>
                         {   
                             <>
                             <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`}>
