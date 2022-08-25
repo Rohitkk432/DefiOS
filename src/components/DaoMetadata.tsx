@@ -1,4 +1,8 @@
 import React from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faArrowsRotate,faWallet,faSquarePollVertical} from '@fortawesome/free-solid-svg-icons'
+
+import Link from 'next/link'
 
 interface DaoMetadataProps {
     metadata:any
@@ -25,14 +29,28 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
                 <img src={metadata.tokenImgUrl} className='h-[3vh] inline mx-[2%]' />  
                 <div className='w-[35%]'>({metadata.totalStakedInUSD})</div>
             </div>
-            <div className='w-[6%] mx-[0.5%] pl-[2%]'>{metadata.openIssues}</div>
+            <div className='w-[6%] mx-[0.5%]'>{metadata.openIssues} {parseInt(metadata.openIssues)>10?"🔥":null}</div>
 
             {(metadata.pendingAction==='Sync Commit History')?
-            <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-blue-200 text-black font-semibold flex justify-center items-center'>{metadata.pendingAction}</div>:
+            <Link href="/dao-details">
+                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-blue-200 text-black font-semibold flex flex-row justify-start items-center'>
+                    <FontAwesomeIcon icon={faArrowsRotate} className='inline h-[2vh] mr-[3%]'/>
+                    {metadata.pendingAction}
+            </div>
+            </Link>:
             (metadata.pendingAction==='Vote on Solution')?
-            <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-orange-500 text-black font-semibold flex justify-center items-center'>{metadata.pendingAction}</div>:
+            <Link href="/dao-details">
+                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-orange-500 text-black font-semibold flex flex-row justify-start items-center'>
+                    <FontAwesomeIcon icon={faSquarePollVertical} className='inline h-[2vh] mr-[3%]'/>
+                    {metadata.pendingAction}
+            </div>
+            </Link>:
             (metadata.pendingAction==='Claim Rewards')?
-            <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-green-500 text-black font-semibold flex justify-center items-center'>{metadata.pendingAction}</div>:null
+            <Link href="/dao-details">
+                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-green-500 text-black font-semibold flex flex-row justify-start items-center'>
+                    <FontAwesomeIcon icon={faWallet} className='inline h-[2vh] mr-[3%]'/>{metadata.pendingAction}
+                </div>
+            </Link>:null
             }
         </div>
     );

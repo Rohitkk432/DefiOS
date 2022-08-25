@@ -87,7 +87,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount}) => {
                     <div className='w-[13%] h-full mx-[0.5%]'>Created by</div>
                     <div className='w-[13%] h-full mx-[0.5%]'>Total Staked</div>
                     <div className='w-[6%] h-full mx-[0.5%]'>Open Issues</div>
-                    <div className='w-[13%] h-full mx-[0.5%] pl-[2%]'>Pending Action</div>
+                    <div className='w-[13%] h-full mx-[0.5%]'>Pending Action</div>
                 </div>
                 <div className='w-full pr-[0.2%] h-[84%] overflow-y-scroll customScrollbar' >
                     {(data && data.length!==0 )?
