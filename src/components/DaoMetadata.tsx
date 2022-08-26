@@ -33,21 +33,21 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
 
             {(metadata.pendingAction==='Sync Commit History')?
             <Link href="/dao-details">
-                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-blue-200 text-black font-semibold flex flex-row justify-start items-center'>
+                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-blue-200 font-semibold flex flex-row justify-start items-center'>
                     <FontAwesomeIcon icon={faArrowsRotate} className='inline h-[2vh] mr-[3%]'/>
                     {metadata.pendingAction}
             </div>
             </Link>:
             (metadata.pendingAction==='Vote on Solution')?
             <Link href="/dao-details">
-                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-orange-500 text-black font-semibold flex flex-row justify-start items-center'>
+                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-orange-500 font-semibold flex flex-row justify-start items-center'>
                     <FontAwesomeIcon icon={faSquarePollVertical} className='inline h-[2vh] mr-[3%]'/>
                     {metadata.pendingAction}
             </div>
             </Link>:
             (metadata.pendingAction==='Claim Rewards')?
             <Link href="/dao-details">
-                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-green-500 text-black font-semibold flex flex-row justify-start items-center'>
+                <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-green-500 font-semibold flex flex-row justify-start items-center'>
                     <FontAwesomeIcon icon={faWallet} className='inline h-[2vh] mr-[3%]'/>{metadata.pendingAction}
                 </div>
             </Link>:null

@@ -29,7 +29,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network}) =
                 </div>
                 <div className='flex flex-row justify-center items-center h-full px-[1.5%] py-[1%] bg-[#262B36] rounded-md ml-[1%]'>
                     <img src="https://res.cloudinary.com/rohitkk432/image/upload/v1661271366/metamaskAccount_j0e9ij.svg" className='h-[3.5vh]  mr-[5%]' />
-                    <div className='text-[2.2vh]' >{currentAccount?.slice(0,7)+".........."+currentAccount?.slice(35,42)}</div>
+                    <div className='text-[2.2vh]' >{currentAccount?.slice(0,6)+"..."+currentAccount?.slice(38,42)}</div>
                 </div>
 
                 {/* create Dao btn */}

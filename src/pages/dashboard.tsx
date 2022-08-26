@@ -59,6 +59,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         .catch((e)=>console.log(e))
 
         provider.getNetwork().then(network => {
+            console.log(network)
             setNetwork(network.name)
         }).catch(err => {
             console.log(err)

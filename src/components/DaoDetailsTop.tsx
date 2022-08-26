@@ -36,10 +36,6 @@ const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = () => {
         },
         stacked: false,
         plugins: {
-            title: {
-                display: true,
-                text: 'Chart.js Line Chart - Multi Axis',
-            },
             legend: {
                 display: true,
                 align:"start" as const,
@@ -109,15 +105,15 @@ const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = () => {
         labels,
         datasets: [
             {
-                label: 'Dataset 1',
+                label: 'Issues Created',
                 data: [10,25,12,31,45,20,30],
-                borderColor: 'rgb(232, 54, 232)',
-                backgroundColor: 'rgb(232, 54, 232)',
+                borderColor: '#fb9230',
+                backgroundColor: '#fb9230',
                 yAxisID: 'y',
                 tension: 0.3,
             },
             {
-                label: 'Dataset 2',
+                label: 'APE Staked',
                 data: [16,35,26,41,31,30,50],
                 borderColor: 'rgb(68, 190, 215)',
                 backgroundColor: 'rgb(68, 190, 215)',
@@ -138,46 +134,64 @@ interface DaoDetailsTopProps {
 const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({}) => {
     return (
         <div className='w-full h-[48%] flex flex-row justify-between items-center'>
-            <div className='w-[30%] h-full rounded-md bg-[#191C21] flex flex-col justify-start items-start p-[1.5%]'>
-                <div className='text-[3vh] font-semibold mb-[2%]' >Ape Hackers Pro X</div>
-                <div className='w-full flex flex-row justify-between items-center' >
-                    <img src="https://res.cloudinary.com/rohitkk432/image/upload/v1660833498/defios_logo_gsg4eo.png" alt="" className='h-[13vh] w-[13vh] rounded-full' />
-                    <div className='flex flex-col items-start justify-start w-[64%] text-[2.2vh]' >
-                        <div className='mb-[2.5%] '>ape-hackers</div>
-                        <div className='mb-[2.5%] '>never2average</div>
-                        <div className='mb-[2.5%] '>Repository name</div>
-                        <div className='mb-[2.5%] '>Repository name</div>
+            <div className='w-[30%] h-full rounded-md bg-[#191C21] flex flex-col justify-center items-start px-[2%]'>
+                <div className='text-[3vh] font-semibold mb-[10%] flex flex-col items-center w-full' >
+                    <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/ape.svg" alt="" className='w-[10vh] h-[10vh] mb-[1%]' />
+                    <div>Ape Hackers Pro X</div>
+                </div>
+                <div className='w-full flex flex-col justify-between items-start text-[2vh]' >
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div>Token : </div>
+                        <div className='text-gray-400'>Apes (APE)</div>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div>Contract :</div>
+                        <div className='text-gray-400'>0x0091...e3f3</div>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div >Repository : </div>
+                        <div className='text-gray-400 flex flex-row justify-end w-[70%]'>
+                            <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh] mr-[3%]' />
+                            <div>/ape-hackers</div>
+                        </div>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div>Created by :</div>
+                        <div className='text-gray-400'>0x1482...50d8</div>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div>Created at :</div>
+                        <div className='text-gray-400'>1 month ago</div>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div>Chain :</div>
+                        <div className='text-gray-400'>Neon Testnet</div>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div>Top Holder :</div>
+                        <div className='text-gray-400'>0x1482...50d8</div>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div>Top Staker :</div>
+                        <div className='text-gray-400'>0x1482...50d8</div>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div>Top Solver :</div>
+                        <div className='text-gray-400 flex flex-row justify-end w-[70%]'>
+                            <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh] mr-[3%]' />
+                            <div>/never2average</div>
+                        </div>
                     </div>
                 </div>
-                <div className='text-[2.5vh] my-[2%]' >Token Stats</div>
-                <div className='text-[2.5vh] font-bold flex flex-row justify-start items-center w-full   shadow-[0_0.5vh_1vh_0.5vh_rgba(0,0,0,0.3)] rounded-md py-[2.5%] my-[1.5%]' >
-                    <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/ape.svg" alt="" className='w-[4.3vh] h-[4.3vh] mx-[10%]' />
-                    <div className='w-[30%] ml-[10%]' >Apes</div>
-                    <div className='w-[30%]'>APE</div>
-                </div>
-                <div className='text-[2.5vh] font-bold flex flex-row justify-evenly items-center w-full shadow-[0_0.5vh_1vh_0.5vh_rgba(0,0,0,0.3)] rounded-md py-[2%] my-[1.5%]' >
-                    <div>1 APE</div>
-                    <div>=</div>
-                    <div>0.005 USDC</div>
-                </div>
-
-                <div className='text-[2.8vh] mt-[3%] mb-[2%] w-full text-center font-bold '>
-                    Top 3 Holders
-                </div>
-                <div className='w-full flex flex-row justify-between items-center text-[2.2vh] mb-[2.5%]' >
-                    <div>never2average</div>
-                    <div>270 APE</div>
-                </div>
-                <div className='w-full flex flex-row justify-between items-center text-[2.2vh] mb-[2.5%]' >
-                    <div>rohitkk432</div>
-                    <div>190 APE</div>
-                </div>
-                <div className='w-full flex flex-row justify-between items-center text-[2.2vh] mb-[2.5%]' >
-                    <div>AbhisekBasu1</div>
-                    <div>65 APE</div>
+                <div className='font-bold text-center
+                border border-white text-[2.5vh]
+                rounded-md py-[2.5%] my-[3%] w-full' >
+                    <span>1 APE = $0.005</span>
+                    <span className='text-green-500'> (+0.5%)</span>
                 </div>
             </div>
-            <div className='w-[69%] h-full rounded-md  p-[1.5%] bg-[#191C21]'>
+            <div className='w-[69%] text-center h-full rounded-md  p-[1.5%] bg-[#191C21]'>
+                <div className='text-[#91A8ED] text-[4vh]'>Community Health</div>
                 <MultiAxisLineChart/>
             </div>
         </div>
