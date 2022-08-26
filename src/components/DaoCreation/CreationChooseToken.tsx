@@ -49,8 +49,6 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
         router.push('/creation/3')
     }
 
-    const fontsizer2 = 'text-[calc(98vh/60)]';
-
     return (
         <div 
         className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center'
@@ -74,23 +72,23 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
                         setTokenImgFile(file);
                     }} />
                 </div>
-                <div className={`${fontsizer2} mt-[2%]`}>Token Logo</div>
+                <div className={`text-[1.63vh] mt-[2%]`}>Token Logo</div>
                 {/* input feild */}
-                <input type="text" name='DaoName' className={`bg-[#121418] w-full py-[2%] px-[4%] mb-[2%] mt-[8%] ${fontsizer2} font-semibold rounded-md border-[#373737] border`} placeholder='Enter DAO Name' value={DaoName} onChange={(e)=>setDaoName(e.target.value)} />
-                <input type="text" name='TokenName' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] ${fontsizer2} font-semibold rounded-md border-[#373737] border`} placeholder='Enter the Token Name' value={tokenName} onChange={(e)=>setTokenName(e.target.value)} />
-                <input type="text" name='TokenSymbol'className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] ${fontsizer2} font-semibold rounded-md border-[#373737] border`} placeholder='Enter the Token Symbol' value={tokenSymbol} onChange={(e)=>setTokenSymbol(e.target.value)} />
+                <input type="text" name='DaoName' className={`bg-[#121418] w-full py-[2%] px-[4%] mb-[2%] mt-[8%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter DAO Name' value={DaoName} onChange={(e)=>setDaoName(e.target.value)} />
+                <input type="text" name='TokenName' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter the Token Name' value={tokenName} onChange={(e)=>setTokenName(e.target.value)} />
+                <input type="text" name='TokenSymbol'className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter the Token Symbol' value={tokenSymbol} onChange={(e)=>setTokenSymbol(e.target.value)} />
 
             </div>
 
             {/* Submit Btn */}
-            <div className={`${fontsizer2} mb-[2%] text-red-500`}>{errorMsg}</div>
+            <div className={`text-[1.63vh] mb-[2%] text-red-500`}>{errorMsg}</div>
             <button onClick={()=>{
                 if(DaoName===''||tokenName===''||tokenSymbol===''||tokenImgFile===undefined){
                     setErrorMsg('Please fill all the fields')
                     return
                 }
                 submitPage()
-            }} className={`bg-[#91A8ED] w-full py-[2%] ${fontsizer2} font-semibold rounded-md`} >
+            }} className={`bg-[#91A8ED] w-full py-[2%] text-[1.63vh] font-semibold rounded-md`} >
                 Confirm Token Specification
             </button>
         </div>

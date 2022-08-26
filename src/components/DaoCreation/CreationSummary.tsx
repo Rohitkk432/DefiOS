@@ -87,8 +87,6 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
         setContriKeys(dataContributors)
     },[triggerToSummary])
 
-    const fontsizer = 'text-[calc(98vh/54)]';
-    const fontsizer2 = 'text-[calc(98vh/60)]';
 
     const options = {
         plugins: {
@@ -125,18 +123,18 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
         <div 
         className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-center justify-between'
         >   
-            <div className={`w-[90%] ${fontsizer} border-b border-[#9D9D9D] pb-[4%] pl-[1%] pt-[6%] text-left mb-[2%]`} >Initial Token Distribution</div>
+            <div className={`w-[90%] text-[1.81vh] border-b border-[#9D9D9D] pb-[4%] pl-[1%] pt-[6%] text-left mb-[2%]`} >Initial Token Distribution</div>
             {(step>1)?(
                 <div className='w-full min-h-[calc(0.422*0.6*98vh)] mb-[4%] flex flex-col items-center justify-between' >
                     <PieChart optionsPie={options} dataPie={(step<3)?data1:data2} />
                     {(step<3)?(
-                        <div className={`w-[90%] mt-[2%] mb-[10%] ${fontsizer2} flex flex-row items-center justify-between`} >
+                        <div className={`w-[90%] mt-[2%] mb-[10%] text-[1.63vh] flex flex-row items-center justify-between`} >
                             <div className='text-[#7B7C7D] font-semibold'>DAO Name</div>
                             <div className='font-semibold'>100%</div>
                         </div>
                     ):(
                         <div className='w-[100%] h-[15vh] flex flex-col items-center justify-between  customScrollbar overflow-y-scroll'>
-                            <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} >
+                            <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
                                 <div className='font-semibold' >{fullData.daoName} DAO</div>
                                 <div className='font-semibold'>
                                     {fullData.distributionPercentage!==undefined ?
@@ -146,7 +144,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                             {
                             contriKeys.map((contriKey:any,index:number)=>{
                                 return (
-                                    <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
+                                    <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
                                         <div className='font-semibold' >{contriKey}</div>
                                         <div className='font-semibold'>{fullData.distribution[`${contriKey}`]} </div>
                                     </div>
@@ -158,8 +156,8 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
             ):null
             }
             <div className='pb-[6%] mt-[2%] text-center' >
-                <div className={`${fontsizer2} font-bold`} >Total token supply <InformationCircleIcon className='w-[6%] h-[6%] inline'/></div>
-                <div className={fontsizer} >100M Tokens</div>
+                <div className={`text-[1.63vh] font-bold`} >Total token supply <InformationCircleIcon className='w-[6%] h-[6%] inline'/></div>
+                <div className='text-[1.81vh]' >100M Tokens</div>
             </div>
         </div>
     );

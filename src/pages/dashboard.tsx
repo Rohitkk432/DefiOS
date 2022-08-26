@@ -15,6 +15,7 @@ declare let window:any
 const Dashboard: React.FC<DashboardProps> = ({}) => {
 
     const [currentAccount, setCurrentAccount] = useState<string | undefined>()
+    const [network, setNetwork] = useState<string | undefined>()
 
     useEffect(() => {
         if(!window.ethereum){
@@ -30,8 +31,11 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         window.ethereum.on('accountsChanged', () => {
             onClickConnect();
         });
-
+        window.ethereum.on('chainChanged', () => {
+            onClickConnect();
+        });
         // const provider = new ethers.providers.Web3Provider(window.ethereum)
+        
     },[currentAccount])
 
     const onClickConnect = () => {
@@ -53,6 +57,12 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             }
         })
         .catch((e)=>console.log(e))
+
+        provider.getNetwork().then(network => {
+            setNetwork(network.name)
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     // const onClickDisconnect = () => {
@@ -64,7 +74,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
     return (
         <div className='w-screen h-screen bg-[#303C4A] flex flex-row justify-start items-start'>
             <DashboardMenu/>
-            <DashboardMain currentAccount={currentAccount}/>
+            <DashboardMain currentAccount={currentAccount} network={network}/>
         </div>
     );
 }
