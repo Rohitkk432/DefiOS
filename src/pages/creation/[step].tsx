@@ -4,14 +4,14 @@ import { useState,useEffect } from 'react'
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 
-import CreationSteps from '../../components/CreationSteps';
-import CreationSummary from '../../components/CreationSummary';
-import CreationProcess from '../../components/CreationProcess';
+import CreationSteps from '../../components/DaoCreation/CreationSteps';
+import CreationSummary from '../../components/DaoCreation/CreationSummary';
+import CreationProcess from '../../components/DaoCreation/CreationProcess';
 
-import CreationChooseRepo from '../../components/CreationChooseRepo';
-import CreationChooseToken from '../../components/CreationChooseToken';
-import CreationDistribution from '../../components/CreationDistribution';
-import CreationConfirm from '../../components/CreationConfirm';
+import CreationChooseRepo from '../../components/DaoCreation/CreationChooseRepo';
+import CreationChooseToken from '../../components/DaoCreation/CreationChooseToken';
+import CreationDistribution from '../../components/DaoCreation/CreationDistribution';
+import CreationConfirm from '../../components/DaoCreation/CreationConfirm';
 
 import { XIcon } from '@heroicons/react/outline';
 

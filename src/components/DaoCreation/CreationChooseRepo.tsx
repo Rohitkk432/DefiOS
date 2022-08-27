@@ -34,8 +34,6 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
         localStorage.setItem('DaoCreationData',JSON.stringify(data))
         router.push('/creation/2')
     }
-    // const fontsizer = 'text-[calc(98vh/54)]';
-    const fontsizer2 = 'text-[calc(98vh/60)]';
 
     return (
         <div 
@@ -44,7 +42,7 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
             <div className='flex flex-col justify-start items-center h-[90%] w-full relative' >
 
                 {/* Search feild */}
-                <input name='repoSearch' type="text" className={`bg-[#121418] w-full py-[2%] px-[4%] ${fontsizer2} font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search repositories' />
+                <input name='repoSearch' type="text" className={`bg-[#121418] w-full py-[2%] px-[4%] text-[1.63vh] font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search repositories' />
                 <SearchIcon className='w-[5%] absolute top-[1.5%] right-[3%]' />
 
                 {/* Repositories */}
@@ -65,7 +63,7 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
                     return
                 }
                 submitPage()
-            }} className={`bg-[#91A8ED] w-full py-[2%] ${fontsizer2} ${errorMsg?'border-red-500 border-b-2 text-black':null} font-semibold rounded-md`} >
+            }} className={`bg-[#91A8ED] w-full py-[2%] text-[1.63vh] ${errorMsg?'border-red-500 border-b-2 text-black':null} font-semibold rounded-md`} >
                 Choose Repository
             </button>
         </div>

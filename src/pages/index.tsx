@@ -30,7 +30,7 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
                 <div className='flex flex-row justify-end items-center w-full h-full' >
                     <div className='mx-[2%] font-thin text-[2.5vh]'>Whiteboard Explainer</div>
                     <a href='/whitepaper' target="_blank" className='mx-[2%] font-thin text-[2.5vh]'>Whitepaper</a>
-                    <a href="mailto:abhi@defi-os.com?Subject=Product%20Query" target='_blank' className='mx-[2%] font-thin text-[2.5vh]'>Contact Us</a>
+                    <a href="mailto:abhi@defi-os.com?Subject=Product%20Query" className='mx-[2%] font-thin text-[2.5vh]'>Contact Us</a>
                 </div>
             </div>
 

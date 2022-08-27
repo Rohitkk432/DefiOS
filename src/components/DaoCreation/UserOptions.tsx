@@ -11,7 +11,6 @@ interface UserOptionsProps {
 
 const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setTriggerToMain}) => {
 
-    const fontsizer2 = 'text-[calc(98vh/60)]';
 
     const [isEditing,setIsEditing] = useState(false);
     const [share,setShare] = useState('0%');
@@ -46,10 +45,10 @@ const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setT
                 {/* user name */}
                 <div className='flex flex-row'>
                     <img src={contributor.author.avatar_url} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
-                    <div className={`text-[#D7D7D7] ${fontsizer2}`}>{contributor.author.login}</div>
+                    <div className={`text-[#D7D7D7] text-[1.63vh]`}>{contributor.author.login}</div>
                 </div>
                 {/* user distribution */}
-                <div className={`px-[1%] ${fontsizer2} text-[#B5C3DB]
+                <div className={`px-[1%] text-[1.63vh] text-[#B5C3DB]
                 flex flex-row align-center justify-center`} >
                     <div>{share}</div> 
                     <PencilIcon onClick={()=>setIsEditing(true)} className='w-[3vh] mx-[5%]  text-[#B5C3DB]'/>
@@ -63,19 +62,19 @@ const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setT
                     {/* user name */}
                     <div className='flex flex-row'>
                         <img src={contributor.author.avatar_url} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
-                        <div className={`text-[#D7D7D7] ${fontsizer2}`}>{contributor.author.login}</div>
+                        <div className={`text-[#D7D7D7] text-[1.63vh]`}>{contributor.author.login}</div>
                     </div>
                     {/* user distribution */}
-                    <div className={`px-[1%] ${fontsizer2} text-[#B5C3DB]
+                    <div className={`px-[1%] text-[1.63vh] text-[#B5C3DB]
                     flex flex-row align-center justify-center`} >
                         <div>{share}</div>
                         <XIcon onClick={()=>setIsEditing(false)} className='w-[3vh] mx-[5%] text-[#B5C3DB]'/>
                     </div>
                 </div>
                 <div className='flex flex-row align-center justify-between w-full'>
-                    <input type="number" name='newPercentage' className={`bg-[#121418] w-full py-[1%] px-[4%] ${fontsizer2} font-semibold rounded-l-md border-[#3A4E70] border border-r-0`} placeholder='Enter New %' value={newValue} onChange={(e)=>setNewValue(e.target.value)} />
+                    <input type="number" name='newPercentage' className={`bg-[#121418] w-full py-[1%] px-[4%] text-[1.63vh] font-semibold rounded-l-md border-[#3A4E70] border border-r-0`} placeholder='Enter New %' value={newValue} onChange={(e)=>setNewValue(e.target.value)} />
                     {/* user distribution */}
-                    <button onClick={handleEditSumbit} className={`${fontsizer2} px-[5%] rounded-sm bg-[#91A8ED]`} >Update</button>
+                    <button onClick={handleEditSumbit} className={`text-[1.63vh] px-[5%] rounded-sm bg-[#91A8ED]`} >Update</button>
                 </div>
             </div>
         )}

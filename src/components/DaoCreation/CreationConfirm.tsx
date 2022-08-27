@@ -37,29 +37,27 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
 
         if(storageData===[] || storageData==={} || storageData==='') return
 
-        const DistributionData = storageData.distribution
-        const data = Object.values(DistributionData).map((value:any)=>parseInt(value.replace('%','')))
+        const DistributionDataOld = storageData.distribution
+
+        const DistributionData = Object.entries(DistributionDataOld)
+        .sort(([,a]:any,[,b]:any) =>parseInt(b)-parseInt(a))
+        .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+
+        const data = Object.values(DistributionData).map((value:any)=>parseInt(value))
         const dataContributors = Object.keys(DistributionData);
 
-        let totalValue=0
+        // let totalValue=0
         if(storageData.distributionPercentage!==undefined){
             pieData[0] = 100 - storageData.distributionPercentage
             data.map((value:any)=>{
-                totalValue+=value
-                const relativeVal = (value/100)*storageData.distributionPercentage
-                pieData.push(relativeVal)
+                // totalValue+=value
+                pieData.push(value)
             })
-            if(totalValue===100){
-                pieData[0] += 0
-            }else if(totalValue<100){
-                pieData[0] += ((100-totalValue)/100)*storageData.distributionPercentage
-            }else if(totalValue>100){
-                pieData[0] -= ((totalValue-100)/100)*storageData.distributionPercentage
-            }
         }else{
             pieData[0] = 100
             data.map((value:any)=>{
-                totalValue+=value
+                // totalValue+=value
+                pieData[0]-=value
                 pieData.push(value)
             })
         }
@@ -69,8 +67,6 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
         setContriKeys(dataContributors)
     },[])
 
-    const fontsizer = 'text-[calc(98vh/54)]';
-    const fontsizer2 = 'text-[calc(98vh/60)]';
 
     const options = {
         plugins: {
@@ -100,13 +96,13 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
                 <div className='flex flex-row justify-start items-center w-full'>
                     <img src={fullData.tokenImgPreview} alt="token" className='w-[10vh] h-[10vh] mr-[4%] bg-white rounded-full' />
                     <div>
-                        <div className={`${fontsizer} font-semibold`}>{fullData.tokenName} token</div>
-                        <div className={`${fontsizer}`}>{fullData.tokenSymbol}</div>
+                        <div className={`text-[1.81vh] font-semibold`}>{fullData.tokenName} token</div>
+                        <div className={`text-[1.81vh]`}>{fullData.tokenSymbol}</div>
                     </div>
                 </div>
 
                 {/* config details */}
-                <div className={`flex flex-col justify-start items-center w-full mt-[10%] mb-[8%] ${fontsizer2}`}>
+                <div className={`flex flex-col justify-start items-center w-full mt-[10%] mb-[8%] text-[1.63vh]`}>
                     <div className='flex flex-row justify-center items-start w-full mb-[2%]' >
                         <div className='mr-[5%] w-[35%] text-right'>DAO Name</div>
                         <div className='w-[60%]'>{fullData.daoName}</div>
@@ -134,24 +130,35 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
                 </div>
 
                 {/* distribution details */}
-                <div className={`${fontsizer} font-semibold mb-[2%]`} >Token Distribution</div>
-                <div className='flex flex-row justify-center items-center w-full'>
+                <div className={`text-[1.81vh] font-semibold mb-[2%]`} >Token Distribution</div>
+                <div className='flex flex-row justify-center items-center w-full h-[38%]'>
                     <PieChart optionsPie={options} dataPie={data} />
-                    <div className='flex flex-col items-center justify-between w-[70%]'>
-                        {
+                    <div className='flex flex-col items-center justify-between w-[70%] h-full customScrollbar overflow-y-scroll'>
+                        {   
+                            <>
+                            <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`}>
+                                <div className='font-semibold'>{fullData.daoName} DAO</div>
+                                <div className='font-semibold'>
+                                    {fullData.distributionPercentage!==undefined ?
+                                    `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
+                                </div>
+                            </div>
+                            {
                             contriKeys.map((contriKey:any,index:number)=>{
                                 return (
-                                    <div className={`w-[90%] mt-[2%] ${fontsizer2} flex flex-row items-center justify-between`} key={index} >
+                                    <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
                                         <div className='font-semibold'>{contriKey}</div>
                                         <div className='font-semibold'>{fullData.distribution[`${contriKey}`]}</div>
                                     </div>
                                 )})
+                            }
+                            </>
                         }
                     </div>
                 </div>
             </div>
             {/* Submit Btn */}
-            <button className={`bg-[#91A8ED] w-full py-[2%] ${fontsizer2} font-semibold rounded-md`} >
+            <button className={`bg-[#91A8ED] w-full py-[2%] text-[1.63vh] font-semibold rounded-md`} >
                 Confirm DAO Creation
             </button>
         </div>
