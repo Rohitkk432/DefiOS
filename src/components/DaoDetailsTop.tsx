@@ -186,7 +186,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({}) => {
                 <div className='font-bold text-center
                 border border-white text-[2.5vh]
                 rounded-md py-[2.5%] my-[3%] w-full' >
-                    <span>1 APE = $0.005</span>
+                    <span>1 APE = $0.5</span>
                     <span className='text-green-500'> (+0.5%)</span>
                 </div>
             </div>

@@ -14,7 +14,7 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({}) => {
 
     return (
         <div className='w-[20%] h-full bg-[#191C21] flex flex-col justify-start items-center px-[1.5%] py-[1%] pt-[7%] relative text-white'>
-            <Link href='/'>
+            <Link href='/dashboard'>
                 <img src="/assets/images/defi-os-logo.png" className='h-[6vh] absolute top-[2.5vh] left-[6%]' />
             </Link>
             <img src={session?.user?.image || ''} className='h-[9vh] mb-[2vh] rounded-full' />

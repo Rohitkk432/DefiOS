@@ -9,10 +9,10 @@ import data from '../config/daodetails.json';
 // import { useRouter } from 'next/router'
 
 interface DaoDetailsBottomProps {
-
+    setPopupState: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({}) => {
+const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({setPopupState}) => {
     // const router = useRouter()
 
     return (
@@ -28,9 +28,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({}) => {
                     {/* create Dao btn */}
                     <button className='flex flex-row justify-center items-center h-[5vh] px-[1.5%] py-[1%] bg-[#91A8ED] rounded-md ml-[1%] text-[1.8vh] px-[5%] font-semibold'
                     onClick={()=>{
-                        // localStorage.removeItem('DaoCreationData')
-                        // localStorage.removeItem('distributionOk')
-                        // router.push('/creation/1')
+                        setPopupState('newIssue')
                     }}>
                         Create New Issue
                     </button>

@@ -5,11 +5,11 @@ import { XIcon } from '@heroicons/react/outline';
 import Tags from '../utils/Tags'
 import IssueState from '../utils/IssueState'
 
-interface CreateIssueProps {
-
+interface IssueRewardProps {
+    setPopupState: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CreateIssue: React.FC<CreateIssueProps> = ({}) => {
+const IssueReward: React.FC<IssueRewardProps> = ({setPopupState}) => {
     return (
         <div className='w-full h-screen fixed top-0 left-0 bg-[rgba(0,0,0,0.5)] z-20 
         flex items-center justify-center text-white' >
@@ -20,7 +20,7 @@ const CreateIssue: React.FC<CreateIssueProps> = ({}) => {
                 <div className='w-[66%] h-full flex flex-col justify-start items-start'>
                     <div className='flex flex-row items-center w-full flex-wrap text-[3.5vh] font-semibold' >
                         CLI flask run describes that uses --debug to enable debugger and reloader, but flask run does not have the -- debug option
-                        <IssueState issueState='open' />
+                        <IssueState issueState='closed' />
                     </div>
                     <div className='flex flex-row justify-between items-center w-full flex-wrap text-[2.5vh]' >
                         <div className='w-[45%] flex flex-row'>
@@ -55,8 +55,32 @@ const CreateIssue: React.FC<CreateIssueProps> = ({}) => {
 
                 </div>
                 <div className='w-[32%] h-full flex flex-col justify-start items-end'>
-                    <XIcon className='h-[4vh] mb-[4%]' />
-                    <div className='w-full h-full bg-gray-600' ></div>
+                    <XIcon className='h-[4vh] mb-[4%]' 
+                    onClick={()=>{
+                        setPopupState('none')
+                        localStorage.removeItem('popupState')
+                    }}/>
+                    <div className='w-full h-[91%] bg-gray-600 flex flex-col items-start justify-end 
+                    py-[4%] px-[3%] rounded-[1vh] text-[2.5vh]' >
+                        <img src="/assets/images/Reward-illustration.svg" className='h-[40%] mx-auto' />
+                        <div className='flex flex-row justify-center items-center border-2 border-[#91A8ED] w-full py-[2.5%] rounded-[1vh] mb-[3%] mt-[10%] text-[2.7vh]'>
+                            <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/ape.svg" className='w-[4.5vh] h-[4.5vh] mr-[3%]' />
+                            <div>50 APE ($25)</div>
+                        </div>
+                        <div className='flex flex-row w-full items-center mt-[2%]'>
+                            <div className='text-[2.5vh]'>Winning Author:</div>
+                            <div className='ml-[3%] text-[2vh]' >0x1465....1273</div>
+                        </div>
+                        <div className='flex flex-row w-full items-center mt-[2%] flex-wrap'>
+                            <div className='text-[2.5vh]'>Winning PR:</div>
+                            <div className='flex flex-row items-center'>
+                                <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.3vh] ml-[3%]' />
+                                <div className=' text-[2vh]'>/UserName/RepoName/pull/...</div>
+                            </div>
+                        </div>
+                        <button className='flex flex-row justify-center items-center bg-[#91A8ED] 
+                        w-full py-[2.5%] rounded-[1vh] mt-[10%] text-[2.7vh]'>🎉 Claim Reward 🎉</button>
+                    </div>
                 </div>
 
             </div>
@@ -64,4 +88,4 @@ const CreateIssue: React.FC<CreateIssueProps> = ({}) => {
     );
 }
 
-export default CreateIssue;
+export default IssueReward;
