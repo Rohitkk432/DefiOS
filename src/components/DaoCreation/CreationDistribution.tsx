@@ -30,7 +30,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
         if (dataInStorage===''||dataInStorage===[] || dataInStorage==={}) return;
         const repoName = dataInStorage.repoFullName;
         if (repoName==='') return; 
-        fetch(`http://localhost:3000/api/repo/contributors/${repoName}`)
+        fetch(`https://defi-os.com/api/repo/contributors/${repoName}`)
         .then(res => res.json())
         .then(data => {
             setTriggerToMain(triggerToMain+1);
