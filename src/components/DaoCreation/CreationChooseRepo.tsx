@@ -19,7 +19,7 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
     const [errorMsg,setErrorMsg] = useState(false);
 
     useEffect(() => {
-        fetch(`https://defi-os.com/api/getreposbyuser`).then(res => res.json()).then(data => {
+        fetch(`/api/getreposbyuser`).then(res => res.json()).then(data => {
             setRepos(data);
             setIsLoading(false);
         }).catch(err => {
