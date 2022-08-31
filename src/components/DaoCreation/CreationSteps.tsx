@@ -8,7 +8,7 @@ const CreationSteps: React.FC<CreationStepsProps> = ({step}) => {
 
     return (
         <div 
-        className='w-1/6 h-1/3 bg-[#121418] rounded-xl text-[#F8ECDE]'
+        className='w-1/6 h-1/3 bg-[#121418] rounded-xl text-[#F8ECDE] shadow-[0_0_4vh_0.5vh] shadow-gray-500/70'
         >
             <div className={`w-full  text-center text-[1.81vh] border-b border-[#9D9D9D] py-[5%] mb-[8%] font-semibold`} >DAO Creation Steps</div>
             <div className='flex flex-row items-center justify-start w-full'>

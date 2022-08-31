@@ -82,7 +82,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
 
     return (
         <div 
-        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center'
+        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center shadow-[0_0_4vh_0.5vh] shadow-gray-500/70'
         >
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* input feild */}

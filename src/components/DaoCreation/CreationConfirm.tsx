@@ -4,10 +4,6 @@ import {useState,useEffect} from 'react'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
-interface CreationConfirmRepoProps {
-
-}
-
 interface PieChartProps{
     dataPie: any;
     optionsPie: any;
@@ -23,7 +19,12 @@ const PieChart: React.FC<PieChartProps> = ({dataPie,optionsPie}) => {
     )
 }
 
-const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
+interface CreationConfirmRepoProps {
+    startCreation: boolean;
+    setStartCreation: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreation,startCreation}) => {
 
     const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
 
@@ -89,7 +90,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
 
     return (
         <div 
-        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center'
+        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center shadow-[0_0_4vh_0.5vh] shadow-gray-500/70'
         >
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* token details */}
@@ -158,7 +159,12 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({}) => {
                 </div>
             </div>
             {/* Submit Btn */}
-            <button className={`bg-[#91A8ED] w-full py-[2%] text-[1.63vh] font-semibold rounded-md`} >
+            <button className={`bg-[#91A8ED] w-full py-[2%] text-[1.63vh] font-semibold rounded-md`}
+            onClick={()=>{
+                if(!startCreation){
+                    setStartCreation(true)
+                }
+            }}>
                 Confirm DAO Creation
             </button>
         </div>

@@ -121,7 +121,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
 
     return (
         <div 
-        className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-center justify-between'
+        className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-center justify-between shadow-[0_0_4vh_0.5vh] shadow-gray-500/70'
         >   
             <div className={`w-[90%] text-[1.81vh] border-b border-[#9D9D9D] pb-[4%] pl-[1%] pt-[6%] text-left mb-[2%]`} >Initial Token Distribution</div>
             {(step>1)?(
