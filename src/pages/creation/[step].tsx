@@ -42,7 +42,7 @@ const Creation: React.FC<creationProps> = ({}) => {
 
     return (
         <div className='flex flex-row justify-center items-center w-screen h-screen bg-[#303C4A]'>
-            <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] rounded-2xl'>
+            <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] rounded-2xl z-0'>
                 <Link
                     href="/dashboard"
                 >

@@ -1,5 +1,5 @@
 import React from 'react'
-import {useState,useEffect} from 'react'
+import {useState,useEffect,useMemo} from 'react'
 import { useRouter } from 'next/router';
 import UserOptions from './UserOptions';
 import { InformationCircleIcon , SearchIcon , CheckIcon, PencilIcon } from '@heroicons/react/outline';
@@ -24,6 +24,20 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
     const [isLoading,setIsLoading]=useState(true);
 
     const [editDistribution,setEditDistribution] = useState(true);
+
+    //search logic
+    const [search, setSearch] = useState("");
+    const [triggerSearch,setTriggerSearch] = useState(0);
+    const contributorSearch = useMemo(() => {
+        if (search==="") return contributors;
+        setTriggerSearch(triggerSearch+1)
+        return contributors.filter((_contributor:any) => {
+            return (
+                _contributor.author.login.toLowerCase().includes(search.toLowerCase()) ||
+                _contributor.author.login === JSON.parse(localStorage.getItem('DaoCreationData')||'{}').repoFullName.split('/')[0]
+            );
+        });
+    }, [search,contributors]);
 
     useEffect(()=>{
         const dataInStorage = JSON.parse(localStorage.getItem('DaoCreationData')||'{}');
@@ -82,7 +96,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
 
     return (
         <div 
-        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center shadow-[0_0_4vh_0.5vh] shadow-gray-500/70'
+        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center customGradient'
         >
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* input feild */}
@@ -204,7 +218,8 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                 {/* Assign Distribution */}
                 {/* Search User */}
                 <div className='w-full relative mt-[3%]'>
-                    <input type="text" name='SearchUser' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search contributors by username' />
+                    <input type="text" name='SearchUser' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search contributors by username' value={search}
+                    onChange={(e) => setSearch(e.target.value)} />
                     <SearchIcon className='w-[5%] absolute top-[30%] right-[3%] text-[#3A4E70]' />
                 </div>
                 <div className='flex flex-col justify-start items-center h-[100%] w-full relative overflow-y-scroll overflow-x-hidden customScrollbar'>
@@ -224,11 +239,12 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                     </div>
 
                     {isLoading && <div className='m-auto'>Loading...</div>}
-                    {!isLoading && contributors.length > 0 && contributors.map((contributor:any, idx:any)=>{
+                    {!isLoading && contributorSearch.length > 0 && contributorSearch.map((contributor:any, idx:any)=>{
                         return (
                         <UserOptions contributor={contributor} key={idx}
                         triggerToMain={triggerToMain} 
-                        setTriggerToMain={setTriggerToMain} />
+                        setTriggerToMain={setTriggerToMain}
+                        triggerSearch={triggerSearch} />
                         )
                     })}
 

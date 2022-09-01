@@ -7,9 +7,10 @@ interface UserOptionsProps {
     contributor:any;
     triggerToMain:number;
     setTriggerToMain:React.Dispatch<React.SetStateAction<number>>;
+    triggerSearch:number;
 }
 
-const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setTriggerToMain}) => {
+const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setTriggerToMain,triggerSearch}) => {
 
 
     const [isEditing,setIsEditing] = useState(false);
@@ -20,7 +21,7 @@ const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setT
     useEffect(()=>{
         const data = JSON.parse(localStorage.getItem('DaoCreationData')||'{}');
         setShare(data.distribution[`${contributor.author.login}`]);
-    },[triggerToMain])
+    },[triggerToMain,triggerSearch])
 
     const handleEditSumbit = ()=>{
         if(newValue==="") return

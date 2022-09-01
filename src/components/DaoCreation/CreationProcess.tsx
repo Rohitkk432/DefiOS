@@ -41,7 +41,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
 
     return (
         <div 
-        className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-start justify-start pt-[1.5%] shadow-[0_0_4vh_0.5vh] shadow-gray-500/70'
+        className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-start justify-start pt-[1.5%] customGradient'
         >   
             {/* completed */}
             <div className='flex flex-row items-center justify-start w-full'>
