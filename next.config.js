@@ -11,6 +11,9 @@ module.exports = withBundleAnalyzer({
   // So, the source code is "basePath-ready".
   // You can remove `basePath` if you don't need it.
   reactStrictMode: true,
+  env: {
+    DEFIOS_CONTRACT_ADDRESS: process.env.DEFIOS_CONTRACT_ADDRESS,
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.

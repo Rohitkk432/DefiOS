@@ -7,9 +7,10 @@ interface UserOptionsProps {
     contributor:any;
     triggerToMain:number;
     setTriggerToMain:React.Dispatch<React.SetStateAction<number>>;
+    triggerSearch:number;
 }
 
-const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setTriggerToMain}) => {
+const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setTriggerToMain,triggerSearch}) => {
 
 
     const [isEditing,setIsEditing] = useState(false);
@@ -19,13 +20,30 @@ const UserOptions: React.FC<UserOptionsProps> = ({contributor,triggerToMain,setT
 
     useEffect(()=>{
         const data = JSON.parse(localStorage.getItem('DaoCreationData')||'{}');
-        setShare(data.distribution[`${contributor.author.login}`]);
-    },[triggerToMain])
+        setShare((Math.round(parseFloat(data.distribution[`${contributor.author.login}`])*100)/100)+"%");
+    },[triggerToMain,triggerSearch])
 
     const handleEditSumbit = ()=>{
         if(newValue==="") return
         const data = JSON.parse(localStorage.getItem('DaoCreationData')||'{}');
-        data.distribution[`${contributor.author.login}`] = Math.floor(parseInt(newValue)) + '%'
+
+        const oldVal = parseFloat(data.distribution[`${contributor.author.login}`]);
+        const newVal = parseFloat(newValue);
+
+        const percentageLeft = parseFloat(data.distributionPercentage);
+
+        const dataContributors = Object.keys(data.distribution);
+
+        dataContributors.forEach((contri:any)=>{
+            if(contri===contributor.author.login){
+                data.distribution[`${contri}`] = newVal + '%';
+            }else{
+                data.distribution[`${contri}`] = parseFloat(data.distribution[`${contri}`])*(1-(newVal-oldVal)/(percentageLeft-oldVal));
+                data.distribution[`${contri}`]+= '%';
+            }
+        })
+
+        // data.distribution[`${contributor.author.login}`] = Math.floor(parseInt(newValue)) + '%'
         localStorage.setItem('DaoCreationData',JSON.stringify(data))
         if(triggerToMain>=1){
             setTriggerToMain(triggerToMain+1);

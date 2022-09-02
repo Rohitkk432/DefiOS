@@ -58,7 +58,7 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
                     <div className='flex flex-row justify-center items-center w-full text-[#1D242D] text-[2vh] font-semibold'>
                         
                         {!session && 
-                        <button onClick={()=>signIn('github',{callbackUrl: `${window.location.origin}/creation/1`})} className='bg-[#D1D2D2] py-[2.5%] w-[27%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
+                        <button onClick={()=>signIn('github',{callbackUrl: `${window.location.origin}/dashboard`})} className='bg-[#D1D2D2] py-[2.5%] w-[27%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
                             <div>Get Started</div>
                             <FontAwesomeIcon icon={faArrowRight} className='inline h-[2vh] ml-[3%]'/>
                         </button>

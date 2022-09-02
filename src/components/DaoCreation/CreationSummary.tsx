@@ -45,27 +45,27 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
         const DistributionDataOld = storageData.distribution
 
         const DistributionData = Object.entries(DistributionDataOld)
-            .sort(([,a]:any,[,b]:any) =>parseInt(b)-parseInt(a))
+            .sort(([,a]:any,[,b]:any) =>parseFloat(b)-parseFloat(a))
             .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
 
-        const data = Object.values(DistributionData).map((value:any)=>parseInt(value))
+        const data = Object.values(DistributionData).map((value:any)=>parseFloat(value))
         const dataContributors = Object.keys(DistributionData);
 
         let totalValue=0
         if(storageData.distributionPercentage!==undefined){
-            pieData[0] = 100 - parseInt(storageData.distributionPercentage)
+            pieData[0] = 100 - parseFloat(storageData.distributionPercentage)
             data.map((value:any)=>{
                 totalValue+=value
                 pieData.push(value)
             })
-            if(totalValue===parseInt(storageData.distributionPercentage)){
+            if(Math.round(totalValue*1000000)/1000000===parseFloat(storageData.distributionPercentage)){
                 pieData[0] += 0
                 localStorage.setItem('distributionOk','true');
-            }else if(totalValue<parseInt(storageData.distributionPercentage)){
-                pieData[0] += (parseInt(storageData.distributionPercentage) - totalValue)
+            }else if(Math.round(totalValue*1000000)/1000000<parseFloat(storageData.distributionPercentage)){
+                pieData[0] += (parseFloat(storageData.distributionPercentage) - totalValue)
                 localStorage.setItem('distributionOk','false');
-            }else if(totalValue>parseInt(storageData.distributionPercentage)){
-                pieData[0] -= (totalValue - parseInt(storageData.distributionPercentage))
+            }else if(Math.round(totalValue*1000000)/1000000>parseFloat(storageData.distributionPercentage)){
+                pieData[0] -= (totalValue - parseFloat(storageData.distributionPercentage))
                 localStorage.setItem('distributionOk','false');
             }
         }else{
@@ -108,6 +108,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
             },
         ],
     };
+    
     const data2 = {
         datasets: [
             {
@@ -121,7 +122,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
 
     return (
         <div 
-        className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-center justify-between'
+        className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-center justify-between customGradient'
         >   
             <div className={`w-[90%] text-[1.81vh] border-b border-[#9D9D9D] pb-[4%] pl-[1%] pt-[6%] text-left mb-[2%]`} >Initial Token Distribution</div>
             {(step>1)?(
@@ -133,7 +134,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                             <div className='font-semibold'>100%</div>
                         </div>
                     ):(
-                        <div className='w-[100%] h-[15vh] flex flex-col items-center justify-between  customScrollbar overflow-y-scroll'>
+                        <div className='w-[100%] h-[15vh] flex flex-col items-center justify-start customScrollbar overflow-y-scroll'>
                             <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
                                 <div className='font-semibold' >{fullData.daoName} DAO</div>
                                 <div className='font-semibold'>
@@ -146,7 +147,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                                 return (
                                     <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
                                         <div className='font-semibold' >{contriKey}</div>
-                                        <div className='font-semibold'>{fullData.distribution[`${contriKey}`]} </div>
+                                        <div className='font-semibold'>{Math.round(parseFloat(fullData.distribution[`${contriKey}`])*100)/100 + "%"} </div>
                                     </div>
                                 )})
                             }

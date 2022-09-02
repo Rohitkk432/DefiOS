@@ -12,9 +12,10 @@ import data from '../config/daotable.json';
 interface DashboardMainProps {
     currentAccount: string | undefined
     network: string | undefined
+    chainId : number | undefined
 }
 
-const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network}) => {
+const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,chainId}) => {
     const router = useRouter()
 
     const [enabled, setEnabled] = useState(false)
@@ -25,7 +26,9 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network}) =
             <div className='w-full h-[6%] flex flex-row justify-end items-start'>
                 <div className='flex flex-row justify-center items-center h-full px-[1.5%] py-[1%] bg-[#262B36] rounded-md ml-[1%]'>
                     {/* <img src="https://res.cloudinary.com/rohitkk432/image/upload/v1661271366/metamaskAccount_j0e9ij.svg" className='h-[3.5vh]  mr-[5%]' /> */}
-                    <div className='text-[2.2vh]'>{network}</div>
+                    <div className='text-[2.2vh]'>
+                        {network!=="unknown"?network:chainId===245022926?'remote proxy — solana devnet':'unknown'}
+                    </div>
                 </div>
                 <div className='flex flex-row justify-center items-center h-full px-[1.5%] py-[1%] bg-[#262B36] rounded-md ml-[1%]'>
                     <img src="https://res.cloudinary.com/rohitkk432/image/upload/v1661271366/metamaskAccount_j0e9ij.svg" className='h-[3.5vh]  mr-[5%]' />

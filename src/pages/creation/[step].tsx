@@ -27,16 +27,22 @@ const Creation: React.FC<creationProps> = ({}) => {
     //triggers
     const [triggerToMain,setTriggerToMain] = useState(1);
     const [triggerToSummary,setTriggerToSummary] = useState(1);
+
+    const [startCreation,setStartCreation] = useState(false);
+    const [creationStarter,setCreationStarter] = useState(false);   
     //triggering mechanism
     useEffect(() => {
         if(triggerToMain>1){
             setTriggerToSummary(triggerToSummary+1);
         }
-    },[triggerToMain]);
+        if(!creationStarter && startCreation){
+            setCreationStarter(true);
+        }
+    },[triggerToMain,startCreation]);
 
     return (
         <div className='flex flex-row justify-center items-center w-screen h-screen bg-[#303C4A]'>
-            <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] rounded-2xl'>
+            <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] rounded-2xl z-0'>
                 <Link
                     href="/dashboard"
                 >
@@ -54,7 +60,9 @@ const Creation: React.FC<creationProps> = ({}) => {
                 triggerToMain={triggerToMain} 
                 setTriggerToMain={setTriggerToMain} />
                 :(Number(step)===4)?
-                <CreationConfirm />
+                <CreationConfirm
+                startCreation={startCreation}
+                setStartCreation={setStartCreation} />
                 :null
                 }
 
@@ -62,7 +70,7 @@ const Creation: React.FC<creationProps> = ({}) => {
                 <CreationSummary step={Number(step)} 
                 triggerToSummary={triggerToSummary} 
                 setTriggerToSummary={setTriggerToSummary} />
-                :<CreationProcess/>
+                :<CreationProcess creationStarter={creationStarter} />
                 }
             </div>
         </div>

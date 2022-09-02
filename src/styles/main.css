@@ -125,3 +125,22 @@ input::-webkit-inner-spin-button {
   border-radius: 2px;
   -webkit-box-shadow: inset 0 0 6px rgba(96, 96, 96, 0.5);
 }
+
+.customGradient{
+  background: #121418;
+  position: relative;
+}
+.customGradient::after{
+  content: "";
+  position: absolute;
+  top: -1vh;
+  right: -2vh;
+  bottom: -1vh;
+  left: -2vh;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(closest-side at 66.7%, #A891ED 100%, transparent 0),
+    radial-gradient(closest-side at 33.3%, #91A8ED 100%, transparent 0);
+  filter: blur(15vh);
+  opacity: .45;
+}
