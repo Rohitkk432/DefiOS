@@ -139,8 +139,8 @@ input::-webkit-inner-spin-button {
   left: -2vh;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(closest-side at 66.7%, #e300ff 100%, transparent 0),
-    radial-gradient(closest-side at 33.3%, #39d0d8 100%, transparent 0);
+  background: radial-gradient(closest-side at 66.7%, #A891ED 100%, transparent 0),
+    radial-gradient(closest-side at 33.3%, #91A8ED 100%, transparent 0);
   filter: blur(15vh);
   opacity: .45;
 }

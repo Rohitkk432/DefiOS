@@ -134,7 +134,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                 <div className={`text-[1.81vh] font-semibold mb-[2%]`} >Token Distribution</div>
                 <div className='flex flex-row justify-center items-center w-full h-[38%]'>
                     <PieChart optionsPie={options} dataPie={data} />
-                    <div className='flex flex-col items-center justify-between w-[70%] h-full customScrollbar overflow-y-scroll'>
+                    <div className='flex flex-col items-center justify-start w-[70%] h-full customScrollbar overflow-y-scroll'>
                         {   
                             <>
                             <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`}>
@@ -149,7 +149,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                                 return (
                                     <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
                                         <div className='font-semibold'>{contriKey}</div>
-                                        <div className='font-semibold'>{fullData.distribution[`${contriKey}`]}</div>
+                                        <div className='font-semibold'>{Math.round(parseFloat(fullData.distribution[`${contriKey}`])*100)/100 + "%"}</div>
                                     </div>
                                 )})
                             }

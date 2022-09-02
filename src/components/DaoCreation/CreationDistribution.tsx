@@ -1,5 +1,7 @@
 import React from 'react'
 import {useState,useEffect,useMemo} from 'react'
+import {ethers} from 'ethers'
+
 import { useRouter } from 'next/router';
 import UserOptions from './UserOptions';
 import { InformationCircleIcon , SearchIcon , CheckIcon, PencilIcon } from '@heroicons/react/outline';
@@ -10,6 +12,8 @@ interface CreationDistributionProps {
     triggerToMain:number;
     setTriggerToMain:React.Dispatch<React.SetStateAction<number>>;
 }
+
+declare let window:any
 
 const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMain,setTriggerToMain}) => {
     const router = useRouter();
@@ -92,6 +96,33 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
         const data = {...oldData,...newData}
         localStorage.setItem('DaoCreationData',JSON.stringify(data))
         router.push('/creation/4');
+    }
+
+    const AddNeonNetwork = async() =>{
+        const chainId = 245022926 // remote proxy — solana devnet
+        if (window.ethereum.networkVersion !== chainId) {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: ethers.utils.hexValue(chainId)}]
+                });
+            }   catch (err:any) {
+                  // This error code indicates that the chain has not been added to MetaMask
+                if (err.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [
+                            {
+                                chainName: 'remote proxy — solana devnet',
+                                chainId: ethers.utils.hexValue(chainId),
+                                nativeCurrency: { name: 'NEON', decimals: 18, symbol: 'NEON' },
+                                rpcUrls: ['https://proxy.devnet.neonlabs.org/solana']
+                            }
+                        ]
+                    });
+                }
+            }
+        }
     }
 
     return (
@@ -210,9 +241,9 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                             Neon Testnet
                         </div>
                     </div>
-                    <div className='w-[30%] text-[#A7B9FC]' >
+                    <button onClick={AddNeonNetwork}  className='w-[30%] text-[#A7B9FC]' >
                         + Add Network
-                    </div>
+                    </button>
                 </div>
 
                 {/* Assign Distribution */}

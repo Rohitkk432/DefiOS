@@ -1,6 +1,6 @@
 export const CodeContributorStats = (data:any,distributionPercentage:any) => {
     const newData:any = {}
-    const percentage = parseInt(distributionPercentage)
+    const percentage = parseFloat(distributionPercentage)
 
     let totalCode = 0
     for (let i=0 ; i<data.length ; i++) {
@@ -14,7 +14,7 @@ export const CodeContributorStats = (data:any,distributionPercentage:any) => {
         totalCode += adds+deletes
     }
     for (let i=0 ; i<data.length ; i++) {
-        newData[data[i].author.login] = Math.floor((newData[data[i].author.login]/totalCode)*percentage)+'%'
+        newData[data[i].author.login] = ((newData[data[i].author.login]/totalCode)*percentage)+'%'
     }
     return newData;
 }

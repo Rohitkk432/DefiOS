@@ -16,6 +16,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
 
     const [currentAccount, setCurrentAccount] = useState<string | undefined>()
     const [network, setNetwork] = useState<string | undefined>()
+    const [chainId, setChainId] = useState<number | undefined>()
 
     useEffect(() => {
         if(!window.ethereum){
@@ -59,8 +60,8 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         .catch((e)=>console.log(e))
 
         provider.getNetwork().then(network => {
-            console.log(network)
             setNetwork(network.name)
+            setChainId(network.chainId)
         }).catch(err => {
             console.log(err)
         })
@@ -75,7 +76,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
     return (
         <div className='w-screen h-screen bg-[#303C4A] flex flex-row justify-start items-start'>
             <DashboardMenu/>
-            <DashboardMain currentAccount={currentAccount} network={network}/>
+            <DashboardMain currentAccount={currentAccount} network={network} chainId={chainId}/>
         </div>
     );
 }
