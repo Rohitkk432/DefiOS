@@ -39,7 +39,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
         const pieData=[100]
         const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
 
-        if(storageData==={}) return
+        if(storageData==='') return
         if(storageData.distribution===undefined) return
 
         const DistributionDataOld = storageData.distribution
@@ -158,7 +158,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
             }
             <div className='pb-[6%] mt-[2%] text-center' >
                 <div className={`text-[1.63vh] font-bold`} >Total token supply <InformationCircleIcon className='w-[6%] h-[6%] inline'/></div>
-                <div className='text-[1.81vh]' >100M Tokens</div>
+                <div className='text-[1.81vh]' >10M Tokens</div>
             </div>
         </div>
     );

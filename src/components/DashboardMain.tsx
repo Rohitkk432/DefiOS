@@ -70,14 +70,14 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                                 {
                                     enabled ? (
                                         <div className='flex flex-row justify-end items-center w-full h-full px-[5%]'>
-                                            <div className='text-[2vh] mx-[5%] font-semibold'>My DAOs</div>
+                                            <div className='text-[1.7vh] mx-[5%] font-semibold'>My DAOs</div>
                                             <UserCircleIcon className='h-[3.5vh]' />
                                         </div>
                                     ) : (
                                         <div className='flex flex-row justify-start items-center w-full h-full px-[5%]'>  
                                             <div></div>
                                             <GlobeAltIcon className='h-[3.5vh]' />
-                                            <div className='text-[2vh] mx-[5%] font-semibold'>Global DAOs</div>
+                                            <div className='text-[1.7vh] mx-[5%] font-semibold'>Global DAOs</div>
                                         </div>
                                     )
                                 }
@@ -88,7 +88,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                     </div>
                 </div>
 
-                <div className='w-full h-[3vh] flex flex-row justify-start items-center mt-[2%] mb-[0.5%] pl-[1%] text-[#CACACA] text-[1.7vh] pr-[1%]'>
+                <div className='w-full h-[3vh] flex flex-row justify-start items-center mt-[2%] mb-[0.5%] pl-[1%] text-[#CACACA] text-[1.5vh] pr-[1%]'>
                     <div className='w-[18%] h-full mx-[0.5%]'>DAO name</div>
                     <div className='w-[20%] h-full mx-[0.5%]'>Repository</div>
                     <div className='w-[10%] h-full mx-[0.5%]'>Role</div>
