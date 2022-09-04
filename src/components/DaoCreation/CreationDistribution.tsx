@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import UserOptions from './UserOptions';
 import { InformationCircleIcon , SearchIcon , CheckIcon, PencilIcon } from '@heroicons/react/outline';
 
-import { CodeContributorStats,OptionRepoOwner } from '../../utils/contributorStats';
+import { CodeContributorStats,OptionRepoOwner,CodeDurationStats } from '../../utils/contributorStats';
 
 interface CreationDistributionProps {
     triggerToMain:number;
@@ -45,7 +45,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
 
     useEffect(()=>{
         const dataInStorage = JSON.parse(localStorage.getItem('DaoCreationData')||'{}');
-        if (dataInStorage===''||dataInStorage===[] || dataInStorage==={}) return;
+        if (dataInStorage==='') return;
         const repoName = dataInStorage.repoFullName;
         if (repoName==='') return; 
         fetch(`/api/repo/contributors/${repoName}`)
@@ -81,6 +81,14 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
     const AlgoCode = ()=>{
         const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
         const newData = CodeContributorStats(contributors,distributionPercentage);
+        oldData.distribution = newData;
+        localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
+        setTriggerToMain(triggerToMain+1);
+    }
+
+    const AlgoDuration = ()=>{
+        const oldData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
+        const newData = CodeDurationStats(contributors,distributionPercentage);
         oldData.distribution = newData;
         localStorage.setItem('DaoCreationData',JSON.stringify(oldData));
         setTriggerToMain(triggerToMain+1);
@@ -207,6 +215,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         <input type="radio" name="TokenAlgo" className='peer absolute opacity-0 w-full h-full cursor-pointer' value='By duration of project involvement ( compute intensive )' 
                         onChange={(e)=>{
                             if(e.target.checked){
+                                AlgoDuration();
                                 setAlgorithm(e.target.value);
                             }
                         }} />

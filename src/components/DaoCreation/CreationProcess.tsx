@@ -13,9 +13,10 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
 
     const {data:session} = useSession()
 
-    const [processStep, setProcessStep] = useState(0)
+    const [processStep, setProcessStep] = useState(-1)
 
     const process1 = async () => {
+        setProcessStep(0);
         const github_uid = session?.user?.image?.split('/')[4]?.split("?")[0] 
         const requestOptions = {
             method: 'POST',
@@ -34,7 +35,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
     }
 
     useEffect(() => {
-        if(session && creationStarter && processStep === 0){
+        if(session && creationStarter && processStep === -1){
             process1();
         }
     } ,[creationStarter,processStep])
