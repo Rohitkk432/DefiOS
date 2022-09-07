@@ -13,6 +13,7 @@ import CreationChooseToken from '../../components/DaoCreation/CreationChooseToke
 import CreationDistribution from '../../components/DaoCreation/CreationDistribution';
 import CreationConfirm from '../../components/DaoCreation/CreationConfirm';
 
+
 import { XIcon } from '@heroicons/react/outline';
 
 interface creationProps {

@@ -5,8 +5,13 @@ import { Listbox, Transition } from '@headlessui/react'
 import Tags from '../utils/Tags'
 import { XIcon } from '@heroicons/react/outline'
 
+import {ethers} from 'ethers'
+declare let window:any
+import DaoAbi from "../ContractFunctions/DaoABI.json"
+
 interface NewIssueProps {
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
+    DaoInfo: any;
 }
 
 interface CreateTagProps {
@@ -48,9 +53,44 @@ const CreateTag: React.FC<CreateTagProps> = ({allTags,setAllTags}) => {
     )
 }
 
-const NewIssue: React.FC<NewIssueProps> = ({setPopupState}) => {
+const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
 
     const [allTags , setAllTags] = useState<string[]>([])
+
+    const [issueTitle, setIssueTitle] = useState('')
+    const [issueBody, setIssueBody] = useState('')
+
+    const createNewIssue = async () => {
+        const user = await fetch(`https://api.github.com/user/${DaoInfo.metadata.partners[0]}`).then(res=>res.json()).catch(err=>console.log(err))
+
+        const response = await fetch('/api/issue/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: issueTitle,
+                body: issueBody,
+                labels: allTags,
+                owner: user.login,
+                repo: DaoInfo.metadata.repoName
+            })
+        })
+        const issueOutput = await response.json()
+        // console.log(issueOutput.data.html_url)
+
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
+
+        let tx = await DaoContract.createIssue(issueOutput.data.html_url,0,{gasLimit: 25000})
+        let receipt = await tx.wait()
+
+        console.log(receipt)
+
+        setPopupState('none')
+    }
     
     return (
         <div className='w-full h-screen fixed top-0 left-0 bg-[rgba(0,0,0,0.5)] z-20 
@@ -67,7 +107,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState}) => {
                         }}/>
                     </div>
                     
-                    <input name='PRSearch' type="text" className='bg-[#262B36] w-full py-[1.5%] px-[2%] text-[2vh] text-white font-semibold rounded-md border-[#3A4E70] border' placeholder='Enter Issue Title' />                    
+                    <input name='PRSearch' type="text" className='bg-[#262B36] w-full py-[1.5%] px-[2%] text-[2vh] text-white font-semibold rounded-md border-[#3A4E70] border' placeholder='Enter Issue Title' value={issueTitle} onChange={(e)=>setIssueTitle(e.target.value)}/>                    
                     <div className='flex flex-row items-center w-full flex-wrap mt-[2%]' >
                         <div className='text-[2.5vh] mr-[1%]' >Issue Label :</div> 
                         {
@@ -80,10 +120,10 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState}) => {
 
                     <textarea className='w-full h-full overflow-y-scroll border border-white 
                     p-[2.2%] mt-[4%] rounded-[2vh] customScrollbar text-[2.3vh] bg-[#262B36] resize-none'
-                    placeholder='Enter Issue Description'></textarea>
+                    placeholder='Enter Issue Description' value={issueBody} onChange={(e)=>setIssueBody(e.target.value)} ></textarea>
 
                     <div className='flex flex-row justify-center items-start w-full mt-[4%]'>
-                        <button className='flex flex-row justify-center items-center bg-[#91A8ED] 
+                        <button onClick={createNewIssue} className='flex flex-row justify-center items-center bg-[#91A8ED] 
                         w-[40%] py-[1.5%] rounded-[1vh] text-[2.7vh]'>Create Issue</button>
                     </div>
                 </div>

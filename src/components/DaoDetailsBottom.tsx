@@ -6,18 +6,17 @@ import DaoDetailsTop from './DaoDetailsTop'
 
 import data from '../config/daodetails.json';
 
-// import { useRouter } from 'next/router'
 
 interface DaoDetailsBottomProps {
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
+    DaoInfo:any;
 }
 
-const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({setPopupState}) => {
-    // const router = useRouter()
+const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({setPopupState,DaoInfo}) => {
 
     return (
         <div className='w-[80%] h-full flex flex-col justify-between items-end px-[1%] py-[1%] relative text-white overflow-hidden'>
-            <DaoDetailsTop/>
+            <DaoDetailsTop DaoInfo={DaoInfo} />
             <div className='w-full h-[50%] px-[1.5%] py-[1.5%] bg-[#262B36] rounded-lg'>
                 <div className='w-full flex flex-row justify-between items-center' >
                     {/* Search bar */}

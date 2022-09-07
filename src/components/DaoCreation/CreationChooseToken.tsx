@@ -5,6 +5,8 @@ import {useRouter} from 'next/router'
 
 import { PhotographIcon,XIcon } from '@heroicons/react/outline';
 
+declare let Buffer:any
+
 interface CreationChooseTokenProps {
 
 }
@@ -21,13 +23,28 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
 
     const [errorMsg,setErrorMsg] = useState('');
 
+    const getHash = async()=>{
+        const formData = new FormData();
+        formData.append('file',tokenImgFile);
+        const ipfsRes = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${process.env.PINATA_JWT}`
+            },
+            body: formData
+        }).then(res=>res.json())
+        .catch(err=>console.log(err))
+
+        return ipfsRes.IpfsHash
+    }
+
     useEffect(()=>{
         if (!tokenImgFile) {
             setTokenImgFile(undefined)
             setTokenImgPreview('')
             return
         }
-
+        
         const objectUrl = URL.createObjectURL(tokenImgFile)
         setTokenImgPreview(objectUrl)
 
@@ -35,14 +52,16 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
         // return () => URL.revokeObjectURL(objectUrl)
     },[tokenImgFile])
 
-    const submitPage = ()=>{
+    const submitPage = async()=>{
+        const imgHash = await getHash();
         const dataBefore = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
         const dataAdd = {
             "daoName": DaoName,
             "tokenName": tokenName,
             "tokenSymbol": tokenSymbol,
             "tokenImgFile": tokenImgFile,
-            "tokenImgPreview":tokenImgPreview,
+            "tokenImgIpfsURL":`https://gateway.pinata.cloud/ipfs/${imgHash}`,
+            "tokenImgIpfsHash":imgHash,
         }
         const data = {...dataBefore,...dataAdd}
         localStorage.setItem('DaoCreationData',JSON.stringify(data))

@@ -7,6 +7,7 @@ import IssueState from '../utils/IssueState'
 
 interface IssueRewardProps {
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
+    DaoInfo: any;
 }
 
 const IssueReward: React.FC<IssueRewardProps> = ({setPopupState}) => {

@@ -13,6 +13,7 @@ module.exports = withBundleAnalyzer({
   reactStrictMode: true,
   env: {
     DEFIOS_CONTRACT_ADDRESS: process.env.DEFIOS_CONTRACT_ADDRESS,
+    PINATA_JWT: process.env.PINATA_JWT,
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if

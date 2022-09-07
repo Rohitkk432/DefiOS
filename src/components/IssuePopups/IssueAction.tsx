@@ -10,6 +10,7 @@ import IssueState from '../utils/IssueState'
 
 interface IssueActionProps {
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
+    DaoInfo: any;
 }
 
 interface PieChartProps{

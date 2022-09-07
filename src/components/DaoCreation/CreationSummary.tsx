@@ -136,7 +136,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                     ):(
                         <div className='w-[100%] h-[15vh] flex flex-col items-center justify-start customScrollbar overflow-y-scroll'>
                             <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
-                                <div className='font-semibold' >{fullData.daoName} DAO</div>
+                                <div className={`font-semibold pieDataText1`} >{fullData.daoName} DAO</div>
                                 <div className='font-semibold'>
                                     {fullData.distributionPercentage!==undefined ?
                                     `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
@@ -146,7 +146,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                             contriKeys.map((contriKey:any,index:number)=>{
                                 return (
                                     <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
-                                        <div className='font-semibold' >{contriKey}</div>
+                                        <div className={`font-semibold pieDataText${index+2}`} >{contriKey}</div>
                                         <div className='font-semibold'>{Math.round(parseFloat(fullData.distribution[`${contriKey}`])*100)/100 + "%"} </div>
                                     </div>
                                 )})

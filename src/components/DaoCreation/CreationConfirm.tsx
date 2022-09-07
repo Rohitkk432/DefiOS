@@ -36,7 +36,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
         const pieData=[100]
         const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
 
-        if(storageData===[] || storageData==={} || storageData==='') return
+        if(storageData==='') return
 
         const DistributionDataOld = storageData.distribution
 
@@ -95,7 +95,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* token details */}
                 <div className='flex flex-row justify-start items-center w-full'>
-                    <img src={fullData.tokenImgPreview} alt="token" className='w-[10vh] h-[10vh] mr-[4%] bg-white rounded-full' />
+                    <img src={fullData.tokenImgIpfsURL} alt="token" className='w-[10vh] h-[10vh] mr-[4%] bg-white rounded-full' />
                     <div>
                         <div className={`text-[1.81vh] font-semibold`}>{fullData.tokenName} token</div>
                         <div className={`text-[1.81vh]`}>{fullData.tokenSymbol}</div>
@@ -138,7 +138,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                         {   
                             <>
                             <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`}>
-                                <div className='font-semibold'>{fullData.daoName} DAO</div>
+                                <div className={`font-semibold pieDataText1`}>{fullData.daoName} DAO</div>
                                 <div className='font-semibold'>
                                     {fullData.distributionPercentage!==undefined ?
                                     `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
@@ -148,7 +148,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                             contriKeys.map((contriKey:any,index:number)=>{
                                 return (
                                     <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
-                                        <div className='font-semibold'>{contriKey}</div>
+                                        <div className={`font-semibold pieDataText${index+2}`}>{contriKey}</div>
                                         <div className='font-semibold'>{Math.round(parseFloat(fullData.distribution[`${contriKey}`])*100)/100 + "%"}</div>
                                     </div>
                                 )})

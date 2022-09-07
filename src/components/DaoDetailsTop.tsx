@@ -1,5 +1,7 @@
 import React from 'react'
 
+import {timeAgo} from '../utils/timeUtils'
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -128,44 +130,48 @@ const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = () => {
 }
 
 interface DaoDetailsTopProps {
-
+    DaoInfo: any;
 }
 
-const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({}) => {
+const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
+
     return (
         <div className='w-full h-[48%] flex flex-row justify-between items-center'>
             <div className='w-[30%] h-full rounded-md bg-[#191C21] flex flex-col justify-center items-start px-[2%]'>
                 <div className='text-[3vh] font-semibold mb-[10%] flex flex-col items-center w-full' >
-                    <img src="https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/ape.svg" alt="" className='w-[10vh] h-[10vh] mb-[1%]' />
-                    <div>Ape Hackers Pro X</div>
+                    <img src={DaoInfo!==undefined?DaoInfo.metadata.tokenImg:null} alt="" className='rounded-full w-[10vh] h-[10vh] mb-[1%]' />
+                    <div>{DaoInfo!==undefined?DaoInfo.metadata.daoName:null}</div>
                 </div>
                 <div className='w-full flex flex-col justify-between items-start text-[2vh]' >
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Token : </div>
-                        <div className='text-gray-400'>Apes (APE)</div>
+                        <div className='text-gray-400'>{DaoInfo!==undefined?`${DaoInfo.metadata.tokenName} (${DaoInfo.metadata.tokenSymbol})`:null}</div>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Contract :</div>
-                        <div className='text-gray-400'>0x0091...e3f3</div>
-                    </div>
-                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
-                        <div >Repository : </div>
-                        <div className='text-gray-400 flex flex-row justify-end w-[70%]'>
-                            <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh] mr-[3%]' />
-                            <div>/ape-hackers</div>
+                        <div className='text-gray-400'>
+                            {DaoInfo!==undefined?(DaoInfo.DAO.slice(0,5)+"..."+DaoInfo.DAO.slice(37,42)):null}
                         </div>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
+                        <div >Repository : </div>
+                        <a href={DaoInfo!==undefined?DaoInfo.metadata.repoUrl:null} target="_blank" className='text-gray-400 flex flex-row justify-end w-[70%]'>
+                            <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh] mr-[3%]' />
+                            <div>/{DaoInfo!==undefined?DaoInfo.metadata.repoName:null}</div>
+                        </a>
+                    </div>
+                    <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Created by :</div>
-                        <div className='text-gray-400'>0x1482...50d8</div>
+                        <div className='text-gray-400'>{DaoInfo!==undefined?(DaoInfo.owner.slice(0,5)+"..."+DaoInfo.owner.slice(37,42)):null}</div>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Created at :</div>
-                        <div className='text-gray-400'>1 month ago</div>
+                        <div className='text-gray-400'>{DaoInfo!==undefined?timeAgo(DaoInfo.metadata.createdAt):null} ago</div>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Chain :</div>
-                        <div className='text-gray-400'>Neon Testnet</div>
+                        <div className='text-gray-400'>
+                            {DaoInfo!==undefined?DaoInfo.metadata.chain:null}</div>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Top Holder :</div>
@@ -186,8 +192,9 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({}) => {
                 <div className='font-bold text-center
                 border border-white text-[2.5vh]
                 rounded-md py-[2.5%] my-[3%] w-full' >
-                    <span>1 APE = $0.5</span>
-                    <span className='text-green-500'> (+0.5%)</span>
+                    {/* <span>1 APE = $0.5</span>
+                    <span className='text-green-500'> (+0.5%)</span> */}
+                    <div>{DaoInfo!==undefined?DaoInfo.metadata.tokenSymbol:null}</div>
                 </div>
             </div>
             <div className='w-[69%] text-center h-full rounded-md  p-[1.5%] bg-[#191C21]'>

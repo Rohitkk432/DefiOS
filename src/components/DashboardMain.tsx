@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 import DaoMetadata from './DaoMetadata'
@@ -7,7 +7,11 @@ import DaoMetadata from './DaoMetadata'
 import {SearchIcon , GlobeAltIcon , UserCircleIcon} from '@heroicons/react/outline'
 import { Switch } from '@headlessui/react'
 
-import data from '../config/daotable.json';
+// import data from '../config/daotable.json';
+
+import {ethers} from 'ethers'
+declare let window:any
+import contractAbi from "./ContractFunctions/DaoFactoryABI.json"
 
 interface DashboardMainProps {
     currentAccount: string | undefined
@@ -19,6 +23,42 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
     const router = useRouter()
 
     const [enabled, setEnabled] = useState(false)
+
+    const contractAddress:any = process.env.DEFIOS_CONTRACT_ADDRESS;
+
+    const [DaoList, setDaoList] = useState<any>()
+
+    const listAllUserDao = async()=>{
+        const daoList:any=[];
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+        const userDaoCount = await defiosContract.getUserDAOCount(localStorage.getItem('currentAccount'));
+        for(let i=0;i<userDaoCount;i++){
+            const daoId = await defiosContract.userDAOs(localStorage.getItem('currentAccount'),i)
+            const daoInfo = await defiosContract.getDAOInfo(daoId)
+            const DaoInfoObj = {
+                "DaoId":daoId,
+                "DAO":daoInfo[0],
+                "owner":daoInfo[1],
+                "team":daoInfo[2],
+                "metadata":daoInfo[3],
+            }
+            DaoInfoObj.metadata = await fetch(`https://gateway.pinata.cloud/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
+            DaoInfoObj.metadata.tokenImg = `https://gateway.pinata.cloud/ipfs/${DaoInfoObj.metadata.tokenImg}`
+            daoList.push(DaoInfoObj)
+        }
+        // console.log(daoList)
+        setDaoList(daoList)
+        return daoList;
+    }
+
+    useEffect(()=>{
+        listAllUserDao()
+    },[])
+
 
     return (
         <div className='w-[80%] h-full flex flex-col justify-between items-end px-[1%] py-[1%] relative text-white'>
@@ -98,11 +138,12 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                     <div className='w-[13%] h-full mx-[0.5%]'>Pending Action</div>
                 </div>
                 <div className='w-full pr-[0.2%] h-[84%] overflow-y-scroll customScrollbar' >
-                    {(data && data.length!==0 )?
-                        data.map((dataVal:any, index:any) => {
+                    {(DaoList && DaoList.length!==0 )?
+                        DaoList.map((dataVal:any, index:any) => {
                             return <DaoMetadata metadata={dataVal} key={index}/>
-                        }):
-                        <div className='w-full h-full flex flex-col items-center justify-center' >No DAOs Created yet</div>
+                        }):(DaoList===undefined)?
+                        <div className='w-full h-full flex flex-col items-center justify-center' >Loading...</div>:(DaoList && DaoList.length===0)?
+                        <div className='w-full h-full flex flex-col items-center justify-center' >No DAOs Created yet</div>:null
                     }
                 </div>
             </div>

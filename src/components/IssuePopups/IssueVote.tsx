@@ -8,6 +8,7 @@ import BoxPR from './BoxPR'
 
 interface IssueVoteProps {
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
+    DaoInfo: any;
 }
 
 const IssueVote: React.FC<IssueVoteProps> = ({setPopupState}) => {
