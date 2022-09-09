@@ -104,10 +104,10 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
 
         const creation = await defiosContract.createGitDAO(proposal,partnersKeysSorted,partnersDataSorted,parseFloat(data.DaoFees)*(10**18),ipfsRes.IpfsHash,data.tokenName,data.tokenSymbol);
         const result = await creation.wait()
-
-        if(result.events[2].args.DAO!==undefined){
+        console.log(result)
+        if(result.events[3].args.DAO!==undefined){
             setProcessStep(5)
-            return result.events[2].args.DAO
+            return result.events[3].args.DAO
         }
     }
 
@@ -122,6 +122,8 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
         const daoInfo = await defiosContract.getDAOInfo(daoId)
         if(daoInfo!==undefined){
             setProcessStep(6)
+            localStorage.removeItem('DaoCreationData')
+            localStorage.removeItem('distributionOk')
             router.push(`/dashboard`)
         }
     }

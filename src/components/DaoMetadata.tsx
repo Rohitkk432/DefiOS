@@ -26,7 +26,7 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
         let DaoContract : ethers.Contract = new ethers.Contract(metadata.DAO, DaoAbi , signer);
 
         DaoContract.getOpenIssueCount().then((res:any)=>setOpenIssuesCount(Number(res)));
-        DaoContract.TOTALSTAKED().then((res:any)=>setTotalStaked(Number(res)));
+        DaoContract.TOTALSTAKED().then((res:any)=>setTotalStaked(parseInt(ethers.utils.formatEther(res))));
 
         fetch(`https://api.github.com/user/${metadata.metadata.partners[0]}`).then(res=>res.json())
         .then(res=>setUserData(res)).catch(err=>console.log(err))

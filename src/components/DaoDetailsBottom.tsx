@@ -1,18 +1,55 @@
 import React from 'react'
+import {useState,useEffect} from 'react'
 import {SearchIcon} from '@heroicons/react/outline'
 
 import DaoDetailsMetadata from './DaoDetailsMetadata'
 import DaoDetailsTop from './DaoDetailsTop'
 
-import data from '../config/daodetails.json';
+// import data from '../config/daodetails.json';
 
+import {ethers} from 'ethers'
+declare let window:any
+import DaoAbi from "./ContractFunctions/DaoABI.json"
 
 interface DaoDetailsBottomProps {
+    popupState:string;
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
+    setPopupIssue: React.Dispatch<React.SetStateAction<number>>;
     DaoInfo:any;
 }
 
-const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({setPopupState,DaoInfo}) => {
+const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupState,DaoInfo,setPopupIssue}) => {
+
+    const [IssuesList,setIssuesList] = useState<any>()
+
+    const listAllIssues = async () => {
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
+
+        const IssuesCount = await DaoContract.issueID();
+        const issuesList = [];
+        for (let i = 1; i <= IssuesCount; i++) {
+            const issueRes = await DaoContract.repoIssues(i);
+            const apiURL = issueRes.issueURL.replace('github.com','api.github.com/repos');
+            const githubRes = await fetch(apiURL).then(res=>res.json()).catch(err=>console.log(err));
+            const IterIssue = {
+                contractIssueID: i,
+                issueInfo:issueRes,
+                githubInfo: githubRes
+            }
+            issuesList.push(IterIssue);
+        }
+        // console.log(issuesList);
+        setIssuesList(issuesList);
+    }
+
+    useEffect(()=>{
+        if(DaoInfo!==undefined){
+            listAllIssues();
+        }
+    },[DaoInfo,popupState])
 
     return (
         <div className='w-[80%] h-full flex flex-col justify-between items-end px-[1%] py-[1%] relative text-white overflow-hidden'>
@@ -42,11 +79,12 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({setPopupState,DaoInf
                     <div className='w-[10%] h-full mx-[0.5%]'>Top Staker</div>
                 </div>
                 <div className='w-full pr-[0.2%] h-[72%] overflow-y-scroll customScrollbar' >
-                    {(data && data.length!==0 )?
-                        data.map((dataVal:any, index:any) => {
-                            return <DaoDetailsMetadata metadata={dataVal} key={index}/>
-                        }):
-                        <div className='w-full h-full flex flex-col items-center justify-center' >No DAOs Created yet</div>
+                    {(IssuesList && IssuesList.length!==0 )?
+                        IssuesList.map((dataVal:any, index:any) => {
+                            return <DaoDetailsMetadata setPopupIssue={setPopupIssue} setPopupState={setPopupState} DaoInfo={DaoInfo} metadata={dataVal} key={index}/>
+                        }):(IssuesList===undefined)?
+                        <div className='w-full h-full flex flex-col items-center justify-center' >Loading...</div>:(IssuesList && IssuesList.length===0)?
+                        <div className='w-full h-full flex flex-col items-center justify-center' >No Issues Created yet</div>:null
                     }
                 </div>
             </div>

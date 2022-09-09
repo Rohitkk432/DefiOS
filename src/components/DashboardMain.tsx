@@ -22,7 +22,7 @@ interface DashboardMainProps {
 const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,chainId}) => {
     const router = useRouter()
 
-    const [enabled, setEnabled] = useState(false)
+    const [seeMyDaos, setSeeMyDaos] = useState(true)
 
     const contractAddress:any = process.env.DEFIOS_CONTRACT_ADDRESS;
 
@@ -46,8 +46,34 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                 "team":daoInfo[2],
                 "metadata":daoInfo[3],
             }
-            DaoInfoObj.metadata = await fetch(`https://gateway.pinata.cloud/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
-            DaoInfoObj.metadata.tokenImg = `https://gateway.pinata.cloud/ipfs/${DaoInfoObj.metadata.tokenImg}`
+            DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
+            DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
+            daoList.push(DaoInfoObj)
+        }
+        // console.log(daoList)
+        setDaoList(daoList)
+        return daoList;
+    }
+
+    const listAllGlobalDao = async()=>{
+        const daoList:any=[];
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+        const globalDaoCount = await defiosContract.DAOID();
+        for(let i=1;i<=globalDaoCount;i++){
+            const daoInfo = await defiosContract.getDAOInfo(i)
+            const DaoInfoObj = {
+                "DaoId":i,
+                "DAO":daoInfo[0],
+                "owner":daoInfo[1],
+                "team":daoInfo[2],
+                "metadata":daoInfo[3],
+            }
+            DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
+            DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
             daoList.push(DaoInfoObj)
         }
         // console.log(daoList)
@@ -56,8 +82,12 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
     }
 
     useEffect(()=>{
-        listAllUserDao()
-    },[])
+        if(seeMyDaos){
+            listAllUserDao()
+        }else if(!seeMyDaos){
+            listAllGlobalDao()
+        }
+    },[seeMyDaos])
 
 
     return (
@@ -98,17 +128,17 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                     {/* Switch */}
                     <div className='h-[5vh] w-[20%] relative flex flex-row items-center justify-center'>
                         <Switch
-                            checked={enabled}
-                            onChange={setEnabled}
+                            checked={seeMyDaos}
+                            onChange={setSeeMyDaos}
                             className='bg-[#121418] relative inline-flex h-[4.5vh] w-[85%] items-center rounded-lg px-[4%] flex flex-row justify-between items-center'
                         >
                             <span
                                 className={`${
-                                enabled ? 'translate-x-[42%]' : 'translate-x-[0%]'
+                                seeMyDaos ? 'translate-x-[42%]' : 'translate-x-[0%]'
                                 } transform transition ease-in duration-300 absolute top-0 left-0 inline-block h-[4.5vh] w-[70%] bg-[#91A8ED] rounded-lg`}
                             >
                                 {
-                                    enabled ? (
+                                    seeMyDaos ? (
                                         <div className='flex flex-row justify-end items-center w-full h-full px-[5%]'>
                                             <div className='text-[1.7vh] mx-[5%] font-semibold'>My DAOs</div>
                                             <UserCircleIcon className='h-[3.5vh]' />

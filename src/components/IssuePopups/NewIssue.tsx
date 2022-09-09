@@ -77,18 +77,12 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
             })
         })
         const issueOutput = await response.json()
-        // console.log(issueOutput.data.html_url)
 
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
-
-        let tx = await DaoContract.createIssue(issueOutput.data.html_url,0,{gasLimit: 25000})
-        let receipt = await tx.wait()
-
-        console.log(receipt)
-
+        await DaoContract.createIssue(issueOutput.data.html_url,0)
         setPopupState('none')
     }
     

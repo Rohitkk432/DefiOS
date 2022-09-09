@@ -1,5 +1,12 @@
-export const timeAgo = (time: number) => {
-    var seconds = Math.floor((Date.now() - time) / 1000);        
+export const timeAgo = (time: string|number) => {
+    let seconds = 0;
+
+    if(typeof time === 'string') {
+        seconds += Math.floor((Date.now() - Date.parse(time)) / 1000);
+    }
+    if(typeof time === 'number') {
+        seconds += Math.floor((Date.now() - time) / 1000);
+    }
     var interval = seconds / 31536000;
     if (interval > 1) return Math.floor(interval) + " years";
     interval = seconds / 2592000;

@@ -60,7 +60,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
             "tokenName": tokenName,
             "tokenSymbol": tokenSymbol,
             "tokenImgFile": tokenImgFile,
-            "tokenImgIpfsURL":`https://gateway.pinata.cloud/ipfs/${imgHash}`,
+            "tokenImgIpfsURL":`https://gateway.ipfs.io/ipfs/${imgHash}`,
             "tokenImgIpfsHash":imgHash,
         }
         const data = {...dataBefore,...dataAdd}
