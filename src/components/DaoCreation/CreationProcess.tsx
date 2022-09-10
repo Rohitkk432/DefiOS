@@ -104,7 +104,6 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
 
         const creation = await defiosContract.createGitDAO(proposal,partnersKeysSorted,partnersDataSorted,parseFloat(data.DaoFees)*(10**18),ipfsRes.IpfsHash,data.tokenName,data.tokenSymbol);
         const result = await creation.wait()
-        console.log(result)
         if(result.events[3].args.DAO!==undefined){
             setProcessStep(5)
             return result.events[3].args.DAO

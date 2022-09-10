@@ -25,10 +25,10 @@ ChartJS.register(
 );
 
 interface MultiAxisLineChartProps{
-    
+    Token : string,
 }
 
-const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = () => {
+const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = ({Token}) => {
     const options = {
         responsive: true,
         maintainAspectRatio: true,
@@ -115,7 +115,7 @@ const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = () => {
                 tension: 0.3,
             },
             {
-                label: 'APE Staked',
+                label: `${Token} Staked`,
                 data: [16,35,26,41,31,30,50],
                 borderColor: 'rgb(68, 190, 215)',
                 backgroundColor: 'rgb(68, 190, 215)',
@@ -175,11 +175,11 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Top Holder :</div>
-                        <div className='text-gray-400'>0x1482...50d8</div>
+                        <div className='text-gray-400'>{DaoInfo!==undefined?(DaoInfo.owner.slice(0,5)+"..."+DaoInfo.owner.slice(37,42)):null}</div>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Top Staker :</div>
-                        <div className='text-gray-400'>0x1482...50d8</div>
+                        <div className='text-gray-400'>{DaoInfo!==undefined?(DaoInfo.owner.slice(0,5)+"..."+DaoInfo.owner.slice(37,42)):null}</div>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Top Solver :</div>
@@ -199,7 +199,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
             </div>
             <div className='w-[69%] text-center h-full rounded-md  p-[1.5%] bg-[#191C21]'>
                 <div className='text-[#91A8ED] text-[4vh]'>Community Health</div>
-                <MultiAxisLineChart/>
+                <MultiAxisLineChart Token={DaoInfo!==undefined?DaoInfo.metadata.tokenSymbol:''} />
             </div>
         </div>
     );

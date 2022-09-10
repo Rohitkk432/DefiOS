@@ -141,8 +141,8 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         let TokenContract : ethers.Contract = new ethers.Contract(DaoTokenAddress, TokenAbi , signer);
 
         //increase allowance
-        await TokenContract.increaseAllowance(DaoInfo.DAO,ethers.utils.parseEther(addStake.toString()));
-
+        const tx = await TokenContract.increaseAllowance(DaoInfo.DAO,ethers.utils.parseEther(addStake.toString()));
+        await tx.wait();
         await DaoContract.stakeOnIssue(popupIssueID,ethers.utils.parseEther(addStake.toString()));
         setLoad(false);
         setPopupState('none')
@@ -150,6 +150,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
     }
 
     const StartVotingFunc = async () => {
+        if(Number(IssuesList.issueInfo.totalStaked)===0) return
         setLoad(true);
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;

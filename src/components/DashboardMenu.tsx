@@ -39,14 +39,14 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({}) => {
                     <img src='/assets/images/solvingIcon.svg' className='h-[2.7vh] w-[2.7vh] mr-[8%]'/>
                     <div className='text-[1.6vh]' >Total Issues Solved</div>
                 </div>
-                <div className='text-[1.6vh] w-[25%] text-center' >5</div>
+                <div className='text-[1.6vh] w-[25%] text-center' >-</div>
             </div>
             <div className='w-full h-[4.5vh] mb-[1vh] rounded-md flex flex-row justify-between items-center px-[7%]'>
                 <div className='flex flex-row justify-start items-center w-[70%] h-full'>
                     <img src='/assets/images/DaoIcon.svg' className='h-[2.7vh] w-[2.7vh] mr-[8%]'/>
                     <div className='text-[1.6vh]' >Total DAOs created</div>
                 </div>
-                <div className='text-[1.6vh] w-[25%] text-center' >2</div>
+                <div className='text-[1.6vh] w-[25%] text-center' >-</div>
 
             </div>
             <div className='w-full h-[4.5vh] mb-[1vh] rounded-md flex flex-row justify-between items-center px-[7%]'>
@@ -54,7 +54,7 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({}) => {
                     <img src='/assets/images/earningIcon.svg' className='h-[2.7vh] w-[2.7vh] mr-[8%]'/>
                     <div className='text-[1.6vh]' >Total earnings</div>
                 </div>
-                <div className='text-[1.6vh] w-[25%] text-center' >$40</div>
+                <div className='text-[1.6vh] w-[25%] text-center' >-</div>
             </div>
 
             {/* <div className='w-full text-left text-[2vh] mt-[4%] mb-[4%] text-[#CACACA]' >Actionable Items</div>

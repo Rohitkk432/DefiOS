@@ -85,7 +85,7 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
             stakersObj: stakersObj,
             collabInfo: collabInfo,
         }
-        console.log(IterIssue)
+        // console.log(IterIssue)
         setIssuesList(IterIssue);
     }
 
@@ -106,37 +106,33 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
 
     const ChooseWinnerFunc = async () => {
         setLoad(true);
-        //web3
+        // web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
-        try{
-            await DaoContract.chooseWinner(popupIssueID);
-
-            const issueRes = await DaoContract.repoIssues(popupIssueID);
-            //merge PR
-            for(let i=0;i<IssuesList.collabInfo;i++){
-                if(IssuesList.collabInfo[i].collaborator.toLowerCase()===issueRes.solver.toLowerCase()){
-                    const _linkbreak = IssuesList.collabInfo[i].url.split("/");
-                    await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}/merge`,{
-                        method: 'PUT',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
-                    }).catch(err=>console.log(err));
-                }
+        const tx = await DaoContract.chooseWinner(popupIssueID);
+        await tx.wait();
+        const issueRes = await DaoContract.repoIssues(popupIssueID);
+        //merge PR
+        for(let i=0;i<IssuesList.collabInfo.length;i++){
+            if(IssuesList.collabInfo[i].collaborator.toLowerCase()===issueRes.solver.toLowerCase()){
+                const _linkbreak = IssuesList.collabInfo[i].url.split("/");
+                await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}/merge`,{
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                }).catch(err=>console.log(err));
             }
-
-            //close issue
-            const requestOptions = {
-                method: 'PATCH',
-                headers: { 'Authorization': `Bearer ${session?.accessToken}` },
-                body: JSON.stringify({ state: "closed" })
-            };
-            const issueUrlToClose = IssuesList.issueInfo.issueURL.replace("github.com","api.github.com/repos")
-            await fetch(issueUrlToClose,requestOptions)
-        }catch(err){
-            console.log(err)
         }
+        //close issue
+        const requestOptions = {
+            method: 'PATCH',
+            headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+            body: JSON.stringify({ state: "closed" })
+        };
+        const issueUrlToClose = IssuesList.issueInfo.issueURL.replace("github.com","api.github.com/repos")
+        await fetch(issueUrlToClose,requestOptions)
+
         setLoad(false);
         setPopupState('none')
         localStorage.removeItem('popupState')

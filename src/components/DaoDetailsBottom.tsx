@@ -52,7 +52,6 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
         return IssuesList.filter((_issue:any) => {
             return (
                 _issue.githubInfo.title.toLowerCase().includes(search.toLowerCase()) || 
-                _issue.githubInfo.body.toLowerCase().includes(search.toLowerCase()) ||
                 _issue.githubInfo.user.login.toLowerCase().includes(search.toLowerCase())||
                 _issue.githubInfo.html_url.split("/")[_issue.githubInfo.html_url.split("/").length - 1].toLowerCase().includes(search.toLowerCase())
             );
@@ -92,7 +91,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
                     <div className='w-[15%] h-full mx-[0.5%]'>Amount Staked</div>
                     {/* <div className='w-[10%] h-full mx-[0.5%]'>Top Staker</div> */}
                 </div>
-                <div className='w-full pr-[0.2%] h-[72%] overflow-y-scroll customScrollbar' >
+                <div className='w-full pr-[0.2%] h-[82%] overflow-y-scroll customScrollbar' >
                     {(IssueSearch && IssueSearch.length!==0 )?
                         IssueSearch.map((dataVal:any, index:any) => {
                             return <DaoDetailsMetadata setPopupIssue={setPopupIssue} setPopupState={setPopupState} DaoInfo={DaoInfo} metadata={dataVal} key={index}/>
