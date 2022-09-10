@@ -51,9 +51,13 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
             (metadata.role==='Stake Delegator')?'text-orange-500':
             (metadata.role==='Issue Solver')?'text-green-500':null}
             `}>{metadata.role}</div> */}
-
+            
+            {(metadata.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLowerCase())?<div className={`w-[10%] mx-[0.5%]
+            text-blue-200`}>Repository Owner</div>:
             <div className={`w-[10%] mx-[0.5%]
-            text-blue-200`}>Repository Owner</div>
+            text-white`}>-</div>
+            }
+            
 
             <div className='w-[13%] mx-[0.5%]'>{userData?.login}</div>
             <div className='w-[13%] mx-[0.5%] flex flex-row justify-start items-center'>
