@@ -1,6 +1,7 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
 import {useSession} from 'next-auth/react'
+import LoadingScreen from '../utils/LoadingScreen'
 
 import { XIcon } from '@heroicons/react/outline';
 
@@ -71,6 +72,8 @@ const PieChart: React.FC<PieChartProps> = ({pieData}) => {
 
 const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIssueID}) => {
 
+    const [load, setLoad] = useState(false)
+
     const {data:session} = useSession()
 
     const [IssuesList,setIssuesList] = useState<any>()
@@ -128,6 +131,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
 
     const StakeOnIssueFunc = async () => {
         if(addStake===undefined) return
+        setLoad(true);
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
@@ -140,19 +144,20 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         await TokenContract.increaseAllowance(DaoInfo.DAO,ethers.utils.parseEther(addStake.toString()));
 
         await DaoContract.stakeOnIssue(popupIssueID,ethers.utils.parseEther(addStake.toString()));
-
+        setLoad(false);
         setPopupState('none')
         localStorage.removeItem('popupState') 
     }
 
     const StartVotingFunc = async () => {
+        setLoad(true);
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
         await DaoContract.startVoting(popupIssueID);
-
+        setLoad(false);
         setPopupState('none')
         localStorage.removeItem('popupState')
     }
@@ -172,6 +177,8 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         if(!PrLink.startsWith('https://github.com')) return
         if(session===null || session===undefined) return
         if(localStorage.getItem('currentAccount')===null || localStorage.getItem('currentAccount')===undefined) return
+
+        setLoad(true);
         //PrChecker
         const requestOptions = {
             method: 'GET',
@@ -183,10 +190,16 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
 
         const PrDetails = await fetch(`https://api.github.com/repos/${PrlinkBreakdown[3]}/${PrlinkBreakdown[4]}/pulls/${PrlinkBreakdown[6]}`).then(res=>res.json());
 
-        if(PrDetails.user.login!==GithubUser.login) return
+        if(PrDetails.user.login!==GithubUser.login){
+            setLoad(false);
+            return
+        }
 
         const PrCommitDetails = await fetch(PrDetails.commits_url).then(res=>res.json());
-        if(PrCommitDetails.length<4) return
+        if(PrCommitDetails.length<4){
+            setLoad(false);
+            return
+        }
 
         const ProofOfPR = [
             PrCommitDetails[0].sha,
@@ -200,6 +213,8 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
         await DaoContract.addCollaborator(popupIssueID,PrLink,ProofOfPR);
+
+        setLoad(false);
         setPopupState('none')
         localStorage.removeItem('popupState')
     }
@@ -308,7 +323,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                         </div>
 
                         <div className='flex flex-row justify-center items-center border-2 border-[#91A8ED] w-full py-[2.5%] rounded-[1vh] mb-[8%] mt-[5%] text-[2.7vh]'>
-                            <img src={IssuesList!==undefined && IssuesList.daoInfo.tokenImg} className='w-[4.5vh] h-[4.5vh] mr-[3%]' />
+                            <img src={IssuesList!==undefined && IssuesList.daoInfo.tokenImg || ''} className='w-[4.5vh] h-[4.5vh] mr-[3%]' />
                             <div>{IssuesList!==undefined && parseInt(ethers.utils.formatEther(IssuesList.issueInfo.totalStaked))} {IssuesList!==undefined && IssuesList.daoInfo.tokenSymbol}</div>
                         </div>
                         <div className='flex flex-col w-full items-center mt-[2%] 
@@ -340,6 +355,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                     </div>
                 </div>
             </div>
+            <LoadingScreen load={load} />
         </div>
     )
 }

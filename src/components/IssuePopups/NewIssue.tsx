@@ -1,6 +1,7 @@
 import React from 'react'
 import { Fragment, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
+import LoadingScreen from '../utils/LoadingScreen';
 
 import Tags from '../utils/Tags'
 import { XIcon } from '@heroicons/react/outline'
@@ -55,12 +56,16 @@ const CreateTag: React.FC<CreateTagProps> = ({allTags,setAllTags}) => {
 
 const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
 
+    const [load, setLoad] = useState(false)
+
     const [allTags , setAllTags] = useState<string[]>([])
 
     const [issueTitle, setIssueTitle] = useState('')
     const [issueBody, setIssueBody] = useState('')
 
     const createNewIssue = async () => {
+        setLoad(true)
+
         const user = await fetch(`https://api.github.com/user/${DaoInfo.metadata.partners[0]}`).then(res=>res.json()).catch(err=>console.log(err))
 
         const response = await fetch('/api/issue/create', {
@@ -83,6 +88,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
         await DaoContract.createIssue(issueOutput.data.html_url,0)
+        setLoad(false)
         setPopupState('none')
     }
     
@@ -122,6 +128,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
                     </div>
                 </div>
             </div>
+            <LoadingScreen load={load} />
         </div>
     );
 }

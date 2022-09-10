@@ -1,5 +1,6 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
+import LoadingScreen from '../utils/LoadingScreen';
 
 import { XIcon } from '@heroicons/react/outline';
 
@@ -19,6 +20,8 @@ interface IssueRewardProps {
 }
 
 const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIssueID}) => {
+
+    const [load, setLoad] = useState(false)
 
     const [IssuesList,setIssuesList] = useState<any>()
 
@@ -68,13 +71,14 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
     }
 
     const RedeemRewardsFunc = async () => {
+        setLoad(true);
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
         await DaoContract.redeemRewards(popupIssueID);
-
+        setLoad(false);
         setPopupState('none')
         localStorage.removeItem('popupState')
     }
@@ -168,8 +172,8 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
                         }
                     </div>
                 </div>
-
             </div>
+            <LoadingScreen load={load} />
         </div>
     );
 }

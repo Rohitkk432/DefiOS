@@ -1,5 +1,5 @@
 import React from 'react'
-import {useState,useEffect} from 'react'
+import {useState,useEffect,useMemo} from 'react'
 import {SearchIcon} from '@heroicons/react/outline'
 
 import DaoDetailsMetadata from './DaoDetailsMetadata'
@@ -41,9 +41,23 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
             }
             issuesList.push(IterIssue);
         }
-        // console.log(issuesList);
         setIssuesList(issuesList);
     }
+
+    //search logic
+    const [search, setSearch] = useState("");
+
+    const IssueSearch = useMemo(() => {
+        if (search==="") return IssuesList;
+        return IssuesList.filter((_issue:any) => {
+            return (
+                _issue.githubInfo.title.toLowerCase().includes(search.toLowerCase()) || 
+                _issue.githubInfo.body.toLowerCase().includes(search.toLowerCase()) ||
+                _issue.githubInfo.user.login.toLowerCase().includes(search.toLowerCase())||
+                _issue.githubInfo.html_url.split("/")[_issue.githubInfo.html_url.split("/").length - 1].toLowerCase().includes(search.toLowerCase())
+            );
+        });
+    }, [search,IssuesList]);
 
     useEffect(()=>{
         if(DaoInfo!==undefined){
@@ -58,7 +72,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
                 <div className='w-full flex flex-row justify-between items-center' >
                     {/* Search bar */}
                     <div className='h-[5vh] w-[80%] relative flex flex-row'>
-                        <input type="text" className='w-full h-full rounded-md bg-[#121418] border border-[#3A4E70] text-[1.8vh] pl-[2%]' placeholder='Search DAOs on the basis of name or metadata' />
+                        <input type="text" className='w-full h-full rounded-md bg-[#121418] border border-[#3A4E70] text-[1.8vh] pl-[2%]' placeholder='Search Issues on the basis of name or metadata' value={search} onChange={(e) => setSearch(e.target.value)} />
                         <SearchIcon className='w-[2%] absolute top-[25%] right-[2%]' />
                     </div>
                     {/* create Dao btn */}
@@ -74,16 +88,16 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
                     <div className='w-[30%] h-full mx-[0.5%]'>Title</div>
                     <div className='w-[10%] h-full mx-[0.5%]'>Created by</div>
                     <div className='w-[10%] h-full mx-[0.5%]'>Created at</div>
-                    <div className='w-[30%] h-full mx-[0.5%]'>Tags</div>
-                    <div className='w-[10%] h-full mx-[0.5%]'>Amount Staked</div>
-                    <div className='w-[10%] h-full mx-[0.5%]'>Top Staker</div>
+                    <div className='w-[35%] h-full mx-[0.5%]'>Tags</div>
+                    <div className='w-[15%] h-full mx-[0.5%]'>Amount Staked</div>
+                    {/* <div className='w-[10%] h-full mx-[0.5%]'>Top Staker</div> */}
                 </div>
                 <div className='w-full pr-[0.2%] h-[72%] overflow-y-scroll customScrollbar' >
-                    {(IssuesList && IssuesList.length!==0 )?
-                        IssuesList.map((dataVal:any, index:any) => {
+                    {(IssueSearch && IssueSearch.length!==0 )?
+                        IssueSearch.map((dataVal:any, index:any) => {
                             return <DaoDetailsMetadata setPopupIssue={setPopupIssue} setPopupState={setPopupState} DaoInfo={DaoInfo} metadata={dataVal} key={index}/>
-                        }):(IssuesList===undefined)?
-                        <div className='w-full h-full flex flex-col items-center justify-center' >Loading...</div>:(IssuesList && IssuesList.length===0)?
+                        }):(IssueSearch===undefined)?
+                        <div className='w-full h-full flex flex-col items-center justify-center' >Loading...</div>:(IssueSearch && IssueSearch.length===0)?
                         <div className='w-full h-full flex flex-col items-center justify-center' >No Issues Created yet</div>:null
                     }
                 </div>

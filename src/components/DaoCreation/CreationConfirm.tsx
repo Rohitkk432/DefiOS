@@ -95,7 +95,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* token details */}
                 <div className='flex flex-row justify-start items-center w-full'>
-                    <img src={fullData.tokenImgIpfsURL} alt="token" className='w-[10vh] h-[10vh] mr-[4%] bg-white rounded-full' />
+                    <img src={fullData.tokenImgIpfsURL||''} alt="token" className='w-[10vh] h-[10vh] mr-[4%] bg-white rounded-full' />
                     <div>
                         <div className={`text-[1.81vh] font-semibold`}>{fullData.tokenName} token</div>
                         <div className={`text-[1.81vh]`}>{fullData.tokenSymbol}</div>

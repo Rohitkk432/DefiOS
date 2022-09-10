@@ -1,13 +1,11 @@
 import React from 'react'
-import { useState,useEffect } from 'react'
+import { useState,useEffect,useMemo } from 'react'
 import { useRouter } from 'next/router'
 
 import DaoMetadata from './DaoMetadata'
 
 import {SearchIcon , GlobeAltIcon , UserCircleIcon} from '@heroicons/react/outline'
 import { Switch } from '@headlessui/react'
-
-// import data from '../config/daotable.json';
 
 import {ethers} from 'ethers'
 declare let window:any
@@ -81,6 +79,22 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
         return daoList;
     }
 
+    //search logic
+    const [search, setSearch] = useState("");
+
+    const DaoSearch = useMemo(() => {
+        if (search==="") return DaoList;
+        return DaoList.filter((_dao:any) => {
+            return (
+                _dao.DAO.toLowerCase().includes(search.toLowerCase()) ||
+                _dao.metadata.tokenName.toLowerCase().includes(search.toLowerCase())||
+                _dao.metadata.tokenSymbol.toLowerCase().includes(search.toLowerCase())||
+                _dao.metadata.daoName.toLowerCase().includes(search.toLowerCase())||
+                _dao.metadata.repoName.toLowerCase().includes(search.toLowerCase())
+            );
+        });
+    }, [search,DaoList]);
+
     useEffect(()=>{
         if(seeMyDaos){
             listAllUserDao()
@@ -121,7 +135,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                 <div className='w-full flex flex-row justify-between items-center' >
                     {/* Search bar */}
                     <div className='h-[5vh] w-[80%] relative flex flex-row'>
-                        <input type="text" className='w-full h-full rounded-md bg-[#121418] border border-[#3A4E70] text-[1.8vh] pl-[2%]' placeholder='Search DAOs on the basis of name or metadata' />
+                        <input type="text" className='w-full h-full rounded-md bg-[#121418] border border-[#3A4E70] text-[1.8vh] pl-[2%]' placeholder='Search DAOs on the basis of name or metadata' value={search} onChange={(e) => setSearch(e.target.value)} />
                         <SearchIcon className='w-[2%] absolute top-[25%] right-[2%]' />
                     </div>
                     
@@ -168,11 +182,11 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                     <div className='w-[13%] h-full mx-[0.5%]'>Pending Action</div>
                 </div>
                 <div className='w-full pr-[0.2%] h-[84%] overflow-y-scroll customScrollbar' >
-                    {(DaoList && DaoList.length!==0 )?
-                        DaoList.map((dataVal:any, index:any) => {
+                    {(DaoSearch && DaoSearch.length!==0 )?
+                        DaoSearch.map((dataVal:any, index:any) => {
                             return <DaoMetadata metadata={dataVal} key={index}/>
-                        }):(DaoList===undefined)?
-                        <div className='w-full h-full flex flex-col items-center justify-center' >Loading...</div>:(DaoList && DaoList.length===0)?
+                        }):(DaoSearch===undefined)?
+                        <div className='w-full h-full flex flex-col items-center justify-center' >Loading...</div>:(DaoSearch && DaoSearch.length===0)?
                         <div className='w-full h-full flex flex-col items-center justify-center' >No DAOs Created yet</div>:null
                     }
                 </div>

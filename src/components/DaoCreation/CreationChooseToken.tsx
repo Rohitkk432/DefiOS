@@ -78,7 +78,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
                     {(tokenImgPreview!==''&& tokenImgFile!==undefined) ?
                     (
                         <div className='w-full h-full relative'>
-                            <img src={tokenImgPreview} className='w-full h-full rounded-full' />
+                            <img src={tokenImgPreview||''} className='w-full h-full rounded-full' />
                             <XIcon className='absolute top-[-20%] right-[-20%] z-index-4 text-gray-500 w-[3vh] h-[3vh] cursor-pointer' onClick={()=>setTokenImgFile(undefined)} />
                         </div>
                     ) :

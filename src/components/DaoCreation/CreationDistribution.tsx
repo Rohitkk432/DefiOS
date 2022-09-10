@@ -266,7 +266,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                     <div className='bg-[#121418] w-full h-[20%] px-[2%] py-[2%] mt-[2%] text-xs font-semibold rounded-md border-[#2E2E2F] border flex flex-row align-center justify-between' >
                         {/* user name */}
                         <div className='flex flex-row'>
-                            <img src={JSON.parse(localStorage.getItem('DaoCreationData')||'{}').tokenImgIpfsURL} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
+                            <img src={JSON.parse(localStorage.getItem('DaoCreationData')||'{}').tokenImgIpfsURL||''} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
                             <div className={`text-[#D7D7D7] text-[1.63vh]`}>{JSON.parse(localStorage.getItem('DaoCreationData')||'{}').daoName} DAO</div>
                         </div>
                         {/* user distribution */}

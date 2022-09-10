@@ -1,5 +1,5 @@
 import React from 'react'
-import ActionableItems from './ActionableItems'
+// import ActionableItems from './ActionableItems'
 
 import {useSession} from 'next-auth/react'
 import Link from 'next/link'
@@ -57,12 +57,12 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({}) => {
                 <div className='text-[1.6vh] w-[25%] text-center' >$40</div>
             </div>
 
-            <div className='w-full text-left text-[2vh] mt-[4%] mb-[4%] text-[#CACACA]' >Actionable Items</div>
+            {/* <div className='w-full text-left text-[2vh] mt-[4%] mb-[4%] text-[#CACACA]' >Actionable Items</div>
             <div className='w-full h-[40%] overflow-y-scroll customScrollbar'>
                 <ActionableItems />
                 <ActionableItems />
                 <ActionableItems />
-            </div>
+            </div> */}
         </div>
     );
 }

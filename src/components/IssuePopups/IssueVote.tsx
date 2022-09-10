@@ -1,6 +1,7 @@
 import React from 'react'
-import {useState,useEffect} from 'react'
+import {useState,useEffect,useMemo} from 'react'
 import {useSession} from 'next-auth/react'
+import LoadingScreen from '../utils/LoadingScreen';
 
 import { XIcon,SearchIcon } from '@heroicons/react/outline';
 
@@ -21,6 +22,8 @@ interface IssueVoteProps {
 }
 
 const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID}) => {
+
+    const [load, setLoad] = useState(false)
 
     const {data:session} = useSession()
 
@@ -82,22 +85,27 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
             stakersObj: stakersObj,
             collabInfo: collabInfo,
         }
+        console.log(IterIssue)
         setIssuesList(IterIssue);
     }
 
     const voteForPR = async () =>{
         if(PRChoosen === NaN) return;
         if(localStorage.getItem('currentAccount')===null || localStorage.getItem('currentAccount')===undefined) return;
+        setLoad(true);
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
         await DaoContract.voteOnIssue(popupIssueID,PRChoosen,IssuesList.stakersObj[`${localStorage.getItem('currentAccount')?.toLowerCase()}`].stakerID);
+
+        setLoad(false);
         setPopupState('none')
         localStorage.removeItem('popupState')
     }
 
     const ChooseWinnerFunc = async () => {
+        setLoad(true);
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
@@ -107,7 +115,6 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
             await DaoContract.chooseWinner(popupIssueID);
 
             const issueRes = await DaoContract.repoIssues(popupIssueID);
-
             //merge PR
             for(let i=0;i<IssuesList.collabInfo;i++){
                 if(IssuesList.collabInfo[i].collaborator.toLowerCase()===issueRes.solver.toLowerCase()){
@@ -115,7 +122,7 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
                     await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}/merge`,{
                         method: 'PUT',
                         headers: { 'Authorization': `Bearer ${session?.accessToken}` },
-                    });
+                    }).catch(err=>console.log(err));
                 }
             }
 
@@ -130,10 +137,26 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
         }catch(err){
             console.log(err)
         }
-
+        setLoad(false);
         setPopupState('none')
         localStorage.removeItem('popupState')
     }
+
+    //search logic
+    const [search, setSearch] = useState("");
+
+    const PrSearch = useMemo(() => {
+        if (IssuesList===undefined) return;
+        if (search==="") return IssuesList.collabInfo;
+        return IssuesList.collabInfo.filter((_pr:any) => {
+            return (
+                _pr.prDetails.user.login.toLowerCase().includes(search.toLowerCase()) ||
+                _pr.prDetails.number.toLowerCase().includes(search.toLowerCase()) ||
+                _pr.prDetails.title.toLowerCase().includes(search.toLowerCase()) || 
+                _pr.collabID === PRChoosen
+            );
+        });
+    }, [search,IssuesList]);
 
     useEffect(()=>{
         if(DaoInfo!==undefined && popupIssueID!==0){
@@ -206,11 +229,11 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
                     }} />
                     <div className='w-full h-[91%] bg-gray-600 py-[4%] px-[3%] relative 
                     flex flex-col items-center justify-start rounded-[1vh]' >
-                        <input name='PRSearch' type="text" className='bg-[#121418] w-full py-[2.5%] px-[4%] text-[1.7vh] font-semibold rounded-md border-[#3A4E70] border mb-[3%] ' placeholder='Search for PR by Author, tag or commit hash' />
+                        <input name='PRSearch' type="text" className='bg-[#121418] w-full py-[2.5%] px-[4%] text-[1.7vh] font-semibold rounded-md border-[#3A4E70] border mb-[3%] ' placeholder='Search for PR by Author, tag or commit hash' value={search}onChange={(e) => setSearch(e.target.value)} />
                         <SearchIcon className='w-[5%] absolute top-[5%] right-[5%]' />
                         <div className='h-[75%] mb-[5%] w-full overflow-y-scroll customScrollbar'>
                             {
-                                IssuesList!==undefined && IssuesList.collabInfo.map((collab:any,idx:number)=>{
+                                IssuesList!==undefined && PrSearch.map((collab:any,idx:number)=>{
                                     return <BoxPR PRChoosen={PRChoosen} setPRChoosen={setPRChoosen} PrData={collab} key={idx} />
                                 })
                             }
@@ -222,8 +245,8 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
                         }
                     </div>
                 </div>
-
             </div>
+            <LoadingScreen load={load} />
         </div>
     );
 }

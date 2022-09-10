@@ -58,7 +58,7 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
             <div className='w-[13%] mx-[0.5%]'>{userData?.login}</div>
             <div className='w-[13%] mx-[0.5%] flex flex-row justify-start items-center'>
                 <div className='w-[35%]'>{totalStaked} &nbsp; {metadata.metadata.tokenSymbol} </div>
-                <img src={metadata.metadata.tokenImg} className='rounded-full h-[3vh] inline ml-[5%]' />  
+                <img src={metadata.metadata.tokenImg||''} className='rounded-full h-[3vh] inline ml-[5%]' />  
                 {/* <div className='w-[35%]'>({metadata.totalStakedInUSD})</div> */}
             </div>
             <div className='w-[6%] mx-[0.5%]'>{openIssuesCount} {parseInt(openIssuesCount)>10?"🔥":null}</div>
