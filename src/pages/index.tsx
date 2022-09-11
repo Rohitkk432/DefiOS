@@ -1,7 +1,6 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
-import {faTwitter} from '@fortawesome/free-brands-svg-icons'
 
 import {useSession, signIn} from 'next-auth/react'
 
