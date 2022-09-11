@@ -1,6 +1,7 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
+import {faTwitter} from '@fortawesome/free-brands-svg-icons'
 
 import {useSession, signIn} from 'next-auth/react'
 
@@ -27,7 +28,7 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
             <div className='w-full flex flex-row justify-between items-center h-[7vh] z-20'>
                 <img src="/assets/images/defi-os-logo.png" className='h-full' />
                 <div className='flex flex-row justify-end items-center w-full h-full' >
-                    <a href='https://twitter.com/defiOSofficial' target="_blank" className='mx-[2%] font-thin text-[2.5vh]'>Twitter</a>
+                    <a href='https://youtu.be/36O5ew_3qh0' target="_blank" className='mx-[2%] font-thin text-[2.5vh]'>Click Here !!</a>
                     <a href='/whitepaper' target="_blank" className='mx-[2%] font-thin text-[2.5vh]'>Whitepaper</a>
                     <a href="mailto:abhi@defi-os.com?Subject=Product%20Query" className='mx-[2%] font-thin text-[2.5vh]'>Contact Us</a>
                 </div>
@@ -71,8 +72,9 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
                         </Link>
                         }
 
-                        <a href='https://youtu.be/36O5ew_3qh0' target="_blank" className='bg-[#7082C3] py-[2.5%] w-[27%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
-                            <div>Click This</div>
+                        <a href='https://twitter.com/defiOSofficial' target="_blank" className='bg-[#7082C3] py-[2.5%] w-[27%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
+                            <div>Latest Updates</div>
+                            <FontAwesomeIcon icon={faTwitter} className='inline h-[3vh] ml-[2%]'/>
                         </a>
                     </div>
                 </div>
