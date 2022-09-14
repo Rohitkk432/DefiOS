@@ -24,6 +24,7 @@ interface IssueVoteProps {
 const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID}) => {
 
     const [load, setLoad] = useState(false)
+    const [errorMsg, setErrorMsg] = useState<string>()
 
     const {data:session} = useSession()
 
@@ -97,11 +98,26 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
-        await DaoContract.voteOnIssue(popupIssueID,PRChoosen,IssuesList.stakersObj[`${localStorage.getItem('currentAccount')?.toLowerCase()}`].stakerID);
 
-        setLoad(false);
-        setPopupState('none')
-        localStorage.removeItem('popupState')
+        let txRes = false;
+        const tx = await DaoContract.voteOnIssue(popupIssueID,PRChoosen,IssuesList.stakersObj[`${localStorage.getItem('currentAccount')?.toLowerCase()}`].stakerID)
+        .then((res:any)=>{
+            setLoad(false);
+            setPopupState('none')
+            localStorage.removeItem('popupState')
+            txRes=true;
+            return res;
+        })
+        .catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
+            }
+        });
+        if(txRes){
+            await tx.wait();
+        }
     }
 
     const ChooseWinnerFunc = async () => {
@@ -111,31 +127,46 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
-        const tx = await DaoContract.chooseWinner(popupIssueID);
-        await tx.wait();
-        const issueRes = await DaoContract.repoIssues(popupIssueID);
-        //merge PR
-        for(let i=0;i<IssuesList.collabInfo.length;i++){
-            if(IssuesList.collabInfo[i].collaborator.toLowerCase()===issueRes.solver.toLowerCase()){
-                const _linkbreak = IssuesList.collabInfo[i].url.split("/");
-                await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}/merge`,{
-                    method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${session?.accessToken}` },
-                }).catch(err=>console.log(err));
+        let winnerChoosen = false;
+        const tx = await DaoContract.chooseWinner(popupIssueID)
+        .then((res:any)=>{
+            winnerChoosen = true;
+            return res
+        })
+        .catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
             }
-        }
-        //close issue
-        const requestOptions = {
-            method: 'PATCH',
-            headers: { 'Authorization': `Bearer ${session?.accessToken}` },
-            body: JSON.stringify({ state: "closed" })
-        };
-        const issueUrlToClose = IssuesList.issueInfo.issueURL.replace("github.com","api.github.com/repos")
-        await fetch(issueUrlToClose,requestOptions)
+        });
 
-        setLoad(false);
-        setPopupState('none')
-        localStorage.removeItem('popupState')
+        if(winnerChoosen){
+            await tx.wait();
+            const issueRes = await DaoContract.repoIssues(popupIssueID);
+            //merge PR
+            for(let i=0;i<IssuesList.collabInfo.length;i++){
+                if(IssuesList.collabInfo[i].collaborator.toLowerCase()===issueRes.solver.toLowerCase()){
+                    const _linkbreak = IssuesList.collabInfo[i].url.split("/");
+                    await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}/merge`,{
+                        method: 'PUT',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).catch(err=>console.log(err));
+                }
+            }
+            //close issue
+            const requestOptions = {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                body: JSON.stringify({ state: "closed" })
+            };
+            const issueUrlToClose = IssuesList.issueInfo.issueURL.replace("github.com","api.github.com/repos")
+            await fetch(issueUrlToClose,requestOptions)
+
+            setLoad(false);
+            setPopupState('none')
+            localStorage.removeItem('popupState')
+        }
     }
 
     //search logic
@@ -242,7 +273,7 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
                     </div>
                 </div>
             </div>
-            <LoadingScreen load={load} />
+            <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} />
         </div>
     );
 }

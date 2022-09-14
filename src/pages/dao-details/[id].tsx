@@ -70,7 +70,7 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
 
     return (
         <div className='w-[98.5vw] h-[150vh] bg-[#303C4A] flex flex-row justify-start items-start overflow-x-hidden'>
-            <DashboardMenu/>
+            <DashboardMenu DaoInfo={DaoInfo} />
             <DaoDetailsBottom setPopupIssue={setPopupIssue} DaoInfo={DaoInfo} popupState={popupState}  setPopupState={setPopupState}/>
 
             {

@@ -2,12 +2,11 @@ import React from 'react'
 import {useState,useEffect} from 'react'
 import {ethers} from 'ethers'
 import contractAbi from "../ContractFunctions/DaoFactoryABI.json"
+import LoadingScreen from '../utils/LoadingScreen'
 
 import {CheckIcon} from '@heroicons/react/outline'
 
 import { useSession } from "next-auth/react";
-
-import { useRouter } from 'next/router'
 
 interface CreationProcessProps {
     creationStarter: boolean;
@@ -15,12 +14,11 @@ interface CreationProcessProps {
 
 declare let window:any
 
-const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
-    const router = useRouter()
-    
+const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {    
     const {data:session} = useSession()
     const contractAddress:any = process.env.DEFIOS_CONTRACT_ADDRESS;
-
+    
+    const [load, setLoad] = useState(false)
     const [processStep, setProcessStep] = useState(-1)
 
     const process1 = async () => {
@@ -56,7 +54,9 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
         .then(res=>res.json())
         .catch(err=>console.log(err))
 
-        const partenerData = Object.values(data.distribution).map((value:any)=>Math.round(parseFloat(value)*10000000))
+        const partenerData = Object.values(data.distribution).map((value:any)=>
+            ethers.utils.parseEther((parseFloat(value)*(10**5)).toString())
+        )
         const partenerKeys = Object.keys(data.distribution);
 
         const partnersDataSorted:any = []
@@ -66,10 +66,10 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
             const userGithub:any = await fetch(`https://api.github.com/users/${partenerKeys[i]}`)
             .then(res=>res.json())
             if(partenerKeys[i]?.toLowerCase()===data.repoFullName.split('/')[0].toLowerCase()){
-                partnersKeysSorted.unshift(userGithub.id)
+                partnersKeysSorted.unshift((userGithub.id).toString())
                 partnersDataSorted.unshift(partenerData[i])
             }else{
-                partnersKeysSorted.push(userGithub.id)
+                partnersKeysSorted.push(userGithub.id.toString())
                 partnersDataSorted.push(partenerData[i])
             }
         }
@@ -97,17 +97,21 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
         }).then(res=>res.json())
         .catch(err=>console.log(err))
 
+        console.log(proposal)
+        console.log(partnersKeysSorted);
+        console.log(partnersDataSorted);
+        console.log(parseFloat(data.DaoFees)*(10**18));
+        console.log(ipfsRes.IpfsHash);
+        console.log(data.tokenName);
+        console.log(data.tokenSymbol)
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
         const creation = await defiosContract.createGitDAO(proposal,partnersKeysSorted,partnersDataSorted,parseFloat(data.DaoFees)*(10**18),ipfsRes.IpfsHash,data.tokenName,data.tokenSymbol);
-        const result = await creation.wait()
-        if(result.events[3].args.DAO!==undefined){
-            setProcessStep(5)
-            return result.events[3].args.DAO
-        }
+        await creation.wait()
+        setProcessStep(5)
     }
 
     const process3 = async()=>{
@@ -123,7 +127,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
             setProcessStep(6)
             localStorage.removeItem('DaoCreationData')
             localStorage.removeItem('distributionOk')
-            router.push(`/dashboard`)
+            setLoad(true);
         }
     }
 
@@ -270,6 +274,8 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
             </div>
 
             <div className={`w-[90%] mx-auto  text-center text-[1.81vh] border-t border-[#9D9D9D] py-[3%] mb-[4%] mt-[6%] font-semibold`} >DAO creation {processStep===-1?0:Math.round(processStep/6 *100*100)/100}% completed</div>
+
+            <LoadingScreen load={load} setLoad={setLoad} success="DAO Creation Complete" />
         </div>
     );
 }

@@ -73,6 +73,7 @@ const PieChart: React.FC<PieChartProps> = ({pieData}) => {
 const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIssueID}) => {
 
     const [load, setLoad] = useState(false)
+    const [errorMsg, setErrorMsg] = useState<string>()
 
     const {data:session} = useSession()
 
@@ -114,6 +115,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         const DaoTokenAddress = await DaoContract.TOKEN();
         let TokenContract : ethers.Contract = new ethers.Contract(DaoTokenAddress, TokenAbi , signer);
         const userTokenBalance = ethers.utils.formatEther(await TokenContract.balanceOf(await signer.getAddress()));
+        console.log(userTokenBalance);
 
         const apiURL = await issueRes.issueURL.replace('github.com','api.github.com/repos');
         const githubRes = await fetch(apiURL).then(res=>res.json()).catch(err=>console.log(err));
@@ -141,12 +143,43 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         let TokenContract : ethers.Contract = new ethers.Contract(DaoTokenAddress, TokenAbi , signer);
 
         //increase allowance
-        const tx = await TokenContract.increaseAllowance(DaoInfo.DAO,ethers.utils.parseEther(addStake.toString()));
-        await tx.wait();
-        await DaoContract.stakeOnIssue(popupIssueID,ethers.utils.parseEther(addStake.toString()));
-        setLoad(false);
-        setPopupState('none')
-        localStorage.removeItem('popupState') 
+        let txRes = false;
+        const tx = await TokenContract.increaseAllowance(DaoInfo.DAO,ethers.utils.parseEther(addStake.toString()))
+        .then((res:any)=>{
+            txRes = true;
+            return res
+        })
+        .catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
+            }
+        });
+        if(txRes){
+            await tx.wait();
+        }
+        
+        //stake
+        txRes = false;
+        const tx1 = await DaoContract.stakeOnIssue(popupIssueID,ethers.utils.parseEther(addStake.toString()))
+        .then((res:any)=>{
+            txRes = true;
+            return res;
+        })
+        .catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
+            }
+        });
+        if(txRes){
+            await tx1.wait();
+            setLoad(false);
+            setPopupState('none')
+            localStorage.removeItem('popupState')
+        }
     }
 
     const StartVotingFunc = async () => {
@@ -157,10 +190,26 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
-        await DaoContract.startVoting(popupIssueID);
-        setLoad(false);
-        setPopupState('none')
-        localStorage.removeItem('popupState')
+        //start voting
+        let txRes = false;
+        const tx = await DaoContract.startVoting(popupIssueID)
+        .then((res:any)=>{
+            txRes = true;
+            return res;
+        })
+        .catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
+            }
+        });
+        if(txRes){
+            await tx.wait();
+            setLoad(false);
+            setPopupState('none')
+            localStorage.removeItem('popupState')
+        }
     }
 
     const CheckIfCanBeContributor = () => {
@@ -213,11 +262,26 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
-        await DaoContract.addCollaborator(popupIssueID,PrLink,ProofOfPR);
-
-        setLoad(false);
-        setPopupState('none')
-        localStorage.removeItem('popupState')
+        //add pr contributor
+        let txRes = false;
+        const tx = await DaoContract.addCollaborator(popupIssueID,PrLink,ProofOfPR)
+        .then((res:any)=>{
+            txRes = true;
+            return res;
+        })
+        .catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
+            }
+        });
+        if(txRes){
+            await tx.wait();
+            setLoad(false);
+            setPopupState('none')
+            localStorage.removeItem('popupState')
+        }
     }
 
     useEffect(()=>{
@@ -356,7 +420,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                     </div>
                 </div>
             </div>
-            <LoadingScreen load={load} />
+            <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} />
         </div>
     )
 }

@@ -12,14 +12,19 @@
 				"type": "string"
 			},
 			{
-				"internalType": "uint256[]",
+				"internalType": "string[]",
 				"name": "users",
-				"type": "uint256[]"
+				"type": "string[]"
 			},
 			{
 				"internalType": "uint256[]",
 				"name": "tokens",
 				"type": "uint256[]"
+			},
+			{
+				"internalType": "address",
+				"name": "_factory",
+				"type": "address"
 			}
 		],
 		"stateMutability": "nonpayable",
@@ -158,9 +163,9 @@
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "partnerId",
-				"type": "uint256"
+				"type": "string"
 			}
 		],
 		"name": "claimShare",
@@ -230,24 +235,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "mint",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "name",
 		"outputs": [
@@ -263,9 +250,9 @@
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "",
-				"type": "uint256"
+				"type": "string"
 			}
 		],
 		"name": "partner",

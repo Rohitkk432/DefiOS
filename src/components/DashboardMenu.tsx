@@ -1,16 +1,95 @@
 import React from 'react'
+import {useState,useEffect} from 'react'
+import LoadingScreen from './utils/LoadingScreen'
 // import ActionableItems from './ActionableItems'
 
 import {useSession} from 'next-auth/react'
 import Link from 'next/link'
 
-interface DashboardMenuProps {
+import {ethers} from 'ethers'
+declare let window:any
+import DaoAbi from "./ContractFunctions/DaoABI.json"
+import TokenAbi from "./ContractFunctions/TokenABI.json"
 
+
+interface DashboardMenuProps {
+    DaoInfo?:any
 }
 
-const DashboardMenu: React.FC<DashboardMenuProps> = ({}) => {
+const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
+
+    const [load, setLoad] = useState(false)
+    const [errorMsg, setErrorMsg] = useState<string>()
+    const [successMsg, setSuccessMsg] = useState<string>()
 
     const {data:session} = useSession()
+
+    const [ claimRender , setClaimRender ] = useState(false);
+    const [githubUID, setGithubUID] = useState<string>()
+
+    const claimTokens = async () => {
+        if(githubUID===undefined || !claimRender) return
+        setLoad(true)
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
+        
+        const DaoTokenAddress = await DaoContract.TOKEN();
+        let TokenContract : ethers.Contract = new ethers.Contract(DaoTokenAddress, TokenAbi , signer);
+
+        let txRes = false;
+        const tx = await TokenContract.claimShare(githubUID).then((res:any)=>{
+            setSuccessMsg("Claimed Tokens")
+            return res;
+        }).catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
+            }
+        })
+        if(txRes){
+            await tx.wait();
+        }
+    }
+
+    const checkIfUnclaimed = async()=>{
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+        };
+        const idGithub = await fetch('https://api.github.com/user',requestOptions).then(res=>res.json())
+        .then(res=>{
+            for(let i=0;i<DaoInfo.team.length;i++){
+                if(res.id.toString()===DaoInfo.team[i]){
+                    setGithubUID(res.id.toString())
+                    return res.id.toString();
+                }
+            }
+        });
+        // web3
+        if(idGithub===undefined) return
+        
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
+        
+        const DaoTokenAddress = await DaoContract.TOKEN();
+        let TokenContract : ethers.Contract = new ethers.Contract(DaoTokenAddress, TokenAbi , signer);
+
+        const checkUnclaimed = await TokenContract.partner(idGithub)
+        
+        if(!checkUnclaimed.claimed){
+            setClaimRender(true)
+        }
+    }
+
+    useEffect(()=>{
+        if (session && DaoInfo!==undefined){
+            checkIfUnclaimed();
+        }
+    },[DaoInfo])
 
     return (
         <div className='w-[20%] h-full bg-[#191C21] flex flex-col justify-start items-center px-[1.5%] py-[1%] pt-[7%] relative text-white'>
@@ -63,6 +142,14 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({}) => {
                 <ActionableItems />
                 <ActionableItems />
             </div> */}
+
+            {claimRender && 
+                <button className='flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2.7vh] mt-[1vh]' onClick={()=>claimTokens()} >
+                    <div>Claim Tokens</div>
+                </button>
+            }
+
+            <LoadingScreen load={load} setLoad={setLoad} error={errorMsg} success={successMsg} />
         </div>
     );
 }

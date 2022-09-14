@@ -57,6 +57,7 @@ const CreateTag: React.FC<CreateTagProps> = ({allTags,setAllTags}) => {
 const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
 
     const [load, setLoad] = useState(false)
+    const [errorMsg, setErrorMsg] = useState<string>()
 
     const [allTags , setAllTags] = useState<string[]>([])
 
@@ -87,9 +88,26 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
-        await DaoContract.createIssue(issueOutput.data.html_url,0)
-        setLoad(false)
-        setPopupState('none')
+
+        let txRes = false;
+        const tx = await DaoContract.createIssue(issueOutput.data.html_url,0)
+        .then((res:any)=>{
+            txRes = true;
+            return res;
+        })
+        .catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
+            }
+        });
+        if(txRes){
+            await tx.wait();
+            setLoad(false);
+            setPopupState('none')
+            localStorage.removeItem('popupState')
+        }
     }
     
     return (
@@ -128,7 +146,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
                     </div>
                 </div>
             </div>
-            <LoadingScreen load={load} />
+            <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} />
         </div>
     );
 }

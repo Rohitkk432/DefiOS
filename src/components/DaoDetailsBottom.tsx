@@ -42,6 +42,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
             issuesList.push(IterIssue);
         }
         setIssuesList(issuesList);
+        // console.log(DaoInfo);
     }
 
     //search logic

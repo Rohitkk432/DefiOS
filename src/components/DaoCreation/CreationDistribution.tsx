@@ -144,14 +144,19 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                     <InformationCircleIcon className='w-[5%] absolute top-[30%] right-[3%]' />
                 </div>
                 <div className='w-full relative'>
-                    <input type="number" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#373737] border disabled:border-green-900`} placeholder='Enter Distribution %' value={distributionPercentage} disabled={!editDistribution}
+                    <input type="number" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#373737] border disabled:border-green-900`} placeholder='Enter Distribution % (MAX-25%)' value={distributionPercentage} disabled={!editDistribution}
                     onChange={(e)=>setDistributionPercentage(e.target.value)} required />
                     {editDistribution && <CheckIcon className='w-[5%] absolute top-[30%] right-[3%]'
                     onClick={()=>{
                         setEditDistribution(false)
                         const storeData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
                         if(distributionPercentage!==''){
-                            storeData.distributionPercentage = distributionPercentage;
+                            if(parseFloat(distributionPercentage)>25){
+                                setDistributionPercentage('25')
+                                storeData.distributionPercentage = '25'
+                            }else{
+                                storeData.distributionPercentage = distributionPercentage;
+                            }
                         }else{
                             storeData.distributionPercentage = '0';
                             setDistributionPercentage('0');
@@ -161,6 +166,8 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                             AlgoOwner();
                         }else if(algorithm==='By amount of code contributed ( minified )'){
                             AlgoCode();
+                        }else if(algorithm==='By duration of project involvement ( compute intensive )'){
+                            AlgoDuration();
                         }else{
                             setTriggerToMain(triggerToMain+1);
                         }

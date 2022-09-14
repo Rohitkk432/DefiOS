@@ -22,6 +22,7 @@ interface IssueRewardProps {
 const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIssueID}) => {
 
     const [load, setLoad] = useState(false)
+    const [errorMsg, setErrorMsg] = useState<string>()
 
     const [IssuesList,setIssuesList] = useState<any>()
 
@@ -77,10 +78,25 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
-        await DaoContract.redeemRewards(popupIssueID);
-        setLoad(false);
-        setPopupState('none')
-        localStorage.removeItem('popupState')
+        let txRes = false
+        const tx = await DaoContract.redeemRewards(popupIssueID)
+        .then((res:any)=>{
+            setLoad(false);
+            setPopupState('none')
+            localStorage.removeItem('popupState')
+            txRes=true;
+            return res;
+        })
+        .catch((err:any)=>{
+            if(err.error===undefined){
+                setErrorMsg('Transaction Rejected')
+            }else{
+                setErrorMsg(err.error.data.message)
+            }
+        });
+        if(txRes){
+            await tx.wait();
+        }
     }
 
     useEffect(()=>{
@@ -173,7 +189,7 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
                     </div>
                 </div>
             </div>
-            <LoadingScreen load={load} />
+            <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} />
         </div>
     );
 }

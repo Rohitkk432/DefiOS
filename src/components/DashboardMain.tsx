@@ -101,7 +101,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
         }else if(!seeMyDaos){
             listAllGlobalDao()
         }
-    },[seeMyDaos])
+    },[seeMyDaos,currentAccount,chainId])
 
 
     return (
