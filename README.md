@@ -1,2 +1,1 @@
-DefiOs
-
+DefiOs DAO
