@@ -126,6 +126,8 @@ input::-webkit-inner-spin-button {
   -webkit-box-shadow: inset 0 0 6px rgba(96, 96, 96, 0.5);
 }
 
+
+/* custom gradient bg */
 .customGradient{
   background: #121418;
   position: relative;
@@ -143,4 +145,28 @@ input::-webkit-inner-spin-button {
     radial-gradient(closest-side at 33.3%, #91A8ED 100%, transparent 0);
   filter: blur(15vh);
   opacity: .45;
+}
+
+
+/* pie Data text color */
+.pieDataText1 {
+  color:#7B7C7D;
+}
+.pieDataText2 {
+  color: #6495ED;
+}
+.pieDataText3 {
+  color: #0047AB;
+}
+.pieDataText4 {
+  color: #00008B;
+}
+.pieDataText5 {
+  color: #3F00FF;
+}
+.pieDataText6 {
+  color: #5D3FD3;
+}
+.pieDataText7 {
+  color: #4169E1;
 }

@@ -1,5 +1,8 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
+import {ethers} from 'ethers'
+import contractAbi from "../ContractFunctions/DaoFactoryABI.json"
+import LoadingScreen from '../utils/LoadingScreen'
 
 import {CheckIcon} from '@heroicons/react/outline'
 
@@ -9,14 +12,18 @@ interface CreationProcessProps {
     creationStarter: boolean;
 }
 
-const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
+declare let window:any
 
+const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {    
     const {data:session} = useSession()
-
+    const contractAddress:any = process.env.DEFIOS_CONTRACT_ADDRESS;
+    
+    const [load, setLoad] = useState(false)
     const [processStep, setProcessStep] = useState(-1)
 
     const process1 = async () => {
         setProcessStep(0);
+
         const github_uid = session?.user?.image?.split('/')[4]?.split("?")[0] 
         const requestOptions = {
             method: 'POST',
@@ -29,14 +36,108 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
                 }
             )
         };
-        fetch('https://names.defi-os.com/encrypt',requestOptions)
+        const returnSig = await fetch('https://names.defi-os.com/encrypt',requestOptions)
+        .then(res=>res.status===200?res.json():null)
+        .then(res=>{
+            setProcessStep(1)
+            return res.signature
+        })
+        .catch(err=>console.log(err))
+
+        return returnSig
+    }
+
+    const process2 = async (signature:string) => {
+        const data = JSON.parse(localStorage.getItem('DaoCreationData')||'')
+        const repo = data.repoFullName.split('/').join('!')
+        const repoInfo = await fetch(`/api/repo/info/${repo}`)
         .then(res=>res.json())
-        .then(res=>res.status===200?setProcessStep(1):console.log(res))
+        .catch(err=>console.log(err))
+
+        const partenerData = Object.values(data.distribution).map((value:any)=>
+            ethers.utils.parseEther((parseFloat(value)*(10**5)).toString())
+        )
+        const partenerKeys = Object.keys(data.distribution);
+
+        const partnersDataSorted:any = []
+        const partnersKeysSorted:any = []
+
+        for(let i=0;i<partenerKeys.length;i++){
+            const userGithub:any = await fetch(`https://api.github.com/users/${partenerKeys[i]}`)
+            .then(res=>res.json())
+            if(partenerKeys[i]?.toLowerCase()===data.repoFullName.split('/')[0].toLowerCase()){
+                partnersKeysSorted.unshift((userGithub.id).toString())
+                partnersDataSorted.unshift(partenerData[i])
+            }else{
+                partnersKeysSorted.push(userGithub.id.toString())
+                partnersDataSorted.push(partenerData[i])
+            }
+        }
+
+        const proposal = [repoInfo.html_url,repoInfo.name,localStorage.getItem('currentAccount'),signature]
+        const metadataToHash = {
+            'daoName':data.daoName,
+            'daoFees':data.DaoFees,
+            'tokenName':data.tokenName,
+            'tokenSymbol':data.tokenSymbol,
+            'repoUrl':repoInfo.html_url,
+            'repoName':repoInfo.name,
+            'partners':partnersKeysSorted,
+            'tokenImg':data.tokenImgIpfsHash,
+            'chain':data.network,
+            'createdAt':Date.now()
+        }
+        const ipfsRes = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
+            method: 'POST',
+            headers: {
+                "Content-Type": 'application/json',
+                "Authorization": `Bearer ${process.env.PINATA_JWT}`
+            },
+            body: JSON.stringify(metadataToHash)
+        }).then(res=>res.json())
+        .catch(err=>console.log(err))
+
+        console.log(proposal)
+        console.log(partnersKeysSorted);
+        console.log(partnersDataSorted);
+        console.log(parseFloat(data.DaoFees)*(10**18));
+        console.log(ipfsRes.IpfsHash);
+        console.log(data.tokenName);
+        console.log(data.tokenSymbol)
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+        const creation = await defiosContract.createGitDAO(proposal,partnersKeysSorted,partnersDataSorted,parseFloat(data.DaoFees)*(10**18),ipfsRes.IpfsHash,data.tokenName,data.tokenSymbol);
+        await creation.wait()
+        setProcessStep(5)
+    }
+
+    const process3 = async()=>{
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+        const userDaoCount = await defiosContract.getUserDAOCount(localStorage.getItem('currentAccount'))
+        const daoId = await defiosContract.userDAOs(localStorage.getItem('currentAccount'),userDaoCount-1)
+        const daoInfo = await defiosContract.getDAOInfo(daoId)
+        if(daoInfo!==undefined){
+            setProcessStep(6)
+            localStorage.removeItem('DaoCreationData')
+            localStorage.removeItem('distributionOk')
+            setLoad(true);
+        }
     }
 
     useEffect(() => {
         if(session && creationStarter && processStep === -1){
-            process1();
+            process1().then(res=>{
+                process2(res).then(()=>{
+                    process3()
+                })
+            });
         }
     } ,[creationStarter,processStep])
 
@@ -124,7 +225,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
                     
                 </div>
                 <div className={`text-[1.63vh] font-semibold ${(processStep>=4)?'text-[#A7B9FC]':(processStep===3)?'text-white':'text-[#727272]'} w-[70%]`}>
-                    Deploying Contract for token
+                    Deploying ERC-20 Token
                 </div>
             </div>
             <div className={`w-[calc(83vh/48)] h-[calc(113vh/54)] mx-[6%] ${(processStep>=4)?'border-r border-solid border-[#A7B9FC]':'border-r border-dashed border-[#727272]'}`}></div>
@@ -172,7 +273,9 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
                 </div>
             </div>
 
-            <div className={`w-[90%] mx-auto  text-center text-[1.81vh] border-t border-[#9D9D9D] py-[3%] mb-[4%] mt-[6%] font-semibold`} >DAO creation {Math.floor(processStep/6 *100*100)/100}% completed</div>
+            <div className={`w-[90%] mx-auto  text-center text-[1.81vh] border-t border-[#9D9D9D] py-[3%] mb-[4%] mt-[6%] font-semibold`} >DAO creation {processStep===-1?0:Math.round(processStep/6 *100*100)/100}% completed</div>
+
+            <LoadingScreen load={load} setLoad={setLoad} success="DAO Creation Complete" />
         </div>
     );
 }

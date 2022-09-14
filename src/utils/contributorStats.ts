@@ -82,6 +82,5 @@ export const CodeDurationStats = (data:any,distributionPercentage:any) => {
     for (let i=0 ; i<data.length ; i++) {
         newData[data[i].author.login] = ((newData[data[i].author.login]/totalCode)*percentage)+'%'
     }
-    // console.log(newData);
     return newData;
 }

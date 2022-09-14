@@ -144,14 +144,19 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                     <InformationCircleIcon className='w-[5%] absolute top-[30%] right-[3%]' />
                 </div>
                 <div className='w-full relative'>
-                    <input type="number" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#373737] border disabled:border-green-900`} placeholder='Enter Distribution %' value={distributionPercentage} disabled={!editDistribution}
+                    <input type="number" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#373737] border disabled:border-green-900`} placeholder='Enter Distribution % (MAX-25%)' value={distributionPercentage} disabled={!editDistribution}
                     onChange={(e)=>setDistributionPercentage(e.target.value)} required />
                     {editDistribution && <CheckIcon className='w-[5%] absolute top-[30%] right-[3%]'
                     onClick={()=>{
                         setEditDistribution(false)
                         const storeData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
                         if(distributionPercentage!==''){
-                            storeData.distributionPercentage = distributionPercentage;
+                            if(parseFloat(distributionPercentage)>25){
+                                setDistributionPercentage('25')
+                                storeData.distributionPercentage = '25'
+                            }else{
+                                storeData.distributionPercentage = distributionPercentage;
+                            }
                         }else{
                             storeData.distributionPercentage = '0';
                             setDistributionPercentage('0');
@@ -161,6 +166,8 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                             AlgoOwner();
                         }else if(algorithm==='By amount of code contributed ( minified )'){
                             AlgoCode();
+                        }else if(algorithm==='By duration of project involvement ( compute intensive )'){
+                            AlgoDuration();
                         }else{
                             setTriggerToMain(triggerToMain+1);
                         }
@@ -266,7 +273,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                     <div className='bg-[#121418] w-full h-[20%] px-[2%] py-[2%] mt-[2%] text-xs font-semibold rounded-md border-[#2E2E2F] border flex flex-row align-center justify-between' >
                         {/* user name */}
                         <div className='flex flex-row'>
-                            <img src={JSON.parse(localStorage.getItem('DaoCreationData')||'{}').tokenImgPreview} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
+                            <img src={JSON.parse(localStorage.getItem('DaoCreationData')||'{}').tokenImgIpfsURL||''} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
                             <div className={`text-[#D7D7D7] text-[1.63vh]`}>{JSON.parse(localStorage.getItem('DaoCreationData')||'{}').daoName} DAO</div>
                         </div>
                         {/* user distribution */}

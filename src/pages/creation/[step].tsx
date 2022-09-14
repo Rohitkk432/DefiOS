@@ -1,7 +1,6 @@
 import React from 'react'
 import { useState,useEffect } from 'react'
 
-import Link from 'next/link';
 import {useRouter} from 'next/router';
 
 import CreationSteps from '../../components/DaoCreation/CreationSteps';
@@ -12,6 +11,7 @@ import CreationChooseRepo from '../../components/DaoCreation/CreationChooseRepo'
 import CreationChooseToken from '../../components/DaoCreation/CreationChooseToken';
 import CreationDistribution from '../../components/DaoCreation/CreationDistribution';
 import CreationConfirm from '../../components/DaoCreation/CreationConfirm';
+
 
 import { XIcon } from '@heroicons/react/outline';
 
@@ -43,11 +43,12 @@ const Creation: React.FC<creationProps> = ({}) => {
     return (
         <div className='flex flex-row justify-center items-center w-screen h-screen bg-[#303C4A]'>
             <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] rounded-2xl z-0'>
-                <Link
-                    href="/dashboard"
-                >
-                    <XIcon className="h-[4vh] w-[4vh] text-white absolute top-[3vh] right-[3vh]"/>
-                </Link>
+
+                <XIcon onClick={()=>{
+                    localStorage.removeItem('DaoCreationData')
+                    localStorage.removeItem('distributionOk')
+                    router.push('/dashboard')
+                }} className="h-[4vh] w-[4vh] text-white absolute top-[3vh] right-[3vh]"/>
 
                 <CreationSteps step={Number(step)} />
 
