@@ -32,7 +32,7 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
 
     const [DaoInfo, setDaoInfo] = useState<any>()
 
-    const contractAddress:any = process.env.DEFIOS_CONTRACT_ADDRESS;
+    const contractAddress:any = process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS;
 
     const initDaoData = async()=>{
         let doaID = window.location.pathname.split('/')[2]

@@ -22,7 +22,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
 
     const [seeMyDaos, setSeeMyDaos] = useState(true)
 
-    const contractAddress:any = process.env.DEFIOS_CONTRACT_ADDRESS;
+    const contractAddress:any = process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS;
 
     const [DaoList, setDaoList] = useState<any>()
 

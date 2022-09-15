@@ -18,7 +18,7 @@ declare let window:any
 
 const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {    
     const {data:session} = useSession()
-    const contractAddress:any = process.env.DEFIOS_CONTRACT_ADDRESS;
+    const contractAddress:any = process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS;
     
     const [load, setLoad] = useState(false)
     const [processStep, setProcessStep] = useState(-1)
@@ -115,7 +115,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
             method: 'POST',
             headers: {
                 "Content-Type": 'application/json',
-                "Authorization": `Bearer ${process.env.PINATA_JWT}`
+                "Authorization": `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
             },
             body: JSON.stringify(metadataToHash)
         }).then(res=>res.json())
@@ -203,8 +203,8 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
                 <CustomTooltip title="Pinning metadata to IPFS & calling create_dao function" enterDelay={500}  placement="right" arrow>
                 <div className={`text-[1.63vh] font-semibold ${(processStep>=2)?'text-[#A7B9FC]':(processStep===1)?'text-white':'text-[#727272]'} w-[70%]`}>
                     <div>Calling create_dao on</div>
-                    <a href={`https://neonscan.org/address/${process.env.DEFIOS_CONTRACT_ADDRESS}`} target="_blank" className='underline text-[#99DCF7]' >
-                        {process.env.DEFIOS_CONTRACT_ADDRESS?.slice(0,5)+"..."+process.env.DEFIOS_CONTRACT_ADDRESS?.slice(37,42)}
+                    <a href={`https://neonscan.org/address/${process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS}`} target="_blank" className='underline text-[#99DCF7]' >
+                        {process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS?.slice(0,5)+"..."+process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS?.slice(37,42)}
                     </a>
                 </div>
                 </CustomTooltip>
@@ -298,8 +298,8 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
                 <CustomTooltip title="Verifying contract creation success" enterDelay={500}  placement="right" arrow>
                 <div className={`text-[1.63vh] font-semibold ${(processStep>=6)?'text-[#A7B9FC]':(processStep===5)?'text-white':'text-[#727272]'} w-[70%]`}>
                     <div>Completing call back to</div>
-                    <a href={`https://neonscan.org/address/${process.env.DEFIOS_CONTRACT_ADDRESS}`} target="_blank" className='underline text-[#99DCF7]' >
-                        {process.env.DEFIOS_CONTRACT_ADDRESS?.slice(0,5)+"..."+process.env.DEFIOS_CONTRACT_ADDRESS?.slice(37,42)}
+                    <a href={`https://neonscan.org/address/${process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS}`} target="_blank" className='underline text-[#99DCF7]' >
+                        {process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS?.slice(0,5)+"..."+process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS?.slice(37,42)}
                     </a>
                 </div>
                 </CustomTooltip>
