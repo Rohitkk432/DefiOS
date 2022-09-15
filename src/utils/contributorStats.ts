@@ -42,10 +42,15 @@ export const CodeContributorStats = (data:any,distributionPercentage:any) => {
     return newData;
 }
 
-export const OptionRepoOwner = (data:any,contributors:any,distributionPercentage:any) => {
+export const OptionRepoOwner = (data:any,contributors:any,distributionPercentage:any,daoCreator:string) => {
     const newData:any = {}
     const percentage = parseInt(distributionPercentage)
-    const owner = data.repoFullName.split('/')[0]
+    let owner=""
+    if(daoCreator===""){
+        owner = data.repoFullName.split('/')[0]
+    }else if(daoCreator!==""){
+        owner = daoCreator
+    }
     for (let i=0 ; i<contributors.length ; i++) {
         if(contributors[i].author.login === owner){
             newData[contributors[i].author.login] = `${percentage}%`

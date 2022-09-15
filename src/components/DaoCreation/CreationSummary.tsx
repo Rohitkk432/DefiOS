@@ -7,6 +7,8 @@ import { Doughnut } from 'react-chartjs-2';
 
 import { InformationCircleIcon } from '@heroicons/react/outline';
 
+import BlueShades from '../utils/BlueShades.json'
+
 interface CreationSummaryProps {
     step: number;
     triggerToSummary: number;
@@ -34,7 +36,8 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
     const [fullData,setFullData] = useState<any>({})
     const [contriKeys,setContriKeys] = useState<any>([])
 
-    const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
+    // const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
+    const pieColors = BlueShades;
     useEffect(()=>{
         const pieData=[100]
         const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
@@ -146,7 +149,8 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                             contriKeys.map((contriKey:any,index:number)=>{
                                 return (
                                     <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
-                                        <div className={`font-semibold pieDataText${index+2}`} >{contriKey}</div>
+                                        <div className={`font-semibold`}
+                                        style={{color:pieColors[index+1]}} >{contriKey}</div>
                                         <div className='font-semibold'>{Math.round(parseFloat(fullData.distribution[`${contriKey}`])*100)/100 + "%"} </div>
                                     </div>
                                 )})

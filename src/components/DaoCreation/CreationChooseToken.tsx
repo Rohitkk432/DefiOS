@@ -1,5 +1,6 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
+import LoadingScreen from '../utils/LoadingScreen';
 
 import {useRouter} from 'next/router'
 
@@ -13,6 +14,8 @@ interface CreationChooseTokenProps {
 
 const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
     const router = useRouter()
+
+    const [load, setLoad] = useState(false)
 
     const [tokenImgFile , setTokenImgFile] = useState<any>();
     const [tokenImgPreview , setTokenImgPreview] = useState<any>();
@@ -34,7 +37,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
             body: formData
         }).then(res=>res.json())
         .catch(err=>console.log(err))
-
+        
         return ipfsRes.IpfsHash
     }
 
@@ -53,6 +56,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
     },[tokenImgFile])
 
     const submitPage = async()=>{
+        setLoad(true)
         const imgHash = await getHash();
         const dataBefore = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
         const dataAdd = {
@@ -106,10 +110,15 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
                     setErrorMsg('Please fill all the fields')
                     return
                 }
-                submitPage()
-            }} className={`bg-[#91A8ED] w-full py-[2%] text-[1.63vh] font-semibold rounded-md`} >
+                if(!load){
+                    submitPage()
+                }
+            }} className={`${load?"bg-gray-600":"bg-[#91A8ED]"} w-full py-[2%] text-[1.63vh] font-semibold rounded-md`} >
                 Confirm Token Specification
             </button>
+
+            <LoadingScreen load={load} setLoad={setLoad} processName='Pining Image to IPFS' />
+
         </div>
     );
 }
