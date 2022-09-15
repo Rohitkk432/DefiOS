@@ -4,6 +4,8 @@ import {useState,useEffect} from 'react'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
+import BlueShades from '../utils/BlueShades.json'
+
 interface PieChartProps{
     dataPie: any;
     optionsPie: any;
@@ -26,7 +28,8 @@ interface CreationConfirmRepoProps {
 
 const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreation,startCreation}) => {
 
-    const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
+    // const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
+    const pieColors = BlueShades;
 
     const [dataPie,setDataPie] = useState([100])
     const [fullData,setFullData] = useState<any>({})
@@ -148,7 +151,8 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                             contriKeys.map((contriKey:any,index:number)=>{
                                 return (
                                     <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
-                                        <div className={`font-semibold pieDataText${index+2}`}>{contriKey}</div>
+                                        <div className={`font-semibold`} 
+                                        style={{color:pieColors[index+1]}}>{contriKey}</div>
                                         <div className='font-semibold'>{Math.round(parseFloat(fullData.distribution[`${contriKey}`])*100)/100 + "%"}</div>
                                     </div>
                                 )})
@@ -159,7 +163,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                 </div>
             </div>
             {/* Submit Btn */}
-            <button className={`bg-[#91A8ED] w-full py-[2%] text-[1.63vh] font-semibold rounded-md`}
+            <button className={`${startCreation?"bg-gray-600":"bg-[#91A8ED]"}  w-full py-[2%] text-[1.63vh] font-semibold rounded-md`}
             onClick={()=>{
                 if(!startCreation){
                     setStartCreation(true)
