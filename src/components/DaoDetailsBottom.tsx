@@ -66,7 +66,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
     },[DaoInfo,popupState])
 
     return (
-        <div className='w-[80%] h-full flex flex-col justify-between items-end px-[1%] py-[1%] relative text-white overflow-hidden'>
+        <div className='w-[100%] h-[150vh] flex flex-col justify-between items-end px-[1%] py-[1%] relative text-white overflow-hidden'>
             <DaoDetailsTop DaoInfo={DaoInfo} />
             <div className='w-full h-[50%] px-[1.5%] py-[1.5%] bg-[#262B36] rounded-lg'>
                 <div className='w-full flex flex-row justify-between items-center' >

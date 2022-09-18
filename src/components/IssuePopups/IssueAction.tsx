@@ -47,7 +47,7 @@ const PieChart: React.FC<PieChartProps> = ({pieData}) => {
                 data: pieData,
                 backgroundColor: pieColors,
                 borderWidth: 0,
-                rotation:-10,
+                
             },
         ],
     };
@@ -58,7 +58,7 @@ const PieChart: React.FC<PieChartProps> = ({pieData}) => {
                 data: [1],
                 backgroundColor: ['#7B7C7D'],
                 borderWidth: 0,
-                rotation:-10,
+                
             },
         ],
     };

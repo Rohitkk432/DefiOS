@@ -1,7 +1,7 @@
 import React from 'react'
 import {useState,useEffect} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faArrowsRotate,faWallet,faSquarePollVertical} from '@fortawesome/free-solid-svg-icons'
+// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+// import {faArrowsRotate,faWallet,faSquarePollVertical} from '@fortawesome/free-solid-svg-icons'
 
 import { useRouter }from 'next/router'
 
@@ -15,7 +15,6 @@ import DaoAbi from "./ContractFunctions/DaoABI.json"
 
 const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
     const router = useRouter()
-    const [userData,setUserData] = useState<any>()
     const [openIssuesCount,setOpenIssuesCount] = useState<any>()
     const [totalStaked,setTotalStaked] = useState<any>()
 
@@ -27,9 +26,6 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
 
         DaoContract.getOpenIssueCount().then((res:any)=>setOpenIssuesCount(Number(res)));
         DaoContract.TOTALSTAKED().then((res:any)=>setTotalStaked(parseInt(ethers.utils.formatEther(res))));
-
-        fetch(`https://api.github.com/user/${metadata.metadata.partners[0]}`).then(res=>res.json())
-        .then(res=>setUserData(res)).catch(err=>console.log(err))
     },[])
 
     return (
@@ -59,7 +55,7 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
             }
             
 
-            <div className='w-[13%] mx-[0.5%]'>{userData?.login}</div>
+            <div className='w-[13%] mx-[0.5%]'>{metadata.metadata.creatorGithub}</div>
             <div className='w-[13%] mx-[0.5%] flex flex-row justify-start items-center'>
                 <div className='w-[35%]'>{totalStaked} &nbsp; {metadata.metadata.tokenSymbol} </div>
                 <img src={metadata.metadata.tokenImg||''} className='rounded-full h-[3vh] inline ml-[5%]' />  
@@ -67,7 +63,10 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
             </div>
             <div className='w-[6%] mx-[0.5%]'>{openIssuesCount} {parseInt(openIssuesCount)>10?"🔥":null}</div>
 
-            {(metadata?.pendingAction==='Sync Commit History')?
+            <div className='w-[13%] h-[5.5vh] pl-[1%] mx-[0.5%] font-semibold flex flex-row justify-start items-center z-20'
+            >-</div>
+
+            {/* {(metadata?.pendingAction==='Sync Commit History')?
             <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-blue-200 font-semibold flex flex-row justify-start items-center z-20'
             onClick={(e)=>{
                 e.stopPropagation()
@@ -97,7 +96,7 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
                 <FontAwesomeIcon icon={faWallet} className='inline h-[2vh] mr-[3%]'/>{metadata?.pendingAction}
             </div>
             :null
-            }
+            } */}
         </div>
     );
 }

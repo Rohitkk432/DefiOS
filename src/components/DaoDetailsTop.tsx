@@ -194,7 +194,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
                 rounded-md py-[2.5%] my-[3%] w-full' >
                     {/* <span>1 APE = $0.5</span>
                     <span className='text-green-500'> (+0.5%)</span> */}
-                    <div>{DaoInfo!==undefined?DaoInfo.metadata.tokenSymbol:null}</div>
+                    <div>{DaoInfo!==undefined?DaoInfo.metadata.tokenSymbol:null} = ??</div>
                 </div>
             </div>
             <div className='w-[69%] text-center h-full rounded-md  p-[1.5%] bg-[#191C21]'>

@@ -1,5 +1,6 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
+import Head from 'next/head'
 
 import DashboardMenu from '../../components/DashboardMenu';
 import DaoDetailsBottom from '../../components/DaoDetailsBottom';
@@ -69,9 +70,17 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
     },[popupIssue])
 
     return (
-        <div className='w-[98.5vw] h-[150vh] bg-[#303C4A] flex flex-row justify-start items-start overflow-x-hidden'>
+        <div className='w-[100vw] h-screen overflow-hidden bg-[#303C4A] flex flex-row justify-start items-start overflow-x-hidden'>
+
+            <Head>
+                <title>DAO Details</title>
+            </Head>
+
             <DashboardMenu DaoInfo={DaoInfo} />
-            <DaoDetailsBottom setPopupIssue={setPopupIssue} DaoInfo={DaoInfo} popupState={popupState}  setPopupState={setPopupState}/>
+
+            <div className='overflow-y-scroll w-[80%] h-full customScrollbar'>
+                <DaoDetailsBottom setPopupIssue={setPopupIssue} DaoInfo={DaoInfo} popupState={popupState}  setPopupState={setPopupState}/>
+            </div>
 
             {
             (popupState === 'issueAction')?

@@ -1,6 +1,7 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
 import LoadingScreen from './utils/LoadingScreen'
+import PopupScreen from './utils/PopupScreen'
 // import ActionableItems from './ActionableItems'
 
 import {useSession} from 'next-auth/react'
@@ -11,6 +12,9 @@ declare let window:any
 import DaoAbi from "./ContractFunctions/DaoABI.json"
 import TokenAbi from "./ContractFunctions/TokenABI.json"
 
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faRotate} from '@fortawesome/free-solid-svg-icons';
+
 
 interface DashboardMenuProps {
     DaoInfo?:any
@@ -19,6 +23,7 @@ interface DashboardMenuProps {
 const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
 
     const [load, setLoad] = useState(false)
+    const [popLoad, setPopLoad] = useState(false)
     const [errorMsg, setErrorMsg] = useState<string>()
     const [successMsg, setSuccessMsg] = useState<string>()
 
@@ -26,6 +31,7 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
 
     const [ claimRender , setClaimRender ] = useState(false);
     const [githubUID, setGithubUID] = useState<string>()
+    const [syncCommitBtn, setSyncCommitBtn] = useState(false)
 
     const claimTokens = async () => {
         if(githubUID===undefined || !claimRender) return
@@ -88,6 +94,9 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
     useEffect(()=>{
         if (session && DaoInfo!==undefined){
             checkIfUnclaimed();
+            if(DaoInfo.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLowerCase()){
+                setSyncCommitBtn(true)
+            }
         }
     },[DaoInfo])
 
@@ -144,12 +153,25 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
             </div> */}
 
             {claimRender && 
-                <button className='flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2.7vh] mt-[1vh]' onClick={()=>claimTokens()} >
+                <button className='flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] my-[1vh]' onClick={()=>claimTokens()} >
                     <div>Claim Tokens</div>
                 </button>
             }
 
-            <LoadingScreen load={load} setLoad={setLoad} error={errorMsg} success={successMsg} />
+            {syncCommitBtn &&
+            <button className='flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] my-[1vh]'>
+                <FontAwesomeIcon icon={faRotate} className='h-[2vh] mr-[3%]'/>
+                <div>Sync Commit History</div>
+            </button>
+            }
+
+            <button className='flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] mt-auto mb-[1vh]' onClick={()=>setPopLoad(true)} >
+                <div>Invest</div>
+            </button>
+
+            <LoadingScreen load={load} setLoad={setLoad} error={errorMsg} success={successMsg}
+            redirectURL='' />
+            <PopupScreen load={popLoad} setLoad={setPopLoad} />
         </div>
     );
 }

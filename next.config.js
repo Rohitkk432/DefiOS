@@ -14,6 +14,7 @@ module.exports = withBundleAnalyzer({
   env: {
     NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS,
     NEXT_PUBLIC_PINATA_JWT: process.env.NEXT_PUBLIC_PINATA_JWT,
+    NEXT_PUBLIC_MULTI_CALL_ADDRESS: process.env.NEXT_PUBLIC_MULTI_CALL_ADDRESS,
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if

@@ -2,18 +2,40 @@ import React from 'react'
 import {useState,useEffect} from 'react'
 import LoadingScreen from '../utils/LoadingScreen';
 
-import {useRouter} from 'next/router'
+// import {useRouter} from 'next/router'
 
 import { PhotographIcon,XIcon } from '@heroicons/react/outline';
 
 declare let Buffer:any
 
 interface CreationChooseTokenProps {
-
+    tourSteps:any;
+    setTourSteps:any;
 }
 
-const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
-    const router = useRouter()
+const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({setTourSteps}) => {
+    // const router = useRouter()
+
+    const StepsForTour = [
+        {
+            target: '.demo__step4',
+            content: 'Upload the logo for your project token.',
+            placement: 'right',
+            offset: 0,
+        },
+        {
+            target: '.demo__step5',
+            content: 'Add a name for your DAO.',
+            placement: 'right',
+            offset: 0,
+        },
+        {
+            target: '.demo__step6',
+            content: 'Set the name and symbol for your project token.',
+            placement: 'right',
+            offset: 0,
+        }
+    ]
 
     const [load, setLoad] = useState(false)
 
@@ -25,6 +47,8 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
     const [tokenSymbol,setTokenSymbol] = useState('');
 
     const [errorMsg,setErrorMsg] = useState('');
+    const [successMsg,setSuccessMsg] = useState<string>();
+    const [infoToLoad,setInfoToLoad] = useState<any>();
 
     const getHash = async()=>{
         const formData = new FormData();
@@ -42,6 +66,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
     }
 
     useEffect(()=>{
+        setTourSteps(StepsForTour);
         if (!tokenImgFile) {
             setTokenImgFile(undefined)
             setTokenImgPreview('')
@@ -69,7 +94,10 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
         }
         const data = {...dataBefore,...dataAdd}
         localStorage.setItem('DaoCreationData',JSON.stringify(data))
-        router.push('/creation/3')
+        setSuccessMsg('Image Uploaded Successfully');
+        setInfoToLoad({
+            "Image Uploaded at Url:" : `https://gateway.ipfs.io/ipfs/${imgHash}`
+        })
     }
 
     return (
@@ -78,7 +106,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
         >
             <div className='flex flex-col justify-center items-center h-[90%] w-full relative' >
                 {/* image input */}
-                <div className="w-[12vh] h-[12vh] flex justify-center items-center relative rounded-full border border-[#373737]">
+                <div className="demo__step4 w-[12vh] h-[12vh] flex justify-center items-center relative rounded-full border border-[#373737]">
                     {(tokenImgPreview!==''&& tokenImgFile!==undefined) ?
                     (
                         <div className='w-full h-full relative'>
@@ -97,9 +125,9 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
                 </div>
                 <div className={`text-[1.63vh] mt-[2%]`}>Token Logo</div>
                 {/* input feild */}
-                <input type="text" name='DaoName' className={`bg-[#121418] w-full py-[2%] px-[4%] mb-[2%] mt-[8%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter DAO Name' value={DaoName} onChange={(e)=>setDaoName(e.target.value)} />
+                <input type="text" name='DaoName' className={`demo__step5 bg-[#121418] w-full py-[2%] px-[4%] mb-[2%] mt-[8%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter DAO Name' value={DaoName} onChange={(e)=>setDaoName(e.target.value)} />
                 <input type="text" name='TokenName' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter the Token Name' value={tokenName} onChange={(e)=>setTokenName(e.target.value)} />
-                <input type="text" name='TokenSymbol'className={`bg-[#121418] w-full py-[2%] px-[4%] my-[2%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter the Token Symbol' value={tokenSymbol} onChange={(e)=>setTokenSymbol(e.target.value)} />
+                <input type="text" name='TokenSymbol'className={`demo__step6 bg-[#121418] w-full py-[2%] px-[4%] my-[2%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter the Token Symbol' value={tokenSymbol} onChange={(e)=>setTokenSymbol(e.target.value)} />
 
             </div>
 
@@ -117,7 +145,7 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({}) => {
                 Confirm Token Specification
             </button>
 
-            <LoadingScreen load={load} setLoad={setLoad} processName='Pining Image to IPFS' />
+            <LoadingScreen load={load} setLoad={setLoad} processName='Uploading Image to IPFS' success={successMsg} dataInfo={infoToLoad} redirectURL='/creation/3' proceedStatement='Proceed to Next Step' />
 
         </div>
     );

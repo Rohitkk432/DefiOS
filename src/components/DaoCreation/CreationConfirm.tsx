@@ -24,9 +24,11 @@ const PieChart: React.FC<PieChartProps> = ({dataPie,optionsPie}) => {
 interface CreationConfirmRepoProps {
     startCreation: boolean;
     setStartCreation: React.Dispatch<React.SetStateAction<boolean>>;
+    tourSteps:any;
+    setTourSteps:any;
 }
 
-const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreation,startCreation}) => {
+const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreation,startCreation,setTourSteps}) => {
 
     // const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
     const pieColors = BlueShades;
@@ -35,8 +37,24 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
     const [fullData,setFullData] = useState<any>({})
     const [contriKeys,setContriKeys] = useState<any>([])
 
+    const StepsForTour = [
+        {
+            target: '.demo__step11',
+            content: 'Take a minute to confirm the DAO specifications one final time before the creation process.',
+            placement: 'right',
+            offset: 0,
+        },
+        {
+            target: '.demo__step12',
+            content: 'Track the progress of DAO creation, hover over each step for greater of detail of what is happening there.',
+            placement: 'left',
+            offset: 0,
+        },
+    ]
+
     useEffect(()=>{
-        const pieData=[100]
+        setTourSteps(StepsForTour);
+        const pieData=[75,5,10,10]
         const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
 
         if(storageData==='') return
@@ -52,13 +70,13 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
 
         // let totalValue=0
         if(storageData.distributionPercentage!==undefined){
-            pieData[0] = 100 - storageData.distributionPercentage
+            pieData[0] = 75 - storageData.distributionPercentage
             data.map((value:any)=>{
                 // totalValue+=value
                 pieData.push(value)
             })
         }else{
-            pieData[0] = 100
+            pieData[0] = 75
             data.map((value:any)=>{
                 // totalValue+=value
                 pieData[0]-=value
@@ -86,14 +104,14 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                 data: dataPie,
                 backgroundColor: pieColors,
                 borderWidth: 0,
-                rotation:-10,
+                
             },
         ],
     };
 
     return (
         <div 
-        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center customGradient'
+        className='demo__step11 w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between items-center customGradient'
         >
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* token details */}
@@ -117,7 +135,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                     </div>
                     <div className='flex flex-row justify-center items-start w-full mb-[2%]' >
                         <div className='mr-[5%] w-[35%] text-right'>DAO Fees</div>
-                        <div className='w-[60%]'>{fullData.DaoFees}</div>
+                        <div className='w-[60%]'>{fullData.DaoFees} %</div>
                     </div>
                     <div className='flex flex-row justify-center items-start w-full mb-[2%]' >
                         <div className='mr-[5%] w-[35%] text-right'>Deployment Network</div>
@@ -129,7 +147,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                     </div>
                     <div className='flex flex-row justify-center items-start w-full mb-[2%]' >
                         <div className='mr-[5%] w-[35%] text-right'>Total Token Supply</div>
-                        <div className='w-[60%]'>10,000,000 Tokens</div>
+                        <div className='w-[60%]'>1,000,000 Tokens</div>
                     </div>
                 </div>
 
@@ -141,10 +159,30 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                         {   
                             <>
                             <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`}>
-                                <div className={`font-semibold pieDataText1`}>{fullData.daoName} DAO</div>
+                                <div className={`font-semibold pieDataText1`} style={{color:pieColors[0]}} >
+                                    {fullData.daoName} DAO
+                                </div>
                                 <div className='font-semibold'>
                                     {fullData.distributionPercentage!==undefined ?
-                                    `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
+                                    `${75 - parseInt(fullData.distributionPercentage)}%`:'75%'}
+                                </div>
+                            </div>
+                            <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
+                                <div className={`font-semibold pieDataText1`} style={{color:pieColors[1]}}>defiOS treasury</div>
+                                <div className='font-semibold'>
+                                    5%
+                                </div>
+                            </div>
+                            <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
+                                <div className={`font-semibold pieDataText1`} style={{color:pieColors[2]}} >Initial Sale</div>
+                                <div className='font-semibold'>
+                                    10%
+                                </div>
+                            </div>
+                            <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
+                                <div className={`font-semibold pieDataText1`} style={{color:pieColors[3]}} >Liquidity Pool</div>
+                                <div className='font-semibold'>
+                                    10%
                                 </div>
                             </div>
                             {
@@ -152,7 +190,7 @@ const CreationConfirmRepo: React.FC<CreationConfirmRepoProps> = ({setStartCreati
                                 return (
                                     <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
                                         <div className={`font-semibold`} 
-                                        style={{color:pieColors[index+1]}}>{contriKey}</div>
+                                        style={{color:pieColors[index+4]}}>{contriKey}</div>
                                         <div className='font-semibold'>{Math.round(parseFloat(fullData.distribution[`${contriKey}`])*100)/100 + "%"}</div>
                                     </div>
                                 )})
