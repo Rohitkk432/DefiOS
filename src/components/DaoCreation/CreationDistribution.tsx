@@ -14,12 +14,41 @@ import { CodeContributorStats,OptionRepoOwner,CodeDurationStats } from '../../ut
 interface CreationDistributionProps {
     triggerToMain:number;
     setTriggerToMain:React.Dispatch<React.SetStateAction<number>>;
+    tourSteps:any;
+    setTourSteps:any;
 }
 
 declare let window:any
 
-const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMain,setTriggerToMain}) => {
+const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMain,setTriggerToMain,setTourSteps}) => {
     const chainId = 245022926 // remote proxy — solana devnet
+
+    const StepsForTour = [
+        {
+            target: '.demo__step7',
+            content: 'Set the initial %age of team ownership to be immediately distributed when the repository gets converted into a DAO. Click "Tick" to confirm or "Pencil" to edit.',
+            placement: 'right',
+            offset: 0,
+        },
+        {
+            target: '.demo__step8',
+            content: 'Choose how tokens get distributed amongst initial contributors. Hover over each option to understand the algorithm in detail.',
+            placement: 'right',
+            offset: 0,
+        },
+        {
+            target: '.demo__step9',
+            content: 'Click +Add Network to add this chain to your metamask wallet and choose from the available options on which chain you want your DAO to be created.',
+            placement: 'right',
+            offset: 0,
+        },
+        {
+            target: '.demo__step10',
+            content: 'Manually Edit Individual ownership of contributors to better reflect yoru particular scenario',
+            placement: 'right',
+            offset: 0,
+        },
+    ]
 
     const router = useRouter();
     const {data:session} = useSession()
@@ -152,6 +181,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
     }, [search,contributors]);
 
     useEffect(()=>{
+        setTourSteps(StepsForTour);
         if(session && Object.keys(contributors).length===0){
             FetchContributors();
         }
@@ -233,16 +263,16 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
             <div className='flex flex-col justify-start items-start h-[90%] w-full' >
                 {/* input feild */}
                 <div className='w-full relative'>
-                    <input type="text" name='DaoFees' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter DAO Fees' value={DaoFees} onChange={(e)=>setDaoFees(e.target.value)} required />
-                    <CustomTooltip title="Fees DAO takes on rewards" enterDelay={500}  placement="right" arrow>
+                    <input type="text" name='Enter Issue Unlock Amount' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#373737] border`} placeholder='Enter Issue Unlock Amount' value={DaoFees} onChange={(e)=>setDaoFees(e.target.value)} required />
+                    <CustomTooltip title="It is the additional amount of tokens unlocked from the vested token supply as a percentage of amount staked on issues when those issues are solved." enterDelay={500}  placement="right-start" arrow>
                         <InformationCircleIcon className='w-[5%] absolute top-[30%] right-[3%]' />
                     </CustomTooltip>
                 </div>
-                <div className='w-full relative'>
-                    <input type="number" name='EnterDistribution' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#373737] border disabled:border-green-900`} placeholder='Enter Distribution %' value={distributionPercentage} disabled={!editDistribution}
+                <div className='demo__step7 w-full relative'>
+                    <input type="number" name='Enter Team Starting Ownership' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#373737] border disabled:border-[#91A8ED]`} placeholder='Enter Team Starting Ownership' value={distributionPercentage} disabled={!editDistribution}
                     onChange={(e)=>setDistributionPercentage(e.target.value)} required />
 
-                    <CustomTooltip title="Distribution percentage of total to Partners (Max-25%)" enterDelay={500}  placement="right" arrow>
+                    <CustomTooltip title="The %age of tokens to be distributed to the team (max value: 25%). For any value x set to this field, (75-x)% of the tokens will be vested to the team in the next 2000 days. To activate a linear unlock, set the previous field to 0" enterDelay={500}  placement="right-start" arrow>
                         <InformationCircleIcon className='w-[5%] absolute top-[30%] right-[3%]' />
                     </CustomTooltip>
 
@@ -282,7 +312,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                 </div>
 
                 {/* options */}
-                <div className={`text-[1.81vh] mt-[3%] font-semibold`} >Token Distribution Algorithm <InformationCircleIcon className='w-[3.5%] inline' /></div>
+                <div className={`demo__step8 text-[1.81vh] mt-[3%] font-semibold`} >Token Distribution Algorithm</div>
                 
                 <div className={`text-[1.63vh] mt-[2%] flex flex-row w-full justify-start items-center`}>
                     <div className="w-[2vh] h-[2vh] mr-[2%] relative">
@@ -298,7 +328,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         peer-checked:after:block
                         after:w-3/5 after:h-3/5 after:bg-[#91A8ED] after:rounded-full after:hidden"></span>
                     </div>
-                    <CustomTooltip title="Repository Owner gets All the Tokens" enterDelay={500}  placement="right" arrow>
+                    <CustomTooltip title="Repository Owner gets All the Tokens" enterDelay={500}  placement="right-start" arrow>
                     <div>
                         Repository creator
                     </div>
@@ -319,7 +349,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         peer-checked:after:block
                         after:w-3/5 after:h-3/5 after:bg-[#91A8ED] after:rounded-full after:hidden"></span>
                     </div>
-                    <CustomTooltip title="Distribution based on contributors's code Total(adds+deletes) on the repo" enterDelay={500}  placement="right" arrow>
+                    <CustomTooltip title="Distribution based on contributors's code Total(adds+deletes) on the repo" enterDelay={500}  placement="right-start" arrow>
                     <div>
                         By amount of code contributed ( minified )
                     </div>
@@ -339,7 +369,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         peer-checked:after:block
                         after:w-3/5 after:h-3/5 after:bg-[#91A8ED] after:rounded-full after:hidden"></span>
                     </div>
-                    <CustomTooltip title="Distribution based on contributors's code Total(adds+deletes)/Covariance(adds+deletes on weekly basis) on the repo" enterDelay={500}  placement="right" arrow>
+                    <CustomTooltip title="Distribution based on contributors's code Total(adds+deletes)/Covariance(adds+deletes on weekly basis) on the repo" enterDelay={500}  placement="right-start" arrow>
                     <div>
                         By duration of project involvement ( compute intensive ) 
                     </div>
@@ -347,9 +377,9 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                 </div>
 
                 {/* network */}
-                <div className={`text-[1.81vh] mt-[3%] font-semibold`} >Supported Networks</div>
+                <div className={`text-[1.81vh] mt-[5%] font-semibold`} >Supported Networks</div>
 
-                <div className={`text-[1.63vh] mt-[2%] w-full flex flex-row w-full justify-between items-center`}>
+                <div className={`text-[1.63vh] mt-[3%] w-full flex flex-row w-full justify-between items-center`}>
                     <div className='flex flex-row w-full justify-start items-center'>
                         <div className="w-[2vh] h-[2vh] mr-[2%] relative">
                             <input type="radio" name="NetworkOp" className='peer absolute opacity-0 w-full h-full cursor-pointer' value='Neon Testnet' 
@@ -367,31 +397,31 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                             Neon Testnet
                         </div>
                     </div>
-                    <button onClick={AddNeonNetwork}  className='w-[30%] text-[#A7B9FC]' >
+                    <button onClick={AddNeonNetwork}  className='demo__step9 w-[30%] text-[#A7B9FC]' >
                         + Add Network
                     </button>
                 </div>
 
                 {/* Assign Distribution */}
                 {/* Search User */}
-                <div className='w-full relative mt-[3%]'>
+                <div className='w-full relative mt-[4%]'>
                     <input type="text" name='SearchUser' className={`bg-[#121418] w-full py-[2%] px-[4%] my-[1%] text-[1.63vh] font-semibold rounded-md border-[#3A4E70] border`} placeholder='Search contributors by username' value={search}
                     onChange={(e) => setSearch(e.target.value)} />
                     <SearchIcon className='w-[5%] absolute top-[30%] right-[3%] text-[#3A4E70]' />
                 </div>
-                <div className='flex flex-col justify-start items-center h-[100%] w-full relative overflow-y-scroll overflow-x-hidden customScrollbar'>
+                <div className='demo__step10 flex flex-col justify-start items-center h-[100%] w-full relative overflow-y-scroll overflow-x-hidden customScrollbar'>
+
+                    {/* DAOs share */}
                     <div className='bg-[#121418] w-full h-[20%] px-[2%] py-[2%] mt-[2%] text-xs font-semibold rounded-md border-[#2E2E2F] border flex flex-row align-center justify-between' >
-                        {/* user name */}
                         <div className='flex flex-row'>
                             <img src={JSON.parse(localStorage.getItem('DaoCreationData')||'{}').tokenImgIpfsURL||''} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
                             <div className={`text-[#D7D7D7] text-[1.63vh]`}>{JSON.parse(localStorage.getItem('DaoCreationData')||'{}').daoName} DAO</div>
                         </div>
-                        {/* user distribution */}
                         <div className={`px-[1%] text-[1.63vh] text-[#B5C3DB]
                         flex flex-row align-center justify-center`} >
                             <div>{
                             (JSON.parse(localStorage.getItem('DaoCreationData')||'{}').distributionPercentage)!==undefined 
-                            ?`${100 - parseInt(JSON.parse(localStorage.getItem('DaoCreationData')||'{}').distributionPercentage)}%`:'100%'}</div> 
+                            ?`${75 - parseInt(JSON.parse(localStorage.getItem('DaoCreationData')||'{}').distributionPercentage)}%`:'75%'}</div> 
                         </div>
                     </div>
 
@@ -403,6 +433,49 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                         triggerSearch={triggerSearch} />
                         )
                     })}
+
+                    {/* defiOS treasury */}
+                    <div className='bg-[#121418] w-full h-[20%] px-[2%] py-[2%] mt-[2%] text-xs font-semibold rounded-md border-[#2E2E2F] border flex flex-row align-center justify-between' >
+                        <div className='flex flex-row'>
+                            <img src='/assets/images/logo.png' className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
+                            <div className={`text-[#D7D7D7] text-[1.63vh]`}>
+                                DeFios treasury
+                            </div>
+                        </div>
+                        <div className={`px-[1%] text-[1.63vh] text-[#B5C3DB]
+                        flex flex-row align-center justify-center`} >
+                            <div>5%</div> 
+                        </div>
+                    </div>
+
+                    {/* Initial Sale */}
+                    <div className='bg-[#121418] w-full h-[20%] px-[2%] py-[2%] mt-[2%] text-xs font-semibold rounded-md border-[#2E2E2F] border flex flex-row align-center justify-between' >
+                        <div className='flex flex-row'>
+                            <img src={JSON.parse(localStorage.getItem('DaoCreationData')||'{}').tokenImgIpfsURL||''} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
+                            <div className={`text-[#D7D7D7] text-[1.63vh]`}>
+                                Initial Sale
+                            </div>
+                        </div>
+                        <div className={`px-[1%] text-[1.63vh] text-[#B5C3DB]
+                        flex flex-row align-center justify-center`} >
+                            <div>10%</div> 
+                        </div>
+                    </div>
+                    
+                    {/* Liquidity Pool */}
+                    <div className='bg-[#121418] w-full h-[20%] px-[2%] py-[2%] mt-[2%] text-xs font-semibold rounded-md border-[#2E2E2F] border flex flex-row align-center justify-between' >
+                        <div className='flex flex-row'>
+                            <img src={JSON.parse(localStorage.getItem('DaoCreationData')||'{}').tokenImgIpfsURL||''} className='w-[2.5vh] h-[2.5vh] mr-[1vh] rounded-full'/>
+                            <div className={`text-[#D7D7D7] text-[1.63vh]`}>
+                                Liquidity Pool
+                            </div>
+                        </div>
+                        <div className={`px-[1%] text-[1.63vh] text-[#B5C3DB]
+                        flex flex-row align-center justify-center`} >
+                            <div>10%</div> 
+                        </div>
+                    </div>
+
                     {isLoading && 
                     <div className='w-full h-full flex flex-col justify-center items-center'>
                         <svg aria-hidden="true" className="w-[5vh] h-[5vh] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -8,12 +8,41 @@ import ReposOption from './ReposOption';
 
 import { SearchIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
 
+import {ethers} from 'ethers'
+import { Contract as MultiContract, Provider, setMulticallAddress } from "ethers-multicall";
+import contractAbi from "../ContractFunctions/DaoFactoryABI.json"
+declare let window:any
+
 interface CreationChooseRepoProps {
+    tourSteps:any;
+    setTourSteps:any;
 }
 
-const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
+const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({setTourSteps}) => {
     const router = useRouter()
     const {data:session} = useSession()
+    const contractAddress:any = process.env.NEXT_PUBLIC_DEFIOS_CONTRACT_ADDRESS;
+
+    const StepsForTour = [
+        {
+            target: '.demo__step1',
+            content: 'Follow these 4 simple steps to create a DAO',
+            placement: 'right',
+            offset: 0,
+        },
+        {
+            target: '.demo__step2',
+            content: 'Choose from repositories that you own, or repositories of organizations with ownership access',
+            placement: 'left-start',
+            offset: 0,
+        },
+        {
+            target: '.demo__step3',
+            content: 'Analyze the token ownership split across different contributors',
+            placement: 'left',
+            offset: 0,
+        }
+    ]
 
     //data of repos
     const [repos,setRepos] = useState<any>([]);
@@ -32,6 +61,15 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
     const [submitPage,setSubmitPage] = useState(false);
 
     const FetchRepos = async() =>{
+
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        // let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        //multi-call
+        setMulticallAddress(245022926,process.env.NEXT_PUBLIC_MULTI_CALL_ADDRESS||"");
+        const ethcallProvider = new Provider(provider, 245022926);
+        let defiosContract:MultiContract  = new MultiContract(contractAddress, contractAbi);
+
         let affiliation = 'owner';
         let keepGoing = true;
         let pagination = 1;
@@ -44,7 +82,21 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
                     "Accept":"application/vnd.github.v3+json"
                 }
             }).then(res => res.json()).catch(err => console.log(err));
-            const refinedRes = res.filter((repo:any) => repo.permissions.admin);
+
+            let callsArray:any = [];
+            let createdCheckIds:any = []
+
+            for (let i=0;i<res.length;i++) {
+                callsArray.push(await defiosContract.daoExists((res[i].id).toString()));
+            }
+            if(callsArray.length > 0){
+                const multiRes = await ethcallProvider.all(callsArray)
+                createdCheckIds = multiRes;
+            }
+            const refinedRes = res.filter((repo:any,idx:number) =>
+                repo.permissions.admin && !createdCheckIds[idx]
+            );
+
             if(refinedRes.length === 0 && affiliation === 'owner'){
                 affiliation = 'collaborator';
                 pagination = 1;
@@ -113,6 +165,7 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
 
 
     useEffect(() => {
+        setTourSteps(StepsForTour);
         if(session){
             FetchRepos();
         }
@@ -128,7 +181,7 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({}) => {
 
     return (
         <div 
-        className='w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between customGradient'
+        className='demo__step2 w-1/3 h-5/6 bg-[#121418] mx-[3.4%] rounded-2xl p-[1.5%] text-white flex flex-col justify-between customGradient'
         >
             <div className='flex flex-col justify-start items-center h-[90%] w-full relative' >
                 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState,useEffect } from 'react'
+import Head from 'next/head'
 
 import {useRouter} from 'next/router';
 
@@ -12,8 +13,9 @@ import CreationChooseToken from '../../components/DaoCreation/CreationChooseToke
 import CreationDistribution from '../../components/DaoCreation/CreationDistribution';
 import CreationConfirm from '../../components/DaoCreation/CreationConfirm';
 
+import Joyride, { CallBackProps, STATUS } from 'react-joyride';
 
-import { XIcon } from '@heroicons/react/outline';
+import { XIcon,SupportIcon } from '@heroicons/react/outline';
 
 interface creationProps {
 
@@ -22,6 +24,10 @@ interface creationProps {
 const Creation: React.FC<creationProps> = ({}) => {
     const router = useRouter();
     let {step} = router.query;
+
+    const [tourSteps,setTourSteps] = useState<any>([]);
+
+    const [runTour,setRunTour] = useState(false)
 
     //trigger to send refresh signal from one branch to another in component tree 
     //triggers
@@ -38,32 +44,189 @@ const Creation: React.FC<creationProps> = ({}) => {
         if(!creationStarter && startCreation){
             setCreationStarter(true);
         }
-    },[triggerToMain,startCreation]);
+        
+        const tourDone:any = localStorage.getItem('tourDone');
+        if(typeof step === 'string'){
+            if(parseInt(tourDone)<parseInt(step) ||tourDone===undefined||tourDone===null){
+                setRunTour(true);
+            }
+        }
+    },[triggerToMain,startCreation,tourSteps]);
+
+    const handleJoyrideCallback = (data: CallBackProps) => {
+        const { status } = data;
+        const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+        
+        if (finishedStatuses.includes(status)) {
+            setRunTour(false);
+            if(typeof step === 'string'){
+                localStorage.setItem('tourDone',step);
+            }
+        }
+    };
 
     return (
         <div className='flex flex-row justify-center items-center w-screen h-screen bg-[#303C4A]'>
             <div className='flex flex-row justify-center items-center bg-[#303C4A] w-[calc(16/9*98vh)] h-[98vh] rounded-2xl z-0'>
 
+                {runTour &&
+                <Joyride
+                callback={handleJoyrideCallback}
+                hideCloseButton
+                disableOverlayClose={true}
+                showProgress
+                showSkipButton
+                continuous
+                run={runTour}
+                steps={tourSteps}
+                spotlightPadding={5}
+                styles={{
+                    beacon: {
+                        height: '5vh',
+                        width: '5vh',
+                    },
+                    tooltip: {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: "2vh",
+                        margin:0,
+                        width:"45vh",
+                        height:"25vh",
+                        borderRadius: "1.5vh",
+                    },
+                    tooltipContainer:{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding:0,
+                        margin:0
+                    },
+                    tooltipTitle: {
+                        fontSize: '2.2vh',
+                        margin: '1vh',
+                        padding:0,
+                    },
+                    tooltipContent: {
+                        fontSize: '2.2vh',
+                        margin: '1vh',
+                        padding:0,
+                    },
+                    tooltipFooter: {
+                        width: '100%',
+                        height: '10vh',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding:0,
+                        margin:0
+                    },
+                    buttonNext: {
+                        fontSize:'1.8vh',
+                        margin: 0 ,
+                        padding: "1.5vh 2vh",
+                        borderRadius: "0.5vh",
+                    },
+                    buttonBack: {
+                        fontSize:'1.8vh',
+                        margin: 0 ,
+                        padding: "1.5vh 2vh",
+                        borderRadius: "0.5vh",
+                    },
+                    buttonClose: {
+                        fontSize:'1.8vh',
+                        margin: 0 ,
+                        padding: "1.5vh 2vh",
+                        borderRadius: "0.5vh",
+                        display: 'none',
+                    },
+                    buttonSkip: {
+                        fontSize:'1.8vh',
+                        margin: 0 ,
+                        padding: "1.5vh 2vh",
+                        borderRadius: "0.5vh",
+                    },
+                    spotlight: {
+                        padding:0,
+                        margin:0,
+                        borderRadius: "2vh",
+                    },
+                    spotlightLegacy: {
+                        padding:0,
+                        margin:0,
+                        borderRadius: "2vh",
+                    },
+                    overlay: {
+                        padding:0,
+                        margin:0,
+                        height:"100vh",
+                        width:"100vw",
+                    },
+                    overlayLegacy: {
+                        padding:0,
+                        margin:0,
+                        height:"100vh",
+                        width:"100vw",
+                    },
+                    options: {
+                        arrowColor: '#262B36',
+                        backgroundColor: '#262B36',
+                        primaryColor: '#91A8ED',
+                        textColor: '#FFF',
+                        zIndex: 1000,
+                    }
+                }}
+                />
+                }
+
+                <Head>
+                    <title>DAO Creation</title>
+                </Head>
+
+                {!startCreation &&
                 <XIcon onClick={()=>{
                     localStorage.removeItem('DaoCreationData')
                     localStorage.removeItem('distributionOk')
                     router.push('/dashboard')
                 }} className="h-[4vh] w-[4vh] text-white absolute top-[3vh] right-[3vh]"/>
+                }
+                {!startCreation &&
+                <button className={`flex flex-row justify-center items-center 
+                ${runTour?"text-gray-600":"text-white"}
+                py-[1vh] rounded-[1vh] absolute bottom-[3vh] right-[3vh] text-white flex flex-row items-center justify-center`}
+                onClick={()=>{
+                    setRunTour(true);
+                }}>
+                    <SupportIcon className="h-[3.5vh] w-[3.5vh] mr-[1vh]"/>
+                    <div className='text-[2.8vh] font-semibold'>Tutorial</div>
+                </button>
+                }
 
                 <CreationSteps step={Number(step)} />
 
                 {(Number(step)===1)?
-                <CreationChooseRepo />
+                <CreationChooseRepo
+                tourSteps={tourSteps}
+                setTourSteps={setTourSteps} />
                 :(Number(step)===2)?
-                <CreationChooseToken />
+                <CreationChooseToken
+                tourSteps={tourSteps}
+                setTourSteps={setTourSteps} />
                 :(Number(step)===3)?
                 <CreationDistribution 
                 triggerToMain={triggerToMain} 
-                setTriggerToMain={setTriggerToMain} />
+                setTriggerToMain={setTriggerToMain}
+                tourSteps={tourSteps}
+                setTourSteps={setTourSteps} />
                 :(Number(step)===4)?
                 <CreationConfirm
                 startCreation={startCreation}
-                setStartCreation={setStartCreation} />
+                setStartCreation={setStartCreation}
+                tourSteps={tourSteps}
+                setTourSteps={setTourSteps} />
                 :null
                 }
 
@@ -73,6 +236,7 @@ const Creation: React.FC<creationProps> = ({}) => {
                 setTriggerToSummary={setTriggerToSummary} />
                 :<CreationProcess creationStarter={creationStarter} />
                 }
+
             </div>
         </div>
     );

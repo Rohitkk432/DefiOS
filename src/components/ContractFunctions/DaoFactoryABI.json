@@ -85,6 +85,11 @@
 					},
 					{
 						"internalType": "string",
+						"name": "repoID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
 						"name": "repoName",
 						"type": "string"
 					},
@@ -142,6 +147,25 @@
 	{
 		"inputs": [
 			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "daoExists",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "id",
 				"type": "uint256"
@@ -187,6 +211,11 @@
 					{
 						"internalType": "string",
 						"name": "repoURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "repoID",
 						"type": "string"
 					},
 					{

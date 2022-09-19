@@ -22,6 +22,9 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
     
     const [load, setLoad] = useState(false)
     const [processStep, setProcessStep] = useState(-1)
+    const [infoToLoad,setInfoToLoad] = useState<any>();
+
+    const [createdDaoId, setCreatedDaoId] = useState<any>();
 
     const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
         <Tooltip {...props} classes={{ popper: className }} />
@@ -72,16 +75,16 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
         .then(res=>res.json())
         .catch(err=>console.log(err))
 
-        const partenerData = Object.values(data.distribution).map((value:any)=>
-            ethers.utils.parseEther(Math.floor(parseFloat(value)*(10**5)).toString())
+        const partnerData = Object.values(data.distribution).map((value:any)=>
+            ethers.utils.parseEther(Math.floor(parseFloat(value)*(10**4)).toString())
         )
-        const partenerKeys = Object.keys(data.distribution);
+        const partnerKeys = Object.keys(data.distribution);
 
         const partnersDataSorted:any = []
         const partnersKeysSorted:any = []
 
-        for(let i=0;i<partenerKeys.length;i++){
-            const userGithub:any = await fetch(`https://api.github.com/users/${partenerKeys[i]}`,{
+        for(let i=0;i<partnerKeys.length;i++){
+            const userGithub:any = await fetch(`https://api.github.com/users/${partnerKeys[i]}`,{
                 method:"GET",
                 headers:{
                     "Authorization":`token ${session?.accessToken}`,
@@ -89,16 +92,16 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
                 }
             })
             .then(res=>res.json())
-            if(partenerKeys[i]?.toLowerCase()===data.repoFullName.split('/')[0].toLowerCase()){
+            if(partnerKeys[i]?.toLowerCase()===data.repoFullName.split('/')[0].toLowerCase()){
                 partnersKeysSorted.unshift((userGithub.id).toString())
-                partnersDataSorted.unshift(partenerData[i])
+                partnersDataSorted.unshift(partnerData[i])
             }else{
                 partnersKeysSorted.push(userGithub.id.toString())
-                partnersDataSorted.push(partenerData[i])
+                partnersDataSorted.push(partnerData[i])
             }
         }
 
-        const proposal = [repoInfo.html_url,repoInfo.name,localStorage.getItem('currentAccount'),signature]
+        const proposal = [repoInfo.html_url,(repoInfo.id).toString(),repoInfo.name,localStorage.getItem('currentAccount'),signature]
         const metadataToHash = {
             'daoName':data.daoName,
             'daoFees':data.DaoFees,
@@ -128,7 +131,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
 
         const userDaoCount = await defiosContract.getUserDAOCount(localStorage.getItem('currentAccount'))
 
-        const creation = await defiosContract.createGitDAO(proposal,partnersKeysSorted,partnersDataSorted,parseFloat(data.DaoFees)*(10**18),ipfsRes.IpfsHash,data.tokenName,data.tokenSymbol);
+        const creation = await defiosContract.createGitDAO(proposal,partnersKeysSorted,partnersDataSorted,ethers.utils.parseEther(parseFloat(data.DaoFees).toString()),ipfsRes.IpfsHash,data.tokenName,data.tokenSymbol);
         await creation.wait()
         setProcessStep(5)
 
@@ -142,6 +145,14 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
         let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
         const userDaoCount = await defiosContract.getUserDAOCount(localStorage.getItem('currentAccount'))
+        const daoID = await defiosContract.userDAOs(localStorage.getItem('currentAccount'),Number(userDaoCount)-1)
+        const daoInfo = await defiosContract.getDAOInfo(daoID)
+        setCreatedDaoId(Number(daoID));
+
+        setInfoToLoad({
+            "DAO deployed at Address:" : daoInfo[0],
+        })
+
 
         if(Number(userDaoCount)===initialCount+1){
             setProcessStep(6)
@@ -163,7 +174,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
 
     return (
         <div 
-        className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-start justify-start pt-[1.5%] customGradient'
+        className='demo__step12 w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-start justify-start pt-[1.5%] customGradient'
         >   
             {/* completed */}
             <div className='flex flex-row items-center justify-start w-full'>
@@ -307,7 +318,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
 
             <div className={`w-[90%] mx-auto  text-center text-[1.81vh] border-t border-[#9D9D9D] py-[3%] mb-[4%] mt-[6%] font-semibold`} >DAO creation {processStep===-1?0:Math.round(processStep/6 *100*100)/100}% completed</div>
 
-            <LoadingScreen load={load} setLoad={setLoad} success="DAO Creation Complete" />
+            <LoadingScreen load={load} setLoad={setLoad} success="DAO Creation Complete" redirectURL={`/dao-details/${createdDaoId}`} proceedStatement='Checkout the DAO' dataInfo={infoToLoad} />
         </div>
     );
 }

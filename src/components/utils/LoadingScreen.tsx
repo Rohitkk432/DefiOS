@@ -1,4 +1,5 @@
 import React from 'react'
+import {useState,useEffect} from 'react'
 import {XIcon} from '@heroicons/react/outline'
 import {ExclamationIcon,BadgeCheckIcon} from '@heroicons/react/solid'
 
@@ -11,8 +12,19 @@ interface LoadingScreenProps {
     error?: string;
     success?: string
     processName?: string;
+    dataInfo?:any;
+    redirectURL?:string;
+    proceedStatement?:string;
 }
-const LoadingScreen: React.FC<LoadingScreenProps> = ({load,error,setLoad,setPopupState,success,processName}) => {
+const LoadingScreen: React.FC<LoadingScreenProps> = ({load,error,setLoad,setPopupState,success,processName,dataInfo,redirectURL,proceedStatement}) => {
+
+    const [dataObjKeys,setDataObjKeys] = useState<string[]>([])
+
+    useEffect(()=>{
+        if(dataInfo===undefined) return
+        setDataObjKeys(Object.keys(dataInfo));
+    },[dataInfo])
+
     const router = useRouter()
     return (
         <div className={`w-screen h-screen fixed z-[200] top-0 left-0 bg-[rgba(0,0,0,0.6)] 
@@ -41,14 +53,45 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({load,error,setLoad,setPopu
                 <div className='text-white text-[3vh] mt-[1vh]'>{error}</div>
             </div>
             }
-            {success!==undefined && 
-            <div className='bg-[#4F5A7B] w-[35%] h-[45vh] rounded-[3vh] flex flex-col items-center justify-center relative'>
-                <XIcon onClick={()=>{
-                    setLoad(false)
-                    router.push(`/dashboard`)
-                }} className='w-[5vh] h-[5vh] text-[#CDCDCD] absolute top-[2vh] right-[2vh]' />
+            {success!==undefined && redirectURL!==undefined &&
+            <div className='bg-[#4F5A7B] w-[38%] h-[45vh] rounded-[3vh] flex flex-col items-center justify-center relative'>
                 <BadgeCheckIcon className='w-[8vh] h-[8vh] text-[#CDCDCD] text-blue-500' />
                 <div className='text-white text-[3vh] mt-[1vh]'>{success}</div>
+                {
+                    dataInfo!==undefined &&
+                    dataObjKeys.map((dataKey:string,idx:number)=>{
+                        if(dataKey.includes('Url')){
+                            return(
+                                <div className='w-full flex flex-row items-center justify-center text-[2.2vh] mt-[2vh]' key={idx}>
+                                    <div className='text-[2.5vh] font-semibold mr-[2vh]' >{dataKey}</div>
+                                    <a href={dataInfo[`${dataKey}`]} target="_blank" className='underline' >
+                                        {dataInfo[`${dataKey}`].slice(0,35)}...
+                                    </a>
+                                </div>
+                            )
+                        }else if(dataKey.includes('Address')){
+                            return(
+                                <div className='w-full flex flex-row items-center justify-center text-[2.2vh] mt-[2vh]' key={idx}>
+                                    <div className='text-[2.5vh] font-semibold mr-[2vh]' >{dataKey}</div>
+                                    <a href={'https://neonscan.org/address/'+dataInfo[`${dataKey}`]} target="_blank" className='underline' >{dataInfo[`${dataKey}`].slice(0,10)+"..."+dataInfo[`${dataKey}`].slice(32,42)}</a>
+                                </div>
+                            )
+                        }else{
+                            return(
+                                <div className='w-[80%] flex flex-col items-center justify-center text-[2vh] mt-[2vh]' key={idx}>
+                                    <div className='text-[2.5vh] font-semibold' >{dataKey}</div>
+                                    <div>{dataInfo[`${dataKey}`]}</div>
+                                </div>
+                            )
+                        }
+                    })
+                }
+                <button className='flex flex-row justify-center items-center bg-[#91A8ED] 
+                w-[40%] py-[1%] rounded-[1vh] mt-[4vh] text-[2.7vh]'
+                onClick={()=>{
+                    setLoad(false)
+                    router.push(redirectURL)
+                }} >{proceedStatement ||'Proceed'}</button>
             </div>
             }
             

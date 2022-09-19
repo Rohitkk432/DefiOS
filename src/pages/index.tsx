@@ -1,4 +1,5 @@
 import React from 'react'
+import {useEffect} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -6,6 +7,7 @@ import {faTwitter} from '@fortawesome/free-brands-svg-icons'
 import {useSession, signIn} from 'next-auth/react'
 
 import Link from 'next/link'
+import Head from 'next/head'
 
 interface HomepageProps {
 
@@ -16,8 +18,16 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
 
     const {data:session} = useSession()
 
+    useEffect(()=>{
+        localStorage.removeItem('dashGlobalDaos');
+        localStorage.removeItem('dashUserDaos');
+    },[])
+
     return (
         <div className='w-screen h-screen homepageGradient px-[6%] py-[2%] text-white flex flex-col justify-start items-center'>
+            <Head>
+                <title>DefiOS</title>
+            </Head>
             
             {/* backdrop globe */}
             <div className='h-full w-[88%] absolute top-[0%] overflow-hidden z-10'>
@@ -58,15 +68,15 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
                     <div className='flex flex-row justify-center items-center w-full text-[#1D242D] text-[2vh] font-semibold'>
                         
                         {!session && 
-                        <button onClick={()=>signIn('github',{callbackUrl: `${window.location.origin}/dashboard`})} className='bg-[#D1D2D2] py-[2.5%] w-[27%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
-                            <div>Get Started</div>
+                        <button onClick={()=>signIn('github',{callbackUrl: `${window.location.origin}/dashboard`})} className='bg-[#D1D2D2] py-[2.5%] w-[34%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
+                            <div>Get Started with Github</div>
                             <FontAwesomeIcon icon={faArrowRight} className='inline h-[2vh] ml-[3%]'/>
                         </button>
                         }
                         {session &&
                         <Link href='/dashboard'>
-                            <button className='bg-[#D1D2D2] py-[2.5%] w-[27%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
-                                <div>Get Started</div>
+                            <button className='bg-[#D1D2D2] py-[2.5%] w-[34%] rounded-[0.75vh] mx-[2%] flex flex-row justify-center items-center' >
+                                <div>Get Started with Github</div>
                                 <FontAwesomeIcon icon={faArrowRight} className='inline h-[2vh] ml-[3%]'/>
                             </button>
                         </Link>

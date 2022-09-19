@@ -39,7 +39,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
     // const pieColors = ['#7B7C7D','#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
     const pieColors = BlueShades;
     useEffect(()=>{
-        const pieData=[100]
+        const pieData=[75,5,10,10]
         const storageData = JSON.parse(localStorage.getItem('DaoCreationData')||'{}')
 
         if(storageData==='') return
@@ -56,7 +56,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
 
         let totalValue=0
         if(storageData.distributionPercentage!==undefined){
-            pieData[0] = 100 - parseFloat(storageData.distributionPercentage)
+            pieData[0] = 75 - parseFloat(storageData.distributionPercentage)
             data.map((value:any)=>{
                 totalValue+=value
                 pieData.push(value)
@@ -72,7 +72,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                 localStorage.setItem('distributionOk','false');
             }
         }else{
-            pieData[0] = 100
+            pieData[0] = 75
             data.map((value:any)=>{
                 totalValue+=value
                 pieData[0]-=value
@@ -107,7 +107,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                     '#7B7C7D',
                 ],
                 borderWidth: 0,
-                rotation:-10,
+                
             },
         ],
     };
@@ -118,14 +118,14 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                 data: dataPie,
                 backgroundColor: pieColors,
                 borderWidth: 0,
-                rotation:-10,
+                
             },
         ],
     };
 
     return (
         <div 
-        className='w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-center justify-between customGradient'
+        className='demo__step3 w-[19.5%] min-h-[42.2%] h-auto bg-[#121418] rounded-2xl text-white flex flex-col items-center justify-between customGradient'
         >   
             <div className={`w-[90%] text-[1.81vh] border-b border-[#9D9D9D] pb-[4%] pl-[1%] pt-[6%] text-left mb-[2%]`} >Initial Token Distribution</div>
             {(step>1)?(
@@ -139,10 +139,28 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                     ):(
                         <div className='w-[100%] h-[15vh] flex flex-col items-center justify-start customScrollbar overflow-y-scroll'>
                             <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
-                                <div className={`font-semibold pieDataText1`} >{fullData.daoName} DAO</div>
+                                <div className={`font-semibold pieDataText1`} style={{color:pieColors[0]}} >{fullData.daoName} DAO</div>
                                 <div className='font-semibold'>
                                     {fullData.distributionPercentage!==undefined ?
-                                    `${100 - parseInt(fullData.distributionPercentage)}%`:'100%'}
+                                    `${75 - parseInt(fullData.distributionPercentage)}%`:'75%'}
+                                </div>
+                            </div>
+                            <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
+                                <div className={`font-semibold pieDataText1`} style={{color:pieColors[1]}} >defiOS treasury</div>
+                                <div className='font-semibold'>
+                                    5%
+                                </div>
+                            </div>
+                            <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
+                                <div className={`font-semibold pieDataText1`} style={{color:pieColors[2]}} >Initial Sale</div>
+                                <div className='font-semibold'>
+                                    10%
+                                </div>
+                            </div>
+                            <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} >
+                                <div className={`font-semibold pieDataText1`} style={{color:pieColors[3]}} >Liquidity Pool</div>
+                                <div className='font-semibold'>
+                                    10%
                                 </div>
                             </div>
                             {
@@ -150,7 +168,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
                                 return (
                                     <div className={`w-[90%] mt-[2%] text-[1.63vh] flex flex-row items-center justify-between`} key={index} >
                                         <div className={`font-semibold`}
-                                        style={{color:pieColors[index+1]}} >{contriKey}</div>
+                                        style={{color:pieColors[index+4]}} >{contriKey}</div>
                                         <div className='font-semibold'>{Math.round(parseFloat(fullData.distribution[`${contriKey}`])*100)/100 + "%"} </div>
                                     </div>
                                 )})
@@ -162,7 +180,7 @@ const CreationSummary: React.FC<CreationSummaryProps> = ({step,triggerToSummary}
             }
             <div className='pb-[6%] mt-[2%] text-center' >
                 <div className={`text-[1.63vh] font-bold`} >Total token supply <InformationCircleIcon className='w-[6%] h-[6%] inline'/></div>
-                <div className='text-[1.81vh]' >10M Tokens</div>
+                <div className='text-[1.81vh]' >1M Tokens</div>
             </div>
         </div>
     );
