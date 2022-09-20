@@ -1,5 +1,5 @@
 import React from 'react'
-import {useEffect} from 'react'
+import {useEffect,useState} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -9,6 +9,9 @@ import {useSession, signIn} from 'next-auth/react'
 import Link from 'next/link'
 import Head from 'next/head'
 
+import {ethers} from 'ethers'
+declare let window:any
+
 interface HomepageProps {
 
 }
@@ -16,12 +19,62 @@ interface HomepageProps {
 
 const Homepage: React.FC<HomepageProps> = ({}) => {
 
+    const [currentAccount, setCurrentAccount] = useState<string | undefined>()
+    const [network, setNetwork] = useState<string | undefined>()
+    const [chainId, setChainId] = useState<number | undefined>()
+
     const {data:session} = useSession()
 
-    useEffect(()=>{
+    useEffect(() => {
         localStorage.removeItem('dashGlobalDaos');
         localStorage.removeItem('dashUserDaos');
-    },[])
+
+        if(!window.ethereum){
+            return
+        }
+        let accountInStorage:any= localStorage.getItem("currentAccount")
+        if(accountInStorage){
+            setCurrentAccount(accountInStorage)
+        }
+        if(!currentAccount || !ethers.utils.isAddress(currentAccount) || !accountInStorage){
+            onClickConnect();
+        }
+        window.ethereum.on('accountsChanged', () => {
+            onClickConnect();
+        });
+        window.ethereum.on('chainChanged', () => {
+            onClickConnect();
+        });
+        // const provider = new ethers.providers.Web3Provider(window.ethereum)
+    },[currentAccount])
+
+    const onClickConnect = () => {
+        //client side code
+        if(!window.ethereum) {
+            console.log("please install MetaMask")
+            return
+        }
+
+        //we can do it using ethers.js
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+        // MetaMask requires requesting permission to connect users accounts
+        provider.send("eth_requestAccounts", [])
+        .then((accounts)=>{
+            if(accounts.length>0){
+                setCurrentAccount(accounts[0])
+                localStorage.setItem("currentAccount",accounts[0])
+            }
+        })
+        .catch((e)=>console.log(e))
+
+        provider.getNetwork().then(network => {
+            setNetwork(network.name)
+            setChainId(network.chainId)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
 
     return (
         <div className='w-screen h-screen homepageGradient px-[6%] py-[2%] text-white flex flex-col justify-start items-center'>

@@ -139,7 +139,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
     // }
 
     return (
-        <>
+        <div className='overflow-hidden w-screen h-screen'>
         {runTour &&
         <Joyride
         callback={handleJoyrideCallback}
@@ -254,14 +254,14 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         }}
         />
         }
-        <div className='dash__step1 w-screen h-screen bg-[#303C4A] flex flex-row justify-start items-start'>
+        <div className='dash__step1 w-screen h-screen bg-[#303C4A] flex flex-row justify-start items-start overflow-hidden'>
             <Head>
                 <title>Dashboard</title>
             </Head>
             <DashboardMenu/>
             <DashboardMain runTour={runTour} setRunTour={setRunTour} currentAccount={currentAccount} network={network} chainId={chainId}/>
         </div>
-        </>
+        </div>
     );
 }
 
