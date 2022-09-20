@@ -29,6 +29,8 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
         localStorage.removeItem('dashGlobalDaos');
         localStorage.removeItem('dashUserDaos');
 
+        console.log(network, chainId)
+
         if(!window.ethereum){
             return
         }
