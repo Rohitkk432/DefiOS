@@ -39,6 +39,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                     margin:0,
                     width:"75vw",
                     height:"40vh",
+                    overflow: 'hidden',
                     borderRadius: "1.5vh",
                 },
                 tooltipContent: {
@@ -234,12 +235,14 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                 margin:0,
                 height:"100vh",
                 width:"100vw",
+                overflow:"hidden",
             },
             overlayLegacy: {
                 padding:0,
                 margin:0,
                 height:"100vh",
                 width:"100vw",
+                overflow: 'hidden',
             },
             options: {
                 arrowColor: '#262B36',

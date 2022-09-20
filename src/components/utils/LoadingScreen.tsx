@@ -90,7 +90,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({load,error,setLoad,setPopu
                 w-[40%] py-[1%] rounded-[1vh] mt-[4vh] text-[2.7vh]'
                 onClick={()=>{
                     setLoad(false)
-                    router.push(redirectURL)
+                    if(setPopupState!==undefined ){
+                        setPopupState('none')
+                        localStorage.removeItem('popupState')
+                    }else{
+                        router.push(redirectURL)
+                    }
                 }} >{proceedStatement ||'Proceed'}</button>
             </div>
             }

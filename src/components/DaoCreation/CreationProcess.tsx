@@ -129,7 +129,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
-        const userDaoCount = await defiosContract.getUserDAOCount(localStorage.getItem('currentAccount'))
+        const userDaoCount = await defiosContract.getUserDAOCount(localStorage.getItem('currentAccount')).then((res:any)=>res).catch(()=>0);
 
         const creation = await defiosContract.createGitDAO(proposal,partnersKeysSorted,partnersDataSorted,ethers.utils.parseEther(parseFloat(data.DaoFees).toString()),ipfsRes.IpfsHash,data.tokenName,data.tokenSymbol);
         await creation.wait()
@@ -150,7 +150,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
         setCreatedDaoId(Number(daoID));
 
         setInfoToLoad({
-            "DAO deployed at Address:" : daoInfo[0],
+            "DAO deployed at Address:" : daoInfo.DAOAddress,
         })
 
 

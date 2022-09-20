@@ -43,8 +43,8 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
-        const userDaoCount = await defiosContract.getUserDAOCount(localStorage.getItem('currentAccount'));
-        if(Number(userDaoCount)===storageCount){
+        const userDaoCount = await defiosContract.getUserDAOCount(localStorage.getItem('currentAccount')).then((res:any)=>res).catch(()=>0);
+        if(Number(userDaoCount)===storageCount || userDaoCount===0){
             setLoadingData(false)
             return daoList;
         }
@@ -54,20 +54,20 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
             const daoId = await defiosContract.userDAOs(localStorage.getItem('currentAccount'),i)
             const daoInfo = await defiosContract.getDAOInfo(daoId)
             
-            if(dataInStorage!==null && dataInStorage.includes(daoInfo[3])){
+            if(dataInStorage!==null && dataInStorage.includes(daoInfo.metadata)){
                 continue;
             }
-            if((JSON.stringify(daoList)).includes(daoInfo[3])){
+            if((JSON.stringify(daoList)).includes(daoInfo.metadata)){
                 continue;
             }
 
             const DaoInfoObj = {
                 "DaoId":Number(daoId),
-                "DAO":daoInfo[0],
-                "owner":daoInfo[1],
-                "team":daoInfo[2],
-                "metadata":daoInfo[3],
-                "metaHash":daoInfo[3]
+                "DAO":daoInfo.DAOAddress,
+                "owner":daoInfo.owner,
+                "team":daoInfo.team,
+                "metadata":daoInfo.metadata,
+                "metaHash":daoInfo.metadata
             }
             DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
             DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
@@ -105,8 +105,8 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
         let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
         let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
-        const globalDaoCount = await defiosContract.DAOID();
-        if(Number(globalDaoCount)===storageCount){
+        const globalDaoCount = await defiosContract.DAOID().then((res:any)=>res).catch(()=>0);
+        if(Number(globalDaoCount)===storageCount || globalDaoCount===0){
             setLoadingData(false)
             return daoList;
         }
@@ -114,20 +114,20 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
         for(let i=1;i<=globalDaoCount;i++){
             const daoInfo = await defiosContract.getDAOInfo(i)
 
-            if(dataInStorage!==null && dataInStorage.includes(daoInfo[3])){
+            if(dataInStorage!==null && dataInStorage.includes(daoInfo.metadata)){
                 continue;
             }
-            if((JSON.stringify(daoList)).includes(daoInfo[3])){
+            if((JSON.stringify(daoList)).includes(daoInfo.metadata)){
                 continue;
             }
 
             const DaoInfoObj = {
                 "DaoId":Number(i),
-                "DAO":daoInfo[0],
-                "owner":daoInfo[1],
-                "team":daoInfo[2],
-                "metadata":daoInfo[3],
-                "metaHash":daoInfo[3]
+                "DAO":daoInfo.DAOAddress,
+                "owner":daoInfo.owner,
+                "team":daoInfo.team,
+                "metadata":daoInfo.metadata,
+                "metaHash":daoInfo.metadata
             }
             DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
             DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
