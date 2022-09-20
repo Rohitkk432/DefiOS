@@ -64,12 +64,15 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({setTourSteps}) =
 
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
-        // let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let defiosContract : ethers.Contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
         //multi-call
         setMulticallAddress(245022926,process.env.NEXT_PUBLIC_MULTI_CALL_ADDRESS||"");
         const ethcallProvider = new Provider(provider, 245022926);
-        let defiosContract:MultiContract  = new MultiContract(contractAddress, contractAbi);
+        let defiosMultiContract:MultiContract  = new MultiContract(contractAddress, contractAbi);
 
+        const countOfDaos = await defiosContract.DAOID().then((res:any)=>res).catch(()=>0);
         let affiliation = 'owner';
         let keepGoing = true;
         let pagination = 1;
@@ -87,15 +90,23 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({setTourSteps}) =
             let createdCheckIds:any = []
 
             for (let i=0;i<res.length;i++) {
-                callsArray.push(await defiosContract.daoExists((res[i].id).toString()));
+                callsArray.push(await defiosMultiContract.daoExists((res[i].id).toString()));
             }
-            if(callsArray.length > 0){
+            if(callsArray.length > 0 && countOfDaos!==0){
                 const multiRes = await ethcallProvider.all(callsArray)
                 createdCheckIds = multiRes;
             }
-            const refinedRes = res.filter((repo:any,idx:number) =>
-                repo.permissions.admin && !createdCheckIds[idx]
-            );
+            let refinedRes:any = [];
+
+            if(createdCheckIds.length >0){
+                refinedRes = res.filter((repo:any,idx:number) =>
+                    repo.permissions.admin && !createdCheckIds[idx]
+                );
+            }else{
+                refinedRes = res.filter((repo:any) =>
+                    repo.permissions.admin
+                );
+            }
 
             if(refinedRes.length === 0 && affiliation === 'owner'){
                 affiliation = 'collaborator';

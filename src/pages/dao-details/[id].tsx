@@ -46,10 +46,10 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
         // let DaoContract : ethers.Contract = new ethers.Contract(daoInfo.DAOAddress, DaoAbi , signer);
         const DaoInfoObj = {
             "DaoId":doaID,
-            "DAO":daoInfo[0],
-            "owner":daoInfo[1],
-            "team":daoInfo[2],
-            "metadata":daoInfo[3],
+            "DAO":daoInfo.DAOAddress,
+            "owner":daoInfo.owner,
+            "team":daoInfo.team,
+            "metadata":daoInfo.metadata,
         }
         DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
         DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`

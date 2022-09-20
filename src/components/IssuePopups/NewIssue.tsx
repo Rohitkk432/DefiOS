@@ -9,6 +9,7 @@ import { XIcon } from '@heroicons/react/outline'
 import {ethers} from 'ethers'
 declare let window:any
 import DaoAbi from "../ContractFunctions/DaoABI.json"
+import TokenAbi from "../ContractFunctions/TokenABI.json"
 
 interface NewIssueProps {
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
@@ -58,6 +59,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
 
     const [load, setLoad] = useState(false)
     const [errorMsg, setErrorMsg] = useState<string>()
+    const [successMsg, setSuccessMsg] = useState<string>()
 
     const [allTags , setAllTags] = useState<string[]>([])
 
@@ -66,6 +68,21 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
 
     const createNewIssue = async () => {
         setLoad(true)
+
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
+
+        const DaoTokenAddress = await DaoContract.TOKEN();
+        let TokenContract : ethers.Contract = new ethers.Contract(DaoTokenAddress, TokenAbi , signer);
+        const userTokenBalance = ethers.utils.formatEther(await TokenContract.balanceOf(await signer.getAddress()));
+
+        if(parseInt(userTokenBalance) < 1){
+            setErrorMsg("You need to be Token Holder to create an Issue")
+            return
+        }
+
 
         const user = await fetch(`https://api.github.com/user/${DaoInfo.metadata.partners[0]}`).then(res=>res.json()).catch(err=>console.log(err))
 
@@ -84,11 +101,6 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
         })
         const issueOutput = await response.json()
 
-        //web3
-        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
-        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
-        let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
-
         let txRes = false;
         const tx = await DaoContract.createIssue(issueOutput.data.html_url,0)
         .then((res:any)=>{
@@ -104,9 +116,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
         });
         if(txRes){
             await tx.wait();
-            setLoad(false);
-            setPopupState('none')
-            localStorage.removeItem('popupState')
+            setSuccessMsg("Issue Created Successfully")
         }
     }
     
@@ -146,7 +156,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
                     </div>
                 </div>
             </div>
-            <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} />
+            <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} redirectURL='' success={successMsg} processName="Creating Issue" />
         </div>
     );
 }
