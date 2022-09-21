@@ -20,7 +20,7 @@ import contractAbi from "../../components/ContractFunctions/DaoFactoryABI.json"
 import Joyride, { CallBackProps, STATUS } from 'react-joyride';
 
 interface DaoDetailsProps {
-
+    
 }
 
 const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
@@ -38,31 +38,50 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
 
     const [runTour,setRunTour] = useState(false)
 
+    const [inlineTrigger,setInlineTrigger] = useState(0); 
+
     const tourSteps:any = [
         {
             target: '.dao-details__step1',
-            content: 'Convert your existing repository into a DAO with project native tokens and use them to incentivize community members and power users to contribute to your project.',
-            placement: 'bottom-end',
+            content: 'Discover all the metadata related to the DAO such as who created it on which network, when and who the top contributors are.',
+            placement: 'right',
             offset: 0,
             
         },
         {
             target: '.dao-details__step2',
-            content: 'Convert your existing repository into a DAO with project native tokens and use them to incentivize community members and power users to contribute to your project.',
-            placement: 'bottom-end',
+            content: 'Track the realtime price of each token in USDC',
+            placement: 'right',
             offset: 0,
-            
         },
         {
             target: '.dao-details__step3',
-            content: 'Check out the top repositories converted into DAOs by all users of DefiOS. Filter them to your liking and contribute by creating issues and staking tokens behind them or resolving the issues.',
-            placement: 'bottom-end',
+            content: 'Explore the health of your community to understand how many issues are being created and how much cumulative money is being staked behind issues.',
+            placement: 'left',
             offset: 0,
         },
         {
             target: '.dao-details__step4',
-            content: 'Explore the activity on the repositories you converted into DAOs. Push commit histories on-chain, vote on PRs, create issues, merge PRs, and redeem rewards.',
-            placement: 'bottom-end',
+            content: 'Use this to create a new issue on the repository (gets replicated on the VCS) that the community can get around solving.',
+            placement: 'left',
+            offset: 0,
+        },
+        {
+            target: '.dao-details__step5',
+            content: ' Its important to keep your commit history in sync on-chain as the repository owner so that rewards can be claimed and work history can be proven on-chain',
+            placement: 'top',
+            offset: 0,
+        },
+        {
+            target: '.dao-details__step6',
+            content: 'Explore the open issues on this repository and contribute to unlock the staked rewards.',
+            placement: 'top',
+            offset: 0,
+        },
+        {
+            target: '.dao-details__step7',
+            content: 'Change the state of the issue from open->voting->winner declared -> closed',
+            placement: 'top',
             offset: 0,
         },
     ]
@@ -103,7 +122,10 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
         if(popupIssue!==0){
             setPopupIssueID(popupIssue)
         }
-    },[popupIssue])
+        if(popupIssue!==0 && inlineTrigger){
+            initDaoData()
+        }
+    },[popupIssue,inlineTrigger])
 
     const handleJoyrideCallback = (data: CallBackProps) => {
         const { status } = data;
@@ -122,7 +144,6 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
             callback={handleJoyrideCallback}
             hideCloseButton
             disableOverlayClose={true}
-            showProgress
             showSkipButton
             continuous
             run={runTour}
@@ -239,7 +260,7 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
             <DashboardMenu DaoInfo={DaoInfo} />
 
             <div className='overflow-y-scroll w-[80%] h-full customScrollbar'>
-                <DaoDetailsBottom setRunTour={setRunTour} runTour={runTour} setPopupIssue={setPopupIssue} DaoInfo={DaoInfo} popupState={popupState}  setPopupState={setPopupState}/>
+                <DaoDetailsBottom setInlineTrigger={setInlineTrigger} setRunTour={setRunTour} runTour={runTour} setPopupIssue={setPopupIssue} DaoInfo={DaoInfo} popupState={popupState}  setPopupState={setPopupState}/>
             </div>
 
             {

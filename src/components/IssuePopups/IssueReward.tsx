@@ -126,7 +126,7 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
                     <div className='text-[2.5vh] mt-[1vh]' >Loading</div>
                 </div>
                 }
-                {IssuesList && 
+                {IssuesList!==undefined && 
                 <>
                 <div className='w-[66%] h-full flex flex-col justify-start items-start'>
                     <div className='flex flex-row items-center w-full flex-wrap text-[3.5vh] font-semibold' >
@@ -188,7 +188,7 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
                         </div>
                         <div className='flex flex-row w-full items-center mt-[2%]'>
                             <div className='text-[2.5vh]'>Winning Author:</div>
-                            <a href={`https://neonscan.org/address/${IssuesList.solver}`} target="_blank" className='ml-[3%] text-[2.3vh]' >{IssuesList!==undefined && `${IssuesList.issueInfo.solver.slice(0,5)}...${IssuesList.issueInfo.solver.slice(37,42)}`}</a>
+                            <a href={`https://neonscan.org/address/${IssuesList.issueInfo.solver}`} target="_blank" className='underline ml-[3%] text-[2.3vh]' >{IssuesList!==undefined && `${IssuesList.issueInfo.solver.slice(0,5)}...${IssuesList.issueInfo.solver.slice(37,42)}`}</a>
                         </div>
                         <div className='flex flex-row w-full items-center mt-[2%] flex-wrap'>
                             <div className='text-[2.5vh]'>Winning PR:</div>

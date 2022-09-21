@@ -21,9 +21,11 @@ interface DaoDetailsMetadataProps {
     DaoInfo:any;
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
     setPopupIssue: React.Dispatch<React.SetStateAction<number>>;
+    setInlineTrigger: React.Dispatch<React.SetStateAction<number>>;
+    first:boolean
 }
 
-const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo,setPopupState,setPopupIssue}) => {
+const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo,setPopupState,setPopupIssue,setInlineTrigger,first}) => {
 
     const [load, setLoad] = useState(false)
     const [errorMsg, setErrorMsg] = useState<string>()
@@ -134,7 +136,7 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
 
     return (
         <>
-        <div className='w-full min-h-[6vh] flex flex-row justify-start items-center bg-[#121418] rounded-md mb-[1%] pl-[1%] border border-[#5B5B5B] text-[1.7vh]'
+        <div className={`${first?'dao-details__step6':null} w-full min-h-[6vh] flex flex-row justify-start items-center bg-[#121418] rounded-md mb-[1%] pl-[1%] border border-[#5B5B5B] text-[1.7vh]`}
         onClick={()=>{
             if(metadata.issueInfo.state===0){
                 setPopupIssue(Number(metadata.contractIssueID));
@@ -147,10 +149,9 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
                 setPopupState('issueReward')
             }
         }}>
-            <div className='w-[30%] h-full mx-[0.5%]'>
+            <div className='w-[33%] h-full mx-[0.5%]'>
                 {metadata.githubInfo.title} <IssueState issueState={metadata.issueInfo.state} />
             </div>
-            <div className='w-[10%] h-full mx-[0.5%]'>{metadata.githubInfo.user.login}</div>
             {/* <div className='w-[10%] h-full mx-[0.5%]'>{timeAgo(metadata.githubInfo.created_at)} ago</div> */}
             <div className='w-[35%] h-full mx-[0.5%] flex flex-row flex-wrap justify-start items-center'>
                 {
@@ -159,6 +160,7 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
                     })
                 }
             </div>
+            <div className='w-[7%] h-full mx-[0.5%]'>{metadata.collabCount}</div>
             <div className='w-[15%] h-full mx-[0.5%] flex flex-row justify-between items-center'>
                 <div className='w-[40%]'>{compactNum(parseInt(ethers.utils.formatEther(metadata.issueInfo.totalStaked)))} {DaoInfo.metadata.tokenSymbol} </div>
                 {/* <div className='w-[40%]'>({metadata.amountStakedInUSD})</div> */}
@@ -207,11 +209,11 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
                 Claim Reward
             </div>
             }
-            {metadata.issueInfo.state===3 && 
+            {(metadata.issueInfo.state===3  || ((metadata.issueInfo.solver.toLowerCase()!==localStorage.getItem("currentAccount")) && metadata.issueInfo.state===2))  && 
             <div className='w-[10%] h-full cursor-pointer text-gray-400 font-semibold flex flex-row justify-start items-center z-20'>-</div>
             }
         </div>
-        <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} processName={processName} success={successMsg} redirectURL="" />
+        <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} processName={processName} success={successMsg} setSuccess={setErrorMsg} redirectURL="" setInlineTrigger={setInlineTrigger} />
         </>
     )
 }

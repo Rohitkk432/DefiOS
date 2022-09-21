@@ -294,6 +294,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
     useEffect(()=>{
         if(DaoInfo!==undefined && popupIssueID!==0){
             getTheIssue();
+            setAddStake(0);
         }
     },[DaoInfo,popupIssueID])
 

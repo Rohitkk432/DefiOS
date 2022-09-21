@@ -8,9 +8,9 @@ interface BoxPRProps {
 
 const BoxPR: React.FC<BoxPRProps> = ({PrData,setPRChoosen}) => {
     return (
-        <div className='w-full h-[10vh] bg-[#121418] mb-[1.5vh] rounded-[1vh]
-        px-[3%] py-[2%] flex flex-col items-start justify-between relative'>
-            <a href={PrData.url} className='text-[2vh]' >
+        <div className='w-full h-[15vh] bg-[#121418] mb-[1.5vh] rounded-[1vh]
+        px-[3%] py-[2%] flex flex-col items-start justify-center relative'>
+            <a href={PrData.url} className='text-[2vh] mb-[2vh]' >
                 {PrData.prDetails.title.length>40?`${PrData.prDetails.title.slice(0,40)}...`:PrData.prDetails.title}
             </a>
             <div className='text-[1.8vh] w-full flex flex-row items-center justify-between' >
@@ -31,6 +31,12 @@ const BoxPR: React.FC<BoxPRProps> = ({PrData,setPRChoosen}) => {
                     peer-checked:after:block
                     after:w-3/5 after:h-3/5 after:bg-[#91A8ED] after:rounded-full after:hidden"></span>
                 </div>
+            </div>
+            <div className='text-[1.5vh]'>
+                Plagiarism Rating: -
+            </div>
+            <div className='text-[1.5vh]'>
+                Author Ecosystem Credibility: -
             </div>
         </div>
     );

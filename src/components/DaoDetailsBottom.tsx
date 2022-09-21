@@ -15,12 +15,13 @@ interface DaoDetailsBottomProps {
     popupState:string;
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
     setPopupIssue: React.Dispatch<React.SetStateAction<number>>;
+    setInlineTrigger: React.Dispatch<React.SetStateAction<number>>;
     DaoInfo:any;
     runTour:boolean;
     setRunTour: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupState,DaoInfo,setPopupIssue,setRunTour,runTour}) => {
+const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupState,DaoInfo,setPopupIssue,setRunTour,runTour,setInlineTrigger}) => {
 
     const [IssuesList,setIssuesList] = useState<any>()
 
@@ -36,7 +37,9 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
             const issueRes = await DaoContract.repoIssues(i);
             const apiURL = issueRes.issueURL.replace('github.com','api.github.com/repos');
             const githubRes = await fetch(apiURL).then(res=>res.json()).catch(err=>console.log(err));
+            const collabCount = await DaoContract.getCollaboratorCount(i);
             const IterIssue = {
+                collabCount:Number(collabCount),
                 contractIssueID: i,
                 issueInfo:issueRes,
                 githubInfo: githubRes
@@ -78,7 +81,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
                         <SearchIcon className='w-[2%] absolute top-[25%] right-[2%]' />
                     </div>
                     {/* create Dao btn */}
-                    <button className='flex flex-row justify-center items-center h-[5vh] px-[1.5%] py-[1%] bg-[#91A8ED] rounded-md ml-[1%] text-[1.8vh] px-[5%] font-semibold'
+                    <button className='dao-details__step4 flex flex-row justify-center items-center h-[5vh] px-[1.5%] py-[1%] bg-[#91A8ED] rounded-md ml-[1%] text-[1.8vh] px-[5%] font-semibold'
                     onClick={()=>{
                         setPopupState('newIssue')
                     }}>
@@ -87,17 +90,17 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
                 </div>
 
                 <div className='w-full h-[3vh] flex flex-row justify-start items-center mt-[2%] mb-[0.5%] pl-[1%] text-[#CACACA] text-[1.7vh] pr-[1%]'>
-                    <div className='w-[30%] h-full mx-[0.5%]'>Title</div>
-                    <div className='w-[10%] h-full mx-[0.5%]'>Created by</div>
+                    <div className='w-[33%] h-full mx-[0.5%]'>Title</div>
                     {/* <div className='w-[10%] h-full mx-[0.5%]'>Created at</div> */}
                     <div className='w-[35%] h-full mx-[0.5%]'>Tags</div>
+                    <div className='w-[7%] h-full mx-[0.5%]'>Open PRs</div>
                     <div className='w-[15%] h-full mx-[0.5%]'>Amount Staked</div>
-                    <div className='w-[10%] h-full mx-[0.5%]'>Pending Action</div>
+                    <div className='dao-details__step7 w-[10%] h-full mx-[0.5%]'>Pending Action</div>
                 </div>
                 <div className='w-full pr-[0.2%] h-[82%] overflow-y-scroll customScrollbar' >
                     {(IssueSearch && IssueSearch.length!==0 )&&
                         IssueSearch.map((dataVal:any, index:any) => {
-                            return <DaoDetailsMetadata setPopupIssue={setPopupIssue} setPopupState={setPopupState} DaoInfo={DaoInfo} metadata={dataVal} key={index}/>
+                            return <DaoDetailsMetadata setInlineTrigger={setInlineTrigger} setPopupIssue={setPopupIssue} setPopupState={setPopupState} DaoInfo={DaoInfo} metadata={dataVal} key={index} first={index===0?true:false}/>
                         })
                     }
                     {(IssueSearch===undefined)&&

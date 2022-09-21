@@ -244,7 +244,8 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
         if(Object.keys(uniqueSolvers).length===0) return;
         let topSolver = Object.keys(uniqueSolvers).reduce((a, b) => uniqueSolvers[a] > uniqueSolvers[b] ? a : b);
 
-        let gitMapperContract : ethers.Contract = new ethers.Contract('0x009143d82A1c926eBb255169C07dc3468141e3f3', DefiOSNamesRouterABI, signer);
+        const namesDefiOSAddress:any= process.env.NEXT_PUBLIC_NAMES_DEFIOS_ADDRESS
+        let gitMapperContract : ethers.Contract = new ethers.Contract(namesDefiOSAddress, DefiOSNamesRouterABI, signer);
 
         const topSolverName = await gitMapperContract.address_to_name_map(topSolver).then((res:any)=>res).catch(()=>topSolver);
         const UserInfo = await fetch('https://api.github.com/user/'+topSolverName).then((res)=>res.json()).catch((err:any)=>console.log(err))
@@ -303,7 +304,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
 
     return (
         <div className='w-full h-[48%] flex flex-row justify-between items-center'>
-            <div className='w-[30%] h-full rounded-md bg-[#191C21] flex flex-col justify-center items-start px-[2%]'>
+            <div className='dao-details__step1 w-[30%] h-full rounded-md bg-[#191C21] flex flex-col justify-center items-start px-[2%]'>
                 {DaoInfo===undefined &&
                     <div className='w-full h-full flex flex-col justify-center items-center'>
                         <svg aria-hidden="true" className="w-[5vh] h-[5vh] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -315,7 +316,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
                 }
                 {DaoInfo && 
                 <>
-                <div className='dao-details__step1 text-[3vh] font-semibold mb-[10%] flex flex-col items-center w-full' >
+                <div className='text-[3vh] font-semibold mb-[10%] flex flex-col items-center w-full' >
                     <img src={DaoInfo.metadata.tokenImg} alt="" className='rounded-full w-[10vh] h-[10vh] mb-[1%]' />
                     <div>{DaoInfo.metadata.daoName}</div>
                 </div>
@@ -382,7 +383,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
                 }
             </div>
 
-            <div className='w-[69%] text-center h-full rounded-md  p-[1.5%] bg-[#191C21] relative'>
+            <div className='dao-details__step3 w-[69%] text-center h-full rounded-md  p-[1.5%] bg-[#191C21] relative'>
                 <button className={`flex flex-row justify-center items-center 
                 ${runTour?"text-gray-600":"text-white"}
                 py-[1vh] rounded-[1vh] absolute top-[1vh] right-[2vh] text-white flex flex-row items-center justify-center`}

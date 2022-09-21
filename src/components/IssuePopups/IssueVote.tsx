@@ -269,7 +269,7 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
                     }} />
                     <div className='w-full h-[91%] bg-gray-600 py-[4%] px-[3%] relative 
                     flex flex-col items-center justify-start rounded-[1vh]' >
-                        <input name='PRSearch' type="text" className='bg-[#121418] w-full py-[2.5%] px-[4%] text-[1.7vh] font-semibold rounded-md border-[#3A4E70] border mb-[3%] ' placeholder='Search for PR by Author, tag or commit hash' value={search}onChange={(e) => setSearch(e.target.value)} />
+                        <input name='PRSearch' type="text" className='bg-[#121418] w-full py-[2.5%] px-[4%] text-[1.7vh] font-semibold rounded-md border-[#3A4E70] border mb-[3%] ' placeholder='Search for PR by #, author, title and plagiarism' value={search}onChange={(e) => setSearch(e.target.value)} />
                         <SearchIcon className='w-[5%] absolute top-[5%] right-[5%]' />
                         <div className='h-[75%] mb-[5%] w-full overflow-y-scroll customScrollbar'>
                             {

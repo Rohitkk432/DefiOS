@@ -11,12 +11,14 @@ interface LoadingScreenProps {
     setPopupState? : React.Dispatch<React.SetStateAction<string>>;
     error?: string;
     success?: string
+    setSuccess?: React.Dispatch<React.SetStateAction<string|undefined>>;
     processName?: string;
     dataInfo?:any;
     redirectURL?:string;
     proceedStatement?:string;
+    setInlineTrigger?: React.Dispatch<React.SetStateAction<number>>
 }
-const LoadingScreen: React.FC<LoadingScreenProps> = ({load,error,setLoad,setPopupState,success,processName,dataInfo,redirectURL,proceedStatement}) => {
+const LoadingScreen: React.FC<LoadingScreenProps> = ({load,error,setLoad,setPopupState,success,setSuccess,processName,dataInfo,redirectURL,proceedStatement,setInlineTrigger}) => {
 
     const [dataObjKeys,setDataObjKeys] = useState<string[]>([])
 
@@ -45,8 +47,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({load,error,setLoad,setPopu
                 <XIcon onClick={()=>{
                     setLoad(false)
                     if(setPopupState!==undefined ){
-                        setPopupState('none')
-                        localStorage.removeItem('popupState')
+                        setPopupState('none');
+                        localStorage.removeItem('popupState');
                     }
                 }} className='w-[5vh] h-[5vh] text-[#CDCDCD] absolute top-[2vh] right-[2vh]' />
                 <ExclamationIcon className='w-[8vh] h-[8vh] text-[#CDCDCD] text-red-600' />
@@ -93,6 +95,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({load,error,setLoad,setPopu
                     if(setPopupState!==undefined ){
                         setPopupState('none')
                         localStorage.removeItem('popupState')
+                        if(setInlineTrigger!==undefined){
+                            setInlineTrigger(inlineTrigger=>inlineTrigger+1)
+                        }
+                        if(setSuccess!==undefined){
+                            setSuccess(undefined);
+                        }
                     }else{
                         router.push(redirectURL)
                     }
