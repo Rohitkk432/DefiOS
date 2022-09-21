@@ -18,6 +18,11 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
     const [openIssuesCount,setOpenIssuesCount] = useState<any>()
     const [totalStaked,setTotalStaked] = useState<any>()
 
+    const compactNum = (num:number)=>{
+        const formatter = Intl.NumberFormat('en',{notation:'compact'});
+        return formatter.format(num);
+    }
+
     useEffect(()=>{
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
@@ -35,7 +40,7 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
             router.push(`/dao-details/${metadata.DaoId}`)
         }}>   
             <div className='w-[18%] mx-[0.5%]'>{metadata.metadata.daoName}</div>
-            <div className='w-[20%] mx-[0.5%] flex flex-row items-center'>
+            <div className='w-[25%] mx-[0.5%] flex flex-row items-center'>
                 <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh] mr-[3%] rounded-full' />
                 <div>/ {metadata.metadata.repoName}</div>
             </div>
@@ -56,15 +61,15 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
             
 
             <div className='w-[13%] mx-[0.5%]'>{metadata.metadata.creatorGithub}</div>
-            <div className='w-[13%] mx-[0.5%] flex flex-row justify-start items-center'>
-                <div className='w-[35%]'>{totalStaked} &nbsp; {metadata.metadata.tokenSymbol} </div>
+            <div className='w-[21%] mx-[0.5%] flex flex-row justify-start items-center'>
+                <div className='w-[35%]'>{compactNum(totalStaked)} &nbsp; {metadata.metadata.tokenSymbol} </div>
                 <img src={metadata.metadata.tokenImg||''} className='rounded-full h-[3vh] inline ml-[5%]' />  
                 {/* <div className='w-[35%]'>({metadata.totalStakedInUSD})</div> */}
             </div>
             <div className='w-[6%] mx-[0.5%]'>{openIssuesCount} {parseInt(openIssuesCount)>10?"🔥":null}</div>
 
-            <div className='w-[13%] h-[5.5vh] pl-[1%] mx-[0.5%] font-semibold flex flex-row justify-start items-center z-20'
-            >-</div>
+            {/* <div className='w-[13%] h-[5.5vh] pl-[1%] mx-[0.5%] font-semibold flex flex-row justify-start items-center z-20'
+            >-</div> */}
 
             {/* {(metadata?.pendingAction==='Sync Commit History')?
             <div className='w-[13.5%] h-[5.5vh] ml-[0.5%] cursor-pointer text-blue-200 font-semibold flex flex-row justify-start items-center z-20'

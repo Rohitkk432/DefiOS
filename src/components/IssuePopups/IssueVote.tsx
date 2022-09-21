@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState,useEffect,useMemo} from 'react'
-import {useSession} from 'next-auth/react'
+// import {useSession} from 'next-auth/react'
 import LoadingScreen from '../utils/LoadingScreen';
 
 import { XIcon,SearchIcon } from '@heroicons/react/outline';
@@ -28,7 +28,7 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
     const [processName, setProcessName] = useState<string>()
     const [successMsg, setSuccessMsg] = useState<string>()
 
-    const {data:session} = useSession()
+    // const {data:session} = useSession()
 
     const [IssuesList,setIssuesList] = useState<any>()
     const [PRChoosen,setPRChoosen] = useState(NaN);
@@ -121,53 +121,53 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
         }
     }
 
-    const ChooseWinnerFunc = async () => {
-        setLoad(true);
-        setProcessName("Choosing Winner if Majority achieved");
-        // web3
-        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
-        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
-        let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
+    // const ChooseWinnerFunc = async () => {
+    //     setLoad(true);
+    //     setProcessName("Choosing Winner if Majority achieved");
+    //     // web3
+    //     let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+    //     let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+    //     let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
-        let winnerChoosen = false;
-        const tx = await DaoContract.chooseWinner(popupIssueID)
-        .then((res:any)=>{
-            winnerChoosen = true;
-            return res
-        })
-        .catch((err:any)=>{
-            if(err.error===undefined){
-                setErrorMsg('Transaction Rejected')
-            }else{
-                setErrorMsg(err.error.data.message)
-            }
-        });
+    //     let winnerChoosen = false;
+    //     const tx = await DaoContract.chooseWinner(popupIssueID)
+    //     .then((res:any)=>{
+    //         winnerChoosen = true;
+    //         return res
+    //     })
+    //     .catch((err:any)=>{
+    //         if(err.error===undefined){
+    //             setErrorMsg('Transaction Rejected')
+    //         }else{
+    //             setErrorMsg(err.error.data.message)
+    //         }
+    //     });
 
-        if(winnerChoosen){
-            await tx.wait();
-            const issueRes = await DaoContract.repoIssues(popupIssueID);
-            //merge PR
-            for(let i=0;i<IssuesList.collabInfo.length;i++){
-                if(IssuesList.collabInfo[i].collaborator.toLowerCase()===issueRes.solver.toLowerCase()){
-                    const _linkbreak = IssuesList.collabInfo[i].url.split("/");
-                    await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}/merge`,{
-                        method: 'PUT',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
-                    }).catch(err=>console.log(err));
-                }
-            }
-            //close issue
-            const requestOptions = {
-                method: 'PATCH',
-                headers: { 'Authorization': `Bearer ${session?.accessToken}` },
-                body: JSON.stringify({ state: "closed" })
-            };
-            const issueUrlToClose = IssuesList.issueInfo.issueURL.replace("github.com","api.github.com/repos")
-            await fetch(issueUrlToClose,requestOptions)
+    //     if(winnerChoosen){
+    //         await tx.wait();
+    //         const issueRes = await DaoContract.repoIssues(popupIssueID);
+    //         //merge PR
+    //         for(let i=0;i<IssuesList.collabInfo.length;i++){
+    //             if(IssuesList.collabInfo[i].collaborator.toLowerCase()===issueRes.solver.toLowerCase()){
+    //                 const _linkbreak = IssuesList.collabInfo[i].url.split("/");
+    //                 await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}/merge`,{
+    //                     method: 'PUT',
+    //                     headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+    //                 }).catch(err=>console.log(err));
+    //             }
+    //         }
+    //         //close issue
+    //         const requestOptions = {
+    //             method: 'PATCH',
+    //             headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+    //             body: JSON.stringify({ state: "closed" })
+    //         };
+    //         const issueUrlToClose = IssuesList.issueInfo.issueURL.replace("github.com","api.github.com/repos")
+    //         await fetch(issueUrlToClose,requestOptions)
 
-            setSuccessMsg("Winner Choosen Successfully");
-        }
-    }
+    //         setSuccessMsg("Winner Choosen Successfully");
+    //     }
+    // }
 
     //search logic
     const [search, setSearch] = useState("");
@@ -240,22 +240,25 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
                         <div>Issue Url :</div> 
                         <a href={IssuesList!==undefined ? IssuesList.issueInfo.issueURL:''} target="_blank" className='ml-[2%] text-gray-300 flex flex-row items-center w-[80%]' >
                             <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh]' />
-                            <div>{IssuesList!==undefined && IssuesList.issueInfo.issueURL.replace("https://github.com","")}</div>
+                            <div className='underline' >{IssuesList!==undefined && IssuesList.issueInfo.issueURL.replace("https://github.com","")}</div>
                         </a>
                     </div>
 
                     <div className='w-full h-full overflow-y-scroll border border-white 
                     p-[2.2%] mt-[4%] rounded-[2vh] customScrollbar text-[2.3vh]'>
                         {IssuesList!==undefined && IssuesList.githubInfo.body}
+                        {(IssuesList.githubInfo.body===null) &&
+                            <div className='text-gray-500' >No description available</div>
+                        }
                     </div>
 
-                    {DaoInfo!==undefined && IssuesList!==undefined && localStorage.getItem('currentAccount')!==null && DaoInfo.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLocaleLowerCase() &&
+                    {/* {DaoInfo!==undefined && IssuesList!==undefined && localStorage.getItem('currentAccount')!==null && DaoInfo.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLocaleLowerCase() &&
                     <div className='flex flex-row justify-start items-start w-full mt-[2%]'>
                         <button className='flex flex-row justify-center items-center bg-[#91A8ED] 
                         w-[30%] py-[1%] rounded-[1vh] text-[2.7vh]' onClick={ChooseWinnerFunc}
                         >Choose Winner</button>
                     </div>
-                    }
+                    } */}
 
                 </div>
                 <div className='w-[32%] h-full flex flex-col justify-start items-end'>
@@ -266,7 +269,7 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
                     }} />
                     <div className='w-full h-[91%] bg-gray-600 py-[4%] px-[3%] relative 
                     flex flex-col items-center justify-start rounded-[1vh]' >
-                        <input name='PRSearch' type="text" className='bg-[#121418] w-full py-[2.5%] px-[4%] text-[1.7vh] font-semibold rounded-md border-[#3A4E70] border mb-[3%] ' placeholder='Search for PR by Author, tag or commit hash' value={search}onChange={(e) => setSearch(e.target.value)} />
+                        <input name='PRSearch' type="text" className='bg-[#121418] w-full py-[2.5%] px-[4%] text-[1.7vh] font-semibold rounded-md border-[#3A4E70] border mb-[3%] ' placeholder='Search for PR by #, author, title and plagiarism' value={search}onChange={(e) => setSearch(e.target.value)} />
                         <SearchIcon className='w-[5%] absolute top-[5%] right-[5%]' />
                         <div className='h-[75%] mb-[5%] w-full overflow-y-scroll customScrollbar'>
                             {

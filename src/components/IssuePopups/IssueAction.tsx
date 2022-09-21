@@ -16,6 +16,8 @@ declare let window:any
 import DaoAbi from "../ContractFunctions/DaoABI.json"
 import TokenAbi from "../ContractFunctions/TokenABI.json"
 
+import BlueShades from '../utils/BlueShades.json'
+
 import {timeAgo} from '../../utils/timeUtils'
 
 interface IssueActionProps {
@@ -31,7 +33,7 @@ interface PieChartProps{
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart: React.FC<PieChartProps> = ({pieData}) => {
-    const pieColors = ['#6495ED','#0047AB','#00008B','#3F00FF','#5D3FD3','#4169E1'];
+    const pieColors = BlueShades.slice(4);
 
     const options = {
         plugins: {
@@ -83,6 +85,11 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
     const [addStake,setAddStake] = useState<number>()
 
     const [PrLink,setPrLink] = useState<string>('')
+
+    const compactNum = (num:number)=>{
+        const formatter = Intl.NumberFormat('en',{notation:'compact'});
+        return formatter.format(num);
+    }
 
     const getTheIssue = async () => {
         //web3
@@ -184,34 +191,34 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         }
     }
 
-    const StartVotingFunc = async () => {
-        if(Number(IssuesList.issueInfo.totalStaked)===0) return
-        setLoad(true);
-        setProcessName('Starting Voting Process')    
-        //web3
-        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
-        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
-        let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
+    // const StartVotingFunc = async () => {
+    //     if(Number(IssuesList.issueInfo.totalStaked)===0) return
+    //     setLoad(true);
+    //     setProcessName('Starting Voting Process')    
+    //     //web3
+    //     let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+    //     let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+    //     let DaoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi , signer);
 
-        //start voting
-        let txRes = false;
-        const tx = await DaoContract.startVoting(popupIssueID)
-        .then((res:any)=>{
-            txRes = true;
-            return res;
-        })
-        .catch((err:any)=>{
-            if(err.error===undefined){
-                setErrorMsg('Transaction Rejected')
-            }else{
-                setErrorMsg(err.error.data.message)
-            }
-        });
-        if(txRes){
-            await tx.wait();
-            setSuccessMsg('Voting Started Successfully')
-        }
-    }
+    //     //start voting
+    //     let txRes = false;
+    //     const tx = await DaoContract.startVoting(popupIssueID)
+    //     .then((res:any)=>{
+    //         txRes = true;
+    //         return res;
+    //     })
+    //     .catch((err:any)=>{
+    //         if(err.error===undefined){
+    //             setErrorMsg('Transaction Rejected')
+    //         }else{
+    //             setErrorMsg(err.error.data.message)
+    //         }
+    //     });
+    //     if(txRes){
+    //         await tx.wait();
+    //         setSuccessMsg('Voting Started Successfully')
+    //     }
+    // }
 
     const CheckIfCanBeContributor = () => {
         if(IssuesList===undefined) return
@@ -287,6 +294,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
     useEffect(()=>{
         if(DaoInfo!==undefined && popupIssueID!==0){
             getTheIssue();
+            setAddStake(0);
         }
     },[DaoInfo,popupIssueID])
 
@@ -339,13 +347,16 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                         <div>Issue Url :</div> 
                         <a href={IssuesList!==undefined ? IssuesList.issueInfo.issueURL:''} target="_blank" className='ml-[2%] text-gray-300 flex flex-row items-center w-[80%]'>
                             <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh]' />
-                            <div>{IssuesList!==undefined && IssuesList.issueInfo.issueURL.replace("https://github.com","")}</div>
+                            <div className='underline' >{IssuesList!==undefined && IssuesList.issueInfo.issueURL.replace("https://github.com","")}</div>
                         </a>
                     </div>
 
                     <div className='w-full h-full overflow-y-scroll border border-white 
                     p-[2.2%] mt-[4%] rounded-[2vh] customScrollbar text-[2.3vh]'>
                         {IssuesList!==undefined && IssuesList.githubInfo.body}
+                        {(IssuesList.githubInfo.body===null) &&
+                            <div className='text-gray-500' >No description available</div>
+                        }
                     </div>
                     
                     {CheckIfCanBeContributor() && 
@@ -357,14 +368,14 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                     </div>
                     }
 
-                    {DaoInfo!==undefined && localStorage.getItem('currentAccount')!==null && 
+                    {/* {DaoInfo!==undefined && localStorage.getItem('currentAccount')!==null && 
                     DaoInfo.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLowerCase() && 
                     <div className='flex flex-row justify-start items-start w-full mt-[2%]'>
                         <button className='flex flex-row justify-center items-center bg-[#91A8ED] 
                         w-[30%] py-[1%] rounded-[1vh] text-[2.7vh]'
                         onClick={StartVotingFunc} >Start Voting</button>
                     </div>
-                    }
+                    } */}
 
                 </div>
                 <div className='w-[32%] h-full flex flex-col justify-start items-end'>
@@ -384,11 +395,12 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                                     IssuesList.stakersInfo.map((staker:any,idx:number)=>{
                                         return(
                                             <div className={`w-[90%] my-[2%] text-[1.9vh] flex flex-row items-center justify-between`} key={idx} >
-                                                <div className='font-semibold'>
+                                                <div className='font-semibold'
+                                                style={{color:BlueShades[idx+4]}}>
                                                     {staker.staker.slice(0,5)+'...'+staker.staker.slice(37,42)}
                                                 </div>
                                                 <div className='font-semibold'>
-                                                    {parseInt(ethers.utils.formatEther(staker.amount))} {IssuesList.daoInfo.tokenSymbol}
+                                                    {compactNum(parseInt(ethers.utils.formatEther(staker.amount)))} {IssuesList.daoInfo.tokenSymbol}
                                                 </div>
                                             </div>
                                         )
@@ -399,14 +411,22 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
 
                         <div className='flex flex-row justify-center items-center border-2 border-[#91A8ED] w-full py-[2.5%] rounded-[1vh] mb-[8%] mt-[5%] text-[2.7vh]'>
                             <img src={IssuesList!==undefined && IssuesList.daoInfo.tokenImg || ''} className='w-[4.5vh] h-[4.5vh] mr-[3%]' />
-                            <div>{IssuesList!==undefined && parseInt(ethers.utils.formatEther(IssuesList.issueInfo.totalStaked))} {IssuesList!==undefined && IssuesList.daoInfo.tokenSymbol}</div>
+                            <div>{IssuesList!==undefined && compactNum(parseInt(ethers.utils.formatEther(IssuesList.issueInfo.totalStaked)))} {IssuesList!==undefined && IssuesList.daoInfo.tokenSymbol}</div>
                         </div>
                         <div className='flex flex-col w-full items-center mt-[2%] 
                         border border-b-0 rounded-t-[1vh] px-[3%] py-[1.5%]'>
                             <div className='w-full flex flex-row items-center justify-between mb-[2%]'>
-                                <div className='text-[1.8vh]' >Balance:</div>
-                                <div className='text-[2.3vh] font-semibold text-[#91A8ED]'>
-                                    {IssuesList!==undefined && Math.round(IssuesList.tokenBalance)}
+                                <div className='text-[2.2vh] flex flex-row items-center justify-center' >
+                                    <div className='mr-[2vh]' >Balance: </div>
+                                    <div className='font-semibold'>{IssuesList!==undefined && Math.round(IssuesList.tokenBalance)}</div>
+                                </div>
+                                <div className='text-[2.2vh] text-[#91A8ED] flex flex-row items-center justify-center font-semibold' >
+                                    <button onClick={()=>{
+                                        setAddStake(Math.round(IssuesList.tokenBalance)/2)
+                                    }} className='mr-[2vh]' >50%</button>
+                                    <button onClick={()=>{
+                                        setAddStake(Math.round(IssuesList.tokenBalance))
+                                    }} className=''>MAX</button>
                                 </div>
                             </div>
                             <div className='w-full flex flex-row items-center justify-between mb-[2%]'>

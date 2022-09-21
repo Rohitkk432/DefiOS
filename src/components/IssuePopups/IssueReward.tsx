@@ -28,6 +28,11 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
 
     const [IssuesList,setIssuesList] = useState<any>()
 
+    const compactNum = (num:number)=>{
+        const formatter = Intl.NumberFormat('en',{notation:'compact'});
+        return formatter.format(num);
+    }
+
     const getTheIssue = async () => {
         //web3
         let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
@@ -121,7 +126,7 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
                     <div className='text-[2.5vh] mt-[1vh]' >Loading</div>
                 </div>
                 }
-                {IssuesList && 
+                {IssuesList!==undefined && 
                 <>
                 <div className='w-[66%] h-full flex flex-col justify-start items-start'>
                     <div className='flex flex-row items-center w-full flex-wrap text-[3.5vh] font-semibold' >
@@ -155,13 +160,16 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
                         <div>Issue Url :</div> 
                         <a href={IssuesList!==undefined ? IssuesList.issueInfo.issueURL:''} target="_blank" className='ml-[2%] text-gray-300 flex flex-row items-center w-[80%]' >
                             <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh]' />
-                            <div>{IssuesList!==undefined && IssuesList.issueInfo.issueURL.replace("https://github.com","")}</div>
+                            <div className='underline' >{IssuesList!==undefined && IssuesList.issueInfo.issueURL.replace("https://github.com","")}</div>
                         </a>
                     </div>
 
                     <div className='w-full h-full overflow-y-scroll border border-white 
                     p-[2.2%] mt-[4%] rounded-[2vh] customScrollbar text-[2.3vh]'>
                         {IssuesList!==undefined && IssuesList.githubInfo.body}
+                        {(IssuesList.githubInfo.body===null) &&
+                            <div className='text-gray-500' >No description available</div>
+                        }
                     </div>
 
                 </div>
@@ -176,20 +184,20 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
                         <img src="/assets/images/Reward-illustration.svg" className='h-[40%] my-[3%] mx-auto' />
                         <div className='flex flex-row justify-center items-center border-2 border-[#91A8ED] w-full py-[2.5%] rounded-[1vh] mb-[3%] mt-[10%] text-[2.7vh]'>
                             <img src={IssuesList!==undefined ? IssuesList.daoInfo.tokenImg : ''}  className='w-[4.5vh] h-[4.5vh] mr-[3%]' />
-                            <div>{IssuesList!==undefined && parseInt(ethers.utils.formatEther(IssuesList.issueInfo.totalStaked))} {IssuesList!==undefined && IssuesList.daoInfo.tokenSymbol}</div>
+                            <div>{IssuesList!==undefined && compactNum(parseInt(ethers.utils.formatEther(IssuesList.issueInfo.totalStaked)))} {IssuesList!==undefined && IssuesList.daoInfo.tokenSymbol}</div>
                         </div>
                         <div className='flex flex-row w-full items-center mt-[2%]'>
                             <div className='text-[2.5vh]'>Winning Author:</div>
-                            <div className='ml-[3%] text-[2.3vh]' >{IssuesList!==undefined && `${IssuesList.issueInfo.solver.slice(0,5)}...${IssuesList.issueInfo.solver.slice(37,42)}`}</div>
+                            <a href={`https://neonscan.org/address/${IssuesList.issueInfo.solver}`} target="_blank" className='underline ml-[3%] text-[2.3vh]' >{IssuesList!==undefined && `${IssuesList.issueInfo.solver.slice(0,5)}...${IssuesList.issueInfo.solver.slice(37,42)}`}</a>
                         </div>
                         <div className='flex flex-row w-full items-center mt-[2%] flex-wrap'>
                             <div className='text-[2.5vh]'>Winning PR:</div>
-                            <div className='flex flex-row items-center w-[70%]'>
+                            <a href={IssuesList.solverInfo.url} target="_blank" className='flex flex-row items-center w-[70%]'>
                                 <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.3vh] ml-[3%]' />
-                                <div className=' text-[2vh]'>{IssuesList!==undefined && 
+                                <div className='underline text-[2vh]'>{IssuesList!==undefined && 
                                 `${IssuesList.solverInfo.url.replace('https://github.com','').length>25 ? IssuesList.solverInfo.url.replace('https://github.com','').slice(0,25)+'...' : IssuesList.solverInfo.url.replace('https://github.com','')}`
                                 }</div>
-                            </div>
+                            </a>
                         </div>
                         {IssuesList!==undefined && localStorage.getItem('currentAccount')!==null
                         && localStorage.getItem('currentAccount')!==undefined && IssuesList.issueInfo.solver.toLowerCase()===localStorage.getItem('currentAccount')?.toLocaleLowerCase() &&

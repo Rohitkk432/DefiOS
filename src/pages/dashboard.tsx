@@ -6,6 +6,7 @@ import DashboardMenu from '../components/DashboardMenu';
 import DashboardMain from '../components/DashboardMain';
 
 import {ethers} from 'ethers'
+import { useSession } from "next-auth/react";
 
 import Joyride, { CallBackProps, STATUS } from 'react-joyride';
 
@@ -16,6 +17,7 @@ interface DashboardProps {
 declare let window:any
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
+    const {data:session} = useSession()
 
     const [currentAccount, setCurrentAccount] = useState<string | undefined>()
     const [network, setNetwork] = useState<string | undefined>()
@@ -69,10 +71,41 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         },
     ]
 
+    const GithubUID_Address_mapping = async () => {
+
+        const github_uid = session?.user?.image?.split('/')[4]?.split("?")[0] 
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(
+                {
+                    "pub_key": localStorage.getItem('currentAccount'),
+                    "github_uid": github_uid,
+                    "github_access_token": session?.accessToken
+                }
+            )
+        };
+        console.log(requestOptions)
+        const returnSig = await fetch('https://names.defi-os.com/encrypt',requestOptions)
+        .then(res=>res.status===200?res.json():null)
+        .then(res=>{
+            return res.signature
+        })
+        .catch(err=>console.log(err))
+        if(returnSig!==undefined && returnSig!==null){
+            localStorage.setItem('mappingDone','true')
+        }
+        return returnSig
+    }
+
     useEffect(() => {
         const tourDone:any = localStorage.getItem('dashTourDone');
         if(tourDone==="false"||tourDone===undefined||tourDone===null){
             setRunTour(true);
+        }
+
+        if(session && localStorage.getItem('mappingDone')===null){
+            GithubUID_Address_mapping();
         }
 
         if(!window.ethereum){
@@ -92,7 +125,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             onClickConnect();
         });
         // const provider = new ethers.providers.Web3Provider(window.ethereum)
-    },[currentAccount])
+    },[currentAccount,session])
 
     const handleJoyrideCallback = (data: CallBackProps) => {
         const { status } = data;

@@ -13,7 +13,7 @@ import DaoAbi from "./ContractFunctions/DaoABI.json"
 import TokenAbi from "./ContractFunctions/TokenABI.json"
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faRotate} from '@fortawesome/free-solid-svg-icons';
+import {faRotate,faRocket} from '@fortawesome/free-solid-svg-icons';
 
 
 interface DashboardMenuProps {
@@ -86,7 +86,7 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
 
         const checkUnclaimed = await TokenContract.partner(idGithub)
         
-        if(!checkUnclaimed.claimed){
+        if(!checkUnclaimed.claimed && Number(checkUnclaimed.amount)!==0){
             setClaimRender(true)
         }
     }
@@ -159,15 +159,18 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
             }
 
             {syncCommitBtn &&
-            <button className='flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] my-[1vh]'>
+            <button className='dao-details__step5 flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] mt-auto mb-[1vh]'>
                 <FontAwesomeIcon icon={faRotate} className='h-[2vh] mr-[3%]'/>
                 <div>Sync Commit History</div>
             </button>
             }
-
+            
+            {DaoInfo===undefined &&
             <button className='flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] mt-auto mb-[1vh]' onClick={()=>setPopLoad(true)} >
-                <div>Invest</div>
+                <FontAwesomeIcon icon={faRocket} className='h-[2vh] mr-[3%]'/>
+                <div>DefiOS Alpha</div>
             </button>
+            }
 
             <LoadingScreen load={load} setLoad={setLoad} error={errorMsg} success={successMsg}
             redirectURL='' />
