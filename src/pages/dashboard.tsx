@@ -85,7 +85,6 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                 }
             )
         };
-        console.log(requestOptions)
         const returnSig = await fetch('https://names.defi-os.com/encrypt',requestOptions)
         .then(res=>res.status===200?res.json():null)
         .then(res=>{
