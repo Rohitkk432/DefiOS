@@ -16,9 +16,11 @@ interface DaoDetailsBottomProps {
     setPopupState: React.Dispatch<React.SetStateAction<string>>;
     setPopupIssue: React.Dispatch<React.SetStateAction<number>>;
     DaoInfo:any;
+    runTour:boolean;
+    setRunTour: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupState,DaoInfo,setPopupIssue}) => {
+const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupState,DaoInfo,setPopupIssue,setRunTour,runTour}) => {
 
     const [IssuesList,setIssuesList] = useState<any>()
 
@@ -67,7 +69,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
 
     return (
         <div className='w-[100%] h-[150vh] flex flex-col justify-between items-end px-[1%] py-[1%] relative text-white overflow-hidden'>
-            <DaoDetailsTop DaoInfo={DaoInfo} />
+            <DaoDetailsTop setRunTour={setRunTour} runTour={runTour} DaoInfo={DaoInfo} />
             <div className='w-full h-[50%] px-[1.5%] py-[1.5%] bg-[#262B36] rounded-lg'>
                 <div className='w-full flex flex-row justify-between items-center' >
                     {/* Search bar */}
@@ -87,10 +89,10 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
                 <div className='w-full h-[3vh] flex flex-row justify-start items-center mt-[2%] mb-[0.5%] pl-[1%] text-[#CACACA] text-[1.7vh] pr-[1%]'>
                     <div className='w-[30%] h-full mx-[0.5%]'>Title</div>
                     <div className='w-[10%] h-full mx-[0.5%]'>Created by</div>
-                    <div className='w-[10%] h-full mx-[0.5%]'>Created at</div>
+                    {/* <div className='w-[10%] h-full mx-[0.5%]'>Created at</div> */}
                     <div className='w-[35%] h-full mx-[0.5%]'>Tags</div>
                     <div className='w-[15%] h-full mx-[0.5%]'>Amount Staked</div>
-                    {/* <div className='w-[10%] h-full mx-[0.5%]'>Top Staker</div> */}
+                    <div className='w-[10%] h-full mx-[0.5%]'>Pending Action</div>
                 </div>
                 <div className='w-full pr-[0.2%] h-[82%] overflow-y-scroll customScrollbar' >
                     {(IssueSearch && IssueSearch.length!==0 )&&

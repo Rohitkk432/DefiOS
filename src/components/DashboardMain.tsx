@@ -215,7 +215,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                 <div className='flex flex-row justify-center items-center h-full px-[1.5%] py-[1%] bg-[#262B36] rounded-md ml-[1%]'>
                     {/* <img src="https://res.cloudinary.com/rohitkk432/image/upload/v1661271366/metamaskAccount_j0e9ij.svg" className='h-[3.5vh]  mr-[5%]' /> */}
                     <div className='text-[2.2vh]'>
-                        {network!=="unknown"?network:chainId===245022926?'remote proxy — solana devnet':'unknown'}
+                        {network!=="unknown"?network:chainId===245022926?'Solana Devnet':'unknown'}
                     </div>
                 </div>
                 <div className='flex flex-row justify-center items-center h-full px-[1.5%] py-[1%] bg-[#262B36] rounded-md ml-[1%]'>
@@ -278,12 +278,12 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
 
                 <div className='w-full h-[3vh] flex flex-row justify-start items-center mt-[2%] mb-[0.5%] pl-[1%] text-[#CACACA] text-[1.5vh] pr-[1%]'>
                     <div className='w-[18%] h-full mx-[0.5%]'>DAO name</div>
-                    <div className='w-[20%] h-full mx-[0.5%]'>Repository</div>
+                    <div className='w-[25%] h-full mx-[0.5%]'>Repository</div>
                     <div className='w-[10%] h-full mx-[0.5%]'>Role</div>
                     <div className='w-[13%] h-full mx-[0.5%]'>Created by</div>
-                    <div className='w-[13%] h-full mx-[0.5%]'>Total Staked</div>
+                    <div className='w-[21%] h-full mx-[0.5%]'>Total Staked</div>
                     <div className='w-[6%] h-full mx-[0.5%]'>Open Issues</div>
-                    <div className='w-[13%] h-full mx-[0.5%]'>Pending Action</div>
+                    {/* <div className='w-[13%] h-full mx-[0.5%]'>Pending Action</div> */}
                 </div>
                 <div className='w-full pr-[0.2%] h-[84%] overflow-y-scroll customScrollbar' >
                     {loadingData &&

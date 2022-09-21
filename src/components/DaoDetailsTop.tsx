@@ -1,6 +1,14 @@
 import React from 'react'
+import {useState, useEffect} from 'react'
 
-import {timeAgo} from '../utils/timeUtils'
+import {ethers} from 'ethers'
+import { Contract as MultiContract, Provider, setMulticallAddress } from "ethers-multicall";
+import DaoAbi from './ContractFunctions/DaoABI.json'
+import DefiOSNamesRouterABI from './ContractFunctions/DefiOSNamesRouterABI.json'
+declare let window:any
+
+import {timeAgo,GraphDataGenerator} from '../utils/timeUtils'
+import {SupportIcon} from '@heroicons/react/outline'
 
 import {
     Chart as ChartJS,
@@ -26,9 +34,10 @@ ChartJS.register(
 
 interface MultiAxisLineChartProps{
     Token : string,
+    chartData:any
 }
 
-const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = ({Token}) => {
+const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = ({Token,chartData}) => {
     const options = {
         responsive: true,
         maintainAspectRatio: true,
@@ -102,13 +111,13 @@ const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = ({Token}) => {
             },
         },
     };
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    const labels = chartData.intervals;
     const data = {
         labels,
         datasets: [
             {
                 label: 'Issues Created',
-                data: [10,25,12,31,45,20,30],
+                data: chartData.issuesCount,
                 borderColor: '#fb9230',
                 backgroundColor: '#fb9230',
                 yAxisID: 'y',
@@ -116,7 +125,7 @@ const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = ({Token}) => {
             },
             {
                 label: `${Token} Staked`,
-                data: [16,35,26,41,31,30,50],
+                data: chartData.stakedCount,
                 borderColor: 'rgb(68, 190, 215)',
                 backgroundColor: 'rgb(68, 190, 215)',
                 yAxisID: 'y1',
@@ -131,9 +140,166 @@ const MultiAxisLineChart: React.FC<MultiAxisLineChartProps> = ({Token}) => {
 
 interface DaoDetailsTopProps {
     DaoInfo: any;
+    setRunTour: React.Dispatch<React.SetStateAction<boolean>>;
+    runTour: boolean;
 }
 
-const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
+const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour}) => {
+
+    const [TopStaker, setTopStaker] = useState<string>()
+    const [TopSolver, setTopSolver] = useState<string>()
+
+    const [chartData, setChartData] = useState<any>()
+
+    const getTopStaker = async()=>{
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let daoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi, signer);
+
+        //multi-call
+        setMulticallAddress(245022926,process.env.NEXT_PUBLIC_MULTI_CALL_ADDRESS||"");
+        const ethcallProvider = new Provider(provider, 245022926);
+        let daoMultiContract:MultiContract  = new MultiContract(DaoInfo.DAO, DaoAbi);
+
+        const countOfIssues = await daoContract.issueID().then((res:any)=>res).catch(()=>0);
+
+        let stakersArray:any = {};
+        let uniqueStakers:any = [];
+        let callsArray:any = [];
+        let stakersCountPerIssue:any = []
+        for (let i=1;i<=countOfIssues;i++) {
+            callsArray.push(await daoMultiContract.getStakersCount(i));
+        }
+        if(callsArray.length > 0 && countOfIssues!==0){
+            const _multiRes = await ethcallProvider.all(callsArray)
+            const multiRes = _multiRes.map((res:any)=>Number(res));
+            stakersCountPerIssue = multiRes;
+        }
+        callsArray = []
+        for (let i=0;i<stakersCountPerIssue.length;i++) {
+            for(let j=0;j<stakersCountPerIssue[i];j++){
+                callsArray.push(await daoMultiContract.stakers(i+1,j));
+            }
+        }
+        if(callsArray.length > 0 && countOfIssues!==0){
+            const _multiRes = await ethcallProvider.all(callsArray)
+            const multiRes = _multiRes.map((res)=>{
+                return {
+                    staker:res.staker,
+                    amount:Number(res.amount),
+                }
+            });
+            stakersArray = multiRes;
+        }
+
+        for(let i=0;i<stakersArray.length;i++){
+            const keys = Object.keys(uniqueStakers)
+            if(keys.includes(stakersArray[i].staker)){
+                uniqueStakers[stakersArray[i].staker] += stakersArray[i].amount;
+            }else{
+                uniqueStakers[`${stakersArray[i].staker}`] = stakersArray[i].amount;
+            }
+        }
+        if(Object.keys(uniqueStakers).length===0) return;
+        let topStaker = Object.keys(uniqueStakers).reduce((a, b) => uniqueStakers[a] > uniqueStakers[b] ? a : b);
+
+        setTopStaker(topStaker);
+    }
+
+    const getTopSolver = async()=>{
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let daoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi, signer);
+
+        //multi-call
+        setMulticallAddress(245022926,process.env.NEXT_PUBLIC_MULTI_CALL_ADDRESS||"");
+        const ethcallProvider = new Provider(provider, 245022926);
+        let daoMultiContract:MultiContract  = new MultiContract(DaoInfo.DAO, DaoAbi);
+
+        const countOfIssues = await daoContract.issueID().then((res:any)=>res).catch(()=>0);
+
+        let solversArray:any = {};
+        let uniqueSolvers:any = [];
+        let callsArray:any = [];
+        for (let i=1;i<=countOfIssues;i++) {
+            callsArray.push(await daoMultiContract.repoIssues(i));
+        }
+        if(callsArray.length > 0 && countOfIssues!==0){
+            const _multiRes = await ethcallProvider.all(callsArray)
+            const multiRes = _multiRes.map((res:any)=>res.solver);
+            solversArray = multiRes;
+        }
+        for(let i=0;i<solversArray.length;i++){
+            if(solversArray[i] === "0x0000000000000000000000000000000000000000") continue;
+            const keys = Object.keys(uniqueSolvers)
+            if(keys.includes(solversArray[i])){
+                uniqueSolvers[solversArray[i]] += 1;
+            }else{
+                uniqueSolvers[`${solversArray[i]}`] = 1;
+            }
+        }
+
+        if(Object.keys(uniqueSolvers).length===0) return;
+        let topSolver = Object.keys(uniqueSolvers).reduce((a, b) => uniqueSolvers[a] > uniqueSolvers[b] ? a : b);
+
+        let gitMapperContract : ethers.Contract = new ethers.Contract('0x009143d82A1c926eBb255169C07dc3468141e3f3', DefiOSNamesRouterABI, signer);
+
+        const topSolverName = await gitMapperContract.address_to_name_map(topSolver).then((res:any)=>res).catch(()=>topSolver);
+        const UserInfo = await fetch('https://api.github.com/user/'+topSolverName).then((res)=>res.json()).catch((err:any)=>console.log(err))
+
+        setTopSolver(UserInfo.login);
+    }
+
+    const getGraphData = async()=>{
+        //web3
+        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+        let daoContract : ethers.Contract = new ethers.Contract(DaoInfo.DAO, DaoAbi, signer);
+
+        //multi-call
+        setMulticallAddress(245022926,process.env.NEXT_PUBLIC_MULTI_CALL_ADDRESS||"");
+        const ethcallProvider = new Provider(provider, 245022926);
+        let daoMultiContract:MultiContract  = new MultiContract(DaoInfo.DAO, DaoAbi);
+
+        const countOfIssues = await daoContract.issueID().then((res:any)=>res).catch(()=>0);
+
+        let issuesArray:any = [];
+        let callsArray:any = [];
+        for (let i=1;i<=countOfIssues;i++) {
+            callsArray.push(await daoMultiContract.repoIssues(i));
+        }
+        if(callsArray.length > 0 && countOfIssues!==0){
+            const _multiRes = await ethcallProvider.all(callsArray)
+            const multiRes = _multiRes.map((res:any)=>res);
+            const _issueArr:any = []
+            for(let i = 0;i<multiRes.length;i++){
+                const apiURL = multiRes[i].issueURL.replace('github.com','api.github.com/repos');
+                const _issueInfo = await fetch(apiURL).then((res)=>res.json()).catch((err:any)=>console.log(err))
+                _issueArr.push({
+                    issueUrl:multiRes[i].issueURL,
+                    issueStaked:parseInt(ethers.utils.formatEther(multiRes[i].totalStaked)),
+                    createdAt : _issueInfo.created_at
+                });
+            }
+            issuesArray = _issueArr;
+        }
+
+        issuesArray.sort((a:any,b:any) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
+
+        const graphData = GraphDataGenerator(issuesArray);
+        setChartData(graphData);
+    }
+
+
+    useEffect(()=>{
+        if(DaoInfo!==undefined){
+            getTopStaker();
+            getTopSolver();
+            getGraphData();
+        }
+    },[DaoInfo])
 
     return (
         <div className='w-full h-[48%] flex flex-row justify-between items-center'>
@@ -149,7 +315,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
                 }
                 {DaoInfo && 
                 <>
-                <div className='text-[3vh] font-semibold mb-[10%] flex flex-col items-center w-full' >
+                <div className='dao-details__step1 text-[3vh] font-semibold mb-[10%] flex flex-col items-center w-full' >
                     <img src={DaoInfo.metadata.tokenImg} alt="" className='rounded-full w-[10vh] h-[10vh] mb-[1%]' />
                     <div>{DaoInfo.metadata.daoName}</div>
                 </div>
@@ -160,9 +326,9 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Contract :</div>
-                        <div className='text-gray-400'>
+                        <a href={`https://neonscan.org/address/${DaoInfo.DAO}`} target="_blank" className='text-gray-400'>
                             {(DaoInfo.DAO.slice(0,5)+"..."+DaoInfo.DAO.slice(37,42))}
-                        </div>
+                        </a>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div >Repository : </div>
@@ -173,7 +339,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Created by :</div>
-                        <div className='text-gray-400'>{(DaoInfo.owner.slice(0,5)+"..."+DaoInfo.owner.slice(37,42))}</div>
+                        <a href={`https://neonscan.org/address/${DaoInfo.owner}`} target="_blank" className='text-gray-400'>{(DaoInfo.owner.slice(0,5)+"..."+DaoInfo.owner.slice(37,42))}</a>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Created at :</div>
@@ -186,33 +352,47 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Top Holder :</div>
-                        <div className='text-gray-400'>{(DaoInfo.owner.slice(0,5)+"..."+DaoInfo.owner.slice(37,42))}</div>
+                        <div className='text-gray-400'>-</div>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Top Staker :</div>
-                        <div className='text-gray-400'>{(DaoInfo.owner.slice(0,5)+"..."+DaoInfo.owner.slice(37,42))}</div>
+                        <a href={TopSolver!==undefined?`https://neonscan.org/address/${TopStaker}`:""} target="_blank" className='text-gray-400'>{TopStaker!==undefined ?
+                        (TopStaker.slice(0,5)+"..."+TopStaker.slice(37,42)) : "-"
+                        }</a>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
                         <div>Top Solver :</div>
-                        <div className='text-gray-400 flex flex-row justify-end w-[70%]'>
+                        {TopSolver!==undefined ?
+                        <a href={`http://github.com/${TopSolver}`} target="_blank" className='text-gray-400 flex flex-row justify-end w-[70%]'>
                             <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh] mr-[3%]' />
-                            <div>/never2average</div>
-                        </div>
+                            <div>/{TopSolver}</div>
+                        </a>:
+                        <div className='text-gray-400'>-</div>
+                        }
                     </div>
                 </div>
-                <div className='font-bold text-center
+                <div className='dao-details__step2 font-bold text-center
                 border border-white text-[2.5vh]
                 rounded-md py-[2.5%] my-[3%] w-full' >
                     {/* <span>1 APE = $0.5</span>
                     <span className='text-green-500'> (+0.5%)</span> */}
-                    <div>{DaoInfo.metadata.tokenSymbol} = ??</div>
+                    <div>1 {DaoInfo.metadata.tokenSymbol} = ?? USDC</div>
                 </div>
                 </>
                 }
             </div>
 
-            <div className='w-[69%] text-center h-full rounded-md  p-[1.5%] bg-[#191C21]'>
-                {DaoInfo===undefined &&
+            <div className='w-[69%] text-center h-full rounded-md  p-[1.5%] bg-[#191C21] relative'>
+                <button className={`flex flex-row justify-center items-center 
+                ${runTour?"text-gray-600":"text-white"}
+                py-[1vh] rounded-[1vh] absolute top-[1vh] right-[2vh] text-white flex flex-row items-center justify-center`}
+                onClick={()=>{
+                    setRunTour(true);
+                }}>
+                    <SupportIcon className="h-[3.5vh] w-[3.5vh] mr-[1vh]"/>
+                    <div className='text-[2.8vh] font-semibold'>Tutorial</div>
+                </button>
+                {(DaoInfo===undefined || chartData===undefined) &&
                     <div className='w-full h-full flex flex-col justify-center items-center'>
                         <svg aria-hidden="true" className="w-[5vh] h-[5vh] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -221,10 +401,10 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo}) => {
                         <div className='text-[2.5vh] mt-[1vh]' >Loading</div>
                     </div>
                 }
-                {DaoInfo &&
+                {DaoInfo && chartData!==undefined &&
                 <>
                 <div className='text-[#91A8ED] text-[4vh]'>Community Health</div>
-                <MultiAxisLineChart Token={DaoInfo.metadata.tokenSymbol} />
+                <MultiAxisLineChart chartData={chartData} Token={DaoInfo.metadata.tokenSymbol} />
                 </>
                 }
             </div>
