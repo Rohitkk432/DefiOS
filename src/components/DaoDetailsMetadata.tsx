@@ -168,7 +168,7 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
             
             {(DaoInfo.owner.toLowerCase()===localStorage.getItem("currentAccount")) &&
             metadata.issueInfo.state===0 &&
-            <div className='w-[10%] h-full cursor-pointer text-blue-500 font-semibold flex flex-row justify-start items-center z-20'
+            <div className={`${first?'dao-details__step7':null} w-[10%] h-full cursor-pointer text-blue-500 font-semibold flex flex-row justify-start items-center z-20`}
             onClick={(e)=>{
                 e.stopPropagation();
                 StartVotingFunc()
@@ -179,14 +179,14 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
             }
             {(DaoInfo.owner.toLowerCase()!==localStorage.getItem("currentAccount")) &&
             metadata.issueInfo.state===0 &&
-            <div className='w-[10%] h-full cursor-pointer text-blue-500 font-semibold flex flex-row justify-start items-center z-20'>
+            <div className={`${first?'dao-details__step7':null}  w-[10%] h-full cursor-pointer text-blue-500 font-semibold flex flex-row justify-start items-center z-20`}>
                 <FontAwesomeIcon icon={faMoneyBillTrendUp} className='inline h-[2vh] mr-[3%]'/>
                 Stake
             </div>
             }
             {(DaoInfo.owner.toLowerCase()===localStorage.getItem("currentAccount")) &&
             metadata.issueInfo.state===1 && 
-            <div className='w-[10%] h-full cursor-pointer text-orange-500 font-semibold flex flex-row justify-start items-center z-20'
+            <div className={`${first?'dao-details__step7':null} w-[10%] h-full cursor-pointer text-orange-500 font-semibold flex flex-row justify-start items-center z-20`}
             onClick={(e)=>{
                 e.stopPropagation();
                 ChooseWinnerFunc()
@@ -197,20 +197,20 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
             }
             {(DaoInfo.owner.toLowerCase()!==localStorage.getItem("currentAccount")) &&
             metadata.issueInfo.state===1 &&
-            <div className='w-[10%] h-full cursor-pointer text-orange-500 font-semibold flex flex-row justify-start items-center z-20'>
+            <div className={`${first?'dao-details__step7':null} w-[10%] h-full cursor-pointer text-orange-500 font-semibold flex flex-row justify-start items-center z-20`}>
                 <FontAwesomeIcon icon={faSquarePollVertical} className='inline h-[2vh] mr-[3%]'/>
                 Vote on PR
             </div>
             }
             {(metadata.issueInfo.solver.toLowerCase()===localStorage.getItem("currentAccount")) &&
             metadata.issueInfo.state===2 &&
-            <div className='w-[10%] h-full cursor-pointer text-green-500 font-semibold flex flex-row justify-start items-center z-20'>
+            <div className={`${first?'dao-details__step7':null} w-[10%] h-full cursor-pointer text-green-500 font-semibold flex flex-row justify-start items-center z-20`}>
                 <FontAwesomeIcon icon={faWallet} className='inline h-[2vh] mr-[3%]'/>
                 Claim Reward
             </div>
             }
             {(metadata.issueInfo.state===3  || ((metadata.issueInfo.solver.toLowerCase()!==localStorage.getItem("currentAccount")) && metadata.issueInfo.state===2))  && 
-            <div className='w-[10%] h-full cursor-pointer text-gray-400 font-semibold flex flex-row justify-start items-center z-20'>-</div>
+            <div className={`${first?'dao-details__step7':null} w-[10%] h-full cursor-pointer text-gray-400 font-semibold flex flex-row justify-start items-center z-20`}>-</div>
             }
         </div>
         <LoadingScreen load={load} setLoad={setLoad} setPopupState={setPopupState} error={errorMsg} processName={processName} success={successMsg} setSuccess={setErrorMsg} redirectURL="" setInlineTrigger={setInlineTrigger} />

@@ -93,6 +93,7 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
 
     useEffect(()=>{
         if (session && DaoInfo!==undefined){
+            console.log(DaoInfo);
             setBtnLoader(true)
             checkIfUnclaimed();
             if(DaoInfo.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLowerCase()){
@@ -154,12 +155,12 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
                 <ActionableItems />
             </div> */}
             <div className='mt-auto w-full'>
-            {claimRender && !btnLoader &&
-                <button className='flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] mb-[2vh]' onClick={()=>claimTokens()} >
-                    <div>Claim Tokens</div>
+            {claimRender && !btnLoader && DaoInfo!==undefined &&
+                <button className='flex flex-row justify-center items-center border-2 border-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] mb-[2vh]' onClick={()=>claimTokens()} >
+                    <div>Claim {DaoInfo.metadata.tokenName}</div>
                 </button>
             }
-            {syncCommitBtn && !btnLoader &&
+            {syncCommitBtn && !btnLoader && DaoInfo!==undefined &&
                 <button className='dao-details__step5 flex flex-row justify-center items-center bg-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] mb-[1vh]'>
                     <FontAwesomeIcon icon={faRotate} className='h-[2vh] mr-[3%]'/>
                     <div>Sync Commit History</div>
