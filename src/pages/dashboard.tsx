@@ -64,8 +64,8 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                     fontWeight: 700,
                 },
                 tooltipContent: {
-                    fontSize: '3.5vh',
-                    fontWeight: 500,
+                    fontSize: '3.15vh',
+                    fontWeight: 400,
                 },
             }
         },
