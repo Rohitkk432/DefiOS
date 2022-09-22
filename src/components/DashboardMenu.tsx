@@ -157,7 +157,7 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
             <div className='mt-auto w-full'>
             {claimRender && !btnLoader && DaoInfo!==undefined &&
                 <button className='flex flex-row justify-center items-center border-2 border-[#91A8ED] w-full py-[2.5%] rounded-[1vh] text-[2vh] mb-[2vh]' onClick={()=>claimTokens()} >
-                    <div>Claim {DaoInfo.metadata.tokenName}</div>
+                    <div>Claim {DaoInfo.metadata.tokenSymbol}</div>
                 </button>
             }
             {syncCommitBtn && !btnLoader && DaoInfo!==undefined &&

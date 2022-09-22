@@ -394,7 +394,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                                 {IssuesList!==undefined && 
                                     IssuesList.stakersInfo.map((staker:any,idx:number)=>{
                                         return(
-                                            <div className={`w-[90%] my-[2%] text-[1.9vh] flex flex-row items-center justify-between`} key={idx} >
+                                            <div className={`w-[90%] my-[2%] text-[1.5vh] flex flex-row items-center justify-between`} key={idx} >
                                                 <div className='font-semibold'
                                                 style={{color:BlueShades[idx+4]}}>
                                                     {staker.staker.slice(0,5)+'...'+staker.staker.slice(37,42)}
@@ -410,7 +410,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                         </div>
 
                         <div className='flex flex-row justify-center items-center border-2 border-[#91A8ED] w-full py-[2.5%] rounded-[1vh] mb-[8%] mt-[5%] text-[2.7vh]'>
-                            <img src={IssuesList!==undefined && IssuesList.daoInfo.tokenImg || ''} className='w-[4.5vh] h-[4.5vh] mr-[3%]' />
+                            <img src={IssuesList!==undefined && IssuesList.daoInfo.tokenImg || ''} className='w-[4.5vh] h-[4.5vh] mr-[3%] rounded-full' />
                             <div>{IssuesList!==undefined && compactNum(parseInt(ethers.utils.formatEther(IssuesList.issueInfo.totalStaked)))} {IssuesList!==undefined && IssuesList.daoInfo.tokenSymbol}</div>
                         </div>
                         <div className='flex flex-col w-full items-center mt-[2%] 
@@ -431,7 +431,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
                             </div>
                             <div className='w-full flex flex-row items-center justify-between mb-[2%]'>
                                 <div className='text-[2vh] px-[7%] py-[1%] bg-[#272A36] rounded-[1.5vh]'>{IssuesList!==undefined && IssuesList.daoInfo.tokenSymbol}</div>
-                                <input type="number" placeholder='0' className='p-[0.5vh] text-right bg-[#4B5563] focus-visible:outline-0' value={addStake} 
+                                <input type="number" placeholder='0' className='w-[60%] p-[0.5vh] text-right bg-[#4B5563] focus-visible:outline-0' value={addStake} 
                                 onChange={(e)=>setAddStake(parseInt(e.target.value))} />
                             </div>
                         </div>
