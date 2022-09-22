@@ -58,7 +58,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
     const [MainDistribution,setMainDistribution] = useState('0');
 
     const [algorithm,setAlgorithm] = useState('');
-    const [network,setNetwork] = useState('');
+    const [network,setNetwork] = useState('Neon Testnet');
     const [errorMsg,setErrorMsg] = useState('');
 
     const [contributors,setContributors] = useState<any>([]);
@@ -382,7 +382,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
                 <div className={`text-[1.63vh] mt-[3%] w-full flex flex-row w-full justify-between items-center`}>
                     <div className='flex flex-row w-full justify-start items-center'>
                         <div className="w-[2vh] h-[2vh] mr-[2%] relative">
-                            <input type="radio" name="NetworkOp" className='peer absolute opacity-0 w-full h-full cursor-pointer' value='Neon Testnet' 
+                            <input type="radio" name="NetworkOp" className='peer absolute opacity-0 w-full h-full cursor-pointer' value='Neon Testnet' checked={network==='Neon Testnet'}
                             onChange={(e)=>{
                                 if(e.target.checked){
                                     setNetwork(e.target.value);

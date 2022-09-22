@@ -18,7 +18,7 @@ const ReposOption: React.FC<ReposOptionProps> = ({repo,repoChoosen,setRepoChoose
             {/* repo name */}
             <div className='flex flex-row'>
                 <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='w-[2.5vh] h-[2.5vh] rounded-full'/>
-                <div className={`ml-[1.5%] text-[#D7D7D7] text-[1.63vh]`}>{repo.full_name}</div>
+                <div className={`ml-[1.5%] text-[#D7D7D7] text-[1.63vh]`}>{repo.full_name.length>43?(repo.full_name+"..."):repo.full_name}</div>
             </div>
             {/* repo description */}
             <div className={`w-[90%] text-[1.2vh] h-[3vh] mt-[1.5%] text-[#BFBFBF]`}>

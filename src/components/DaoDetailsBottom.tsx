@@ -81,7 +81,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
                         <SearchIcon className='w-[2%] absolute top-[25%] right-[2%]' />
                     </div>
                     {/* create Dao btn */}
-                    <button className='dao-details__step4 flex flex-row justify-center items-center h-[5vh] px-[1.5%] py-[1%] bg-[#91A8ED] rounded-md ml-[1%] text-[1.8vh] px-[5%] font-semibold'
+                    <button className='dao-details__step4 flex flex-row justify-center items-center h-[5vh] px-[1.5%] py-[1%] bg-[#91A8ED] rounded-md ml-[1%] text-[1.8vh] w-[32vh] font-semibold'
                     onClick={()=>{
                         setPopupState('newIssue')
                     }}>
