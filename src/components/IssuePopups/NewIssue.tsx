@@ -2,6 +2,7 @@ import React from 'react'
 import { Fragment, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import LoadingScreen from '../utils/LoadingScreen';
+import {useSession} from 'next-auth/react'
 
 import Tags from '../utils/Tags'
 import { XIcon } from '@heroicons/react/outline'
@@ -60,6 +61,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
     const [load, setLoad] = useState(false)
     const [errorMsg, setErrorMsg] = useState<string>()
     const [successMsg, setSuccessMsg] = useState<string>()
+    const {data:session} = useSession()
 
     const [allTags , setAllTags] = useState<string[]>([])
 
@@ -83,8 +85,12 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
             return
         }
 
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+        };
 
-        const user = await fetch(`https://api.github.com/user/${DaoInfo.metadata.partners[0]}`).then(res=>res.json()).catch(err=>console.log(err))
+        const user = await fetch(`https://api.github.com/user/${DaoInfo.metadata.partners[0]}`,requestOptions).then(res=>res.json()).catch(err=>console.log(err))
 
         const response = await fetch('/api/issue/create', {
             method: 'POST',
