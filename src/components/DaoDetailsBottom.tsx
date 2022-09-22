@@ -95,7 +95,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
                     <div className='w-[35%] h-full mx-[0.5%]'>Tags</div>
                     <div className='w-[7%] h-full mx-[0.5%]'>Open PRs</div>
                     <div className='w-[15%] h-full mx-[0.5%]'>Amount Staked</div>
-                    <div className='dao-details__step7 w-[10%] h-full mx-[0.5%]'>Pending Action</div>
+                    <div className='w-[10%] h-full mx-[0.5%]'>Pending Action</div>
                 </div>
                 <div className='w-full pr-[0.2%] h-[82%] overflow-y-scroll customScrollbar' >
                     {(IssueSearch && IssueSearch.length!==0 )&&
