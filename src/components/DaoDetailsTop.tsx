@@ -266,11 +266,17 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
 
         const countOfIssues = await daoContract.issueID().then((res:any)=>res).catch(()=>0);
 
+        if(countOfIssues<=1){
+            setChartData(null)
+            return;
+        }
+
         let issuesArray:any = [];
         let callsArray:any = [];
         for (let i=1;i<=countOfIssues;i++) {
             callsArray.push(await daoMultiContract.repoIssues(i));
         }
+        
         if(callsArray.length > 0 && countOfIssues!==0){
             const _multiRes = await ethcallProvider.all(callsArray)
             const multiRes = _multiRes.map((res:any)=>res);
@@ -335,7 +341,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
                         <div >Repository : </div>
                         <a href={DaoInfo.metadata.repoUrl} target="_blank" className='text-gray-400 flex flex-row justify-end w-[70%]'>
                             <img src='https://res.cloudinary.com/rohitkk432/image/upload/v1660743146/Ellipse_12_vvyjfb.png' className='h-[2.5vh] mr-[3%]' />
-                            <div>/{DaoInfo.metadata.repoName}</div>
+                            <div>/{DaoInfo.metadata.repoName.length>27?(DaoInfo.metadata.repoName+"..."):DaoInfo.metadata.repoName}</div>
                         </a>
                     </div>
                     <div className='mb-[2.5%] flex flex-row w-full justify-between items-center '>
@@ -402,11 +408,14 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
                         <div className='text-[2.5vh] mt-[1vh]' >Loading</div>
                     </div>
                 }
-                {DaoInfo && chartData!==undefined &&
+                {DaoInfo && chartData!==undefined && chartData!==null &&
                 <>
                 <div className='text-[#91A8ED] text-[4vh]'>Community Health</div>
                 <MultiAxisLineChart chartData={chartData} Token={DaoInfo.metadata.tokenSymbol} />
                 </>
+                }
+                {DaoInfo && chartData===null &&
+                <div className='text-gray-500 text-[3vh] flex items-center justify-center w-full h-full'>Not enough data yet to plot the chart</div>
                 }
             </div>
         </div>

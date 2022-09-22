@@ -10,6 +10,9 @@ import { useSession } from "next-auth/react";
 
 import Joyride, { CallBackProps, STATUS } from 'react-joyride';
 
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faFaucet} from '@fortawesome/free-solid-svg-icons';
+
 interface DashboardProps {
 
 }
@@ -28,7 +31,19 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
     const tourSteps:any = [
         {
             target: '.dash__step1',
-            content: 'Welcome to DefiOS the p2p platform for incentivizing open source contribution.',
+            title: 'Welcome to DefiOS 🙏',
+            content: (
+                <div className='flex flex-col items-center justify-center'>
+                    <div>
+                        This is a p2p protocol to add liquidity to open source communities. Earn crypto rewards by contributing to open source repositories or convert your own repository into a token and reward people for helping you build code. Get started now.
+                    </div>
+                    <a href="https://neonfaucet.org/" target="_blank" className='border-2 text-[3vh] border-[#91A8ED] mt-[4vh] px-[8vh] py-[2vh] 
+                    rounded-[1vh] flex flex-row justify-center items-center'>
+                        <FontAwesomeIcon icon={faFaucet} className='h-[3vh] mr-[2vh]'/>
+                        <div>Get Devnet NEON</div>
+                    </a>
+                </div>
+            ),
             placement: 'center',
             offset: 0,
             styles:{
@@ -40,13 +55,17 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                     padding: "3vh 5vh",
                     margin:0,
                     width:"75vw",
-                    height:"40vh",
+                    height:"52vh",
                     overflow: 'hidden',
                     borderRadius: "1.5vh",
                 },
-                tooltipContent: {
-                    fontSize: '5.6vh',
+                tooltipTitle: {
+                    fontSize: '6vh',
                     fontWeight: 700,
+                },
+                tooltipContent: {
+                    fontSize: '3.5vh',
+                    fontWeight: 500,
                 },
             }
         },
