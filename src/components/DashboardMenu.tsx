@@ -93,7 +93,6 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
 
     useEffect(()=>{
         if (session && DaoInfo!==undefined){
-            console.log(DaoInfo);
             setBtnLoader(true)
             checkIfUnclaimed();
             if(DaoInfo.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLowerCase()){
