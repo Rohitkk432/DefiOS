@@ -33,8 +33,9 @@ const Homepage: React.FC<HomepageProps> = ({}) => {
             <div className='w-full flex flex-row justify-between items-center h-[7vh] z-20'>
                 <img src="/assets/images/defi-os-logo.png" className='h-full' />
                 <div className='flex flex-row justify-end items-center w-full h-full' >
-                    <a href='https://youtu.be/36O5ew_3qh0' target="_blank" className='mx-[2%] font-thin text-[2.5vh]'>Click Here !!</a>
+                    <a href='https://youtu.be/36O5ew_3qh0' target="_blank" className='mx-[2%] font-thin text-[2.5vh]'>Click Here!</a>
                     <a href='/whitepaper' target="_blank" className='mx-[2%] font-thin text-[2.5vh]'>Whitepaper</a>
+                    <a href='https://discord.gg/Nm3ahUGCYb' target="_blank" className='mx-[2%] font-thin text-[2.5vh]'>Discord</a>
                     <a href="mailto:abhi@defi-os.com?Subject=Product%20Query" className='mx-[2%] font-thin text-[2.5vh]'>Contact Us</a>
                 </div>
             </div>
