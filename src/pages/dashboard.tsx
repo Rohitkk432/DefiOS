@@ -5,6 +5,8 @@ import Head from 'next/head'
 import DashboardMenu from '../components/DashboardMenu';
 import DashboardMain from '../components/DashboardMain';
 
+import LoginOverlay from '../components/utils/LoginOverlay';
+
 import {ethers} from 'ethers'
 import { useSession } from "next-auth/react";
 
@@ -21,6 +23,8 @@ declare let window:any
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
     const {data:session} = useSession()
+
+    const [load, setLoad] = useState(false)
 
     const [currentAccount, setCurrentAccount] = useState<string | undefined>()
     const [network, setNetwork] = useState<string | undefined>()
@@ -120,21 +124,29 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         const tourDone:any = localStorage.getItem('dashTourDone');
         if(tourDone==="false"||tourDone===undefined||tourDone===null){
             setRunTour(true);
+            return
         }
 
-        if(session && localStorage.getItem('mappingDone')===null){
+        let accountInStorage:any= localStorage.getItem("currentAccount")
+        if(session && localStorage.getItem('mappingDone')===null && accountInStorage!==null){
             GithubUID_Address_mapping();
         }
 
-        if(!window.ethereum){
+        if(!(window.ethereum && accountInStorage!==null)){
+            setLoad(true)
+            // console.log(currentAccount)
             return
         }
-        let accountInStorage:any= localStorage.getItem("currentAccount")
         if(accountInStorage){
             setCurrentAccount(accountInStorage)
-        }
-        if(!currentAccount || !ethers.utils.isAddress(currentAccount) || !accountInStorage){
             onClickConnect();
+            setLoad(false)
+            return
+        }
+        if(currentAccount && ethers.utils.isAddress(currentAccount)){
+            onClickConnect();
+            setLoad(false)
+            return
         }
         window.ethereum.on('accountsChanged', () => {
             onClickConnect();
@@ -151,6 +163,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         
         if (finishedStatuses.includes(status)) {
             setRunTour(false);
+            setLoad(true);
             localStorage.setItem('dashTourDone',"true");
         }
     };
@@ -181,6 +194,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
         }).catch(err => {
             console.log(err)
         })
+
     }
 
     // const onClickDisconnect = () => {
@@ -312,6 +326,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             <DashboardMenu/>
             <DashboardMain runTour={runTour} setRunTour={setRunTour} currentAccount={currentAccount} network={network} chainId={chainId}/>
         </div>
+        <LoginOverlay load={load} onClickConnect={onClickConnect} />
         </div>
     );
 }

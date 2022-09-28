@@ -24,14 +24,22 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
     }
 
     useEffect(()=>{
-        //web3
-        let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
-        let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
-        let DaoContract : ethers.Contract = new ethers.Contract(metadata.DAO, DaoAbi , signer);
+        if(metadata.dummy===true){
+            setOpenIssuesCount(metadata.openIssuesCount)
+            setTotalStaked(metadata.totalStaked)
+        }else{
+            //web3
+            let provider :ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum) ;
+            let signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+            let DaoContract : ethers.Contract = new ethers.Contract(metadata.DAO, DaoAbi , signer);
 
-        DaoContract.getOpenIssueCount().then((res:any)=>setOpenIssuesCount(Number(res)));
-        DaoContract.TOTALSTAKED().then((res:any)=>setTotalStaked(parseInt(ethers.utils.formatEther(res))));
-    },[])
+            DaoContract.getOpenIssueCount().then((res:any)=>setOpenIssuesCount(Number(res)));
+            DaoContract.TOTALSTAKED().then((res:any)=>{
+                setTotalStaked(parseInt(ethers.utils.formatEther(res)))
+                console.log(parseInt(ethers.utils.formatEther(res))) 
+            });
+        }
+    },[metadata])
 
     return (
         <div className='w-full min-h-[6vh] flex flex-row justify-start items-center bg-[#121418] rounded-md mb-[1%] pl-[1%] border border-[#5B5B5B] text-[1.7vh]'
@@ -53,12 +61,17 @@ const DaoMetadata: React.FC<DaoMetadataProps> = ({metadata}) => {
             (metadata.role==='Issue Solver')?'text-green-500':null}
             `}>{metadata.role}</div> */}
             
-            {(metadata.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLowerCase())?<div className={`w-[10%] mx-[0.5%]
+            {( metadata.dummy!==true ) &&
+            (metadata.owner.toLowerCase()===localStorage.getItem('currentAccount')?.toLowerCase()?
+            <div className={`w-[10%] mx-[0.5%]
             text-blue-200`}>Repository Owner</div>:
+            <div className={`w-[10%] mx-[0.5%]
+            text-white`}>-</div>)
+            }
+            {(metadata.dummy===true) &&
             <div className={`w-[10%] mx-[0.5%]
             text-white`}>-</div>
             }
-            
 
             <div className='w-[13%] mx-[0.5%]'>{metadata.metadata.creatorGithub}</div>
             <div className='w-[21%] mx-[0.5%] flex flex-row justify-start items-center'>
