@@ -126,7 +126,10 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         const userTokenBalance = ethers.utils.formatEther(await TokenContract.balanceOf(await signer.getAddress()));
 
         const apiURL = await issueRes.issueURL.replace('github.com','api.github.com/repos');
-        const githubRes = await fetch(apiURL).then(res=>res.json()).catch(err=>console.log(err));
+        const githubRes = await fetch(apiURL,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res=>res.json()).catch(err=>console.log(err));
         const IterIssue = {
             tokenBalance: userTokenBalance,
             stakesArr : stakesArr,
@@ -247,7 +250,10 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
 
         const PrlinkBreakdown = PrLink.split('/');
 
-        const PrDetails = await fetch(`https://api.github.com/repos/${PrlinkBreakdown[3]}/${PrlinkBreakdown[4]}/pulls/${PrlinkBreakdown[6]}`).then(res=>res.json());
+        const PrDetails = await fetch(`https://api.github.com/repos/${PrlinkBreakdown[3]}/${PrlinkBreakdown[4]}/pulls/${PrlinkBreakdown[6]}`,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res=>res.json());
 
         if(PrDetails.user.login!==GithubUser.login){
             setLoad(false);

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState,useEffect,useMemo } from 'react'
 import { useRouter } from 'next/router'
+import {useSession} from 'next-auth/react'
 
 import DaoMetadata from './DaoMetadata'
 
@@ -23,6 +24,7 @@ interface DashboardMainProps {
 
 const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,chainId,runTour,setRunTour}) => {
     const router = useRouter()
+    const {data:session} = useSession()
 
     const [seeMyDaos, setSeeMyDaos] = useState(true)
     const [loadingData, setLoadingData] = useState(true)
@@ -73,7 +75,10 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
             }
             DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
             DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
-            const creatorOfDao = await fetch(`https://api.github.com/user/${DaoInfoObj.metadata.partners[0]}`).then(res=>res.json()).catch(err=>console.log(err))
+            const creatorOfDao = await fetch(`https://api.github.com/user/${DaoInfoObj.metadata.partners[0]}`,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res=>res.json()).catch(err=>console.log(err))
 
             DaoInfoObj.metadata.creatorGithub = creatorOfDao.login;
 
@@ -133,7 +138,10 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
             }
             DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
             DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
-            const creatorOfDao = await fetch(`https://api.github.com/user/${DaoInfoObj.metadata.partners[0]}`).then(res=>res.json()).catch(err=>console.log(err))
+            const creatorOfDao = await fetch(`https://api.github.com/user/${DaoInfoObj.metadata.partners[0]}`,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res=>res.json()).catch(err=>console.log(err))
 
             DaoInfoObj.metadata.creatorGithub = creatorOfDao.login;
 

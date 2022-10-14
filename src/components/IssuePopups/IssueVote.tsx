@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState,useEffect,useMemo} from 'react'
-// import {useSession} from 'next-auth/react'
+import {useSession} from 'next-auth/react'
 import LoadingScreen from '../utils/LoadingScreen';
 
 import { XIcon,SearchIcon } from '@heroicons/react/outline';
@@ -22,6 +22,7 @@ interface IssueVoteProps {
 }
 
 const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID}) => {
+    const {data:session} = useSession()
 
     const [load, setLoad] = useState(false)
     const [errorMsg, setErrorMsg] = useState<string>()
@@ -70,7 +71,10 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
             const _info:any = {}
             const CollabInfo = await DaoContract.collaborators(popupIssueID,i);
             const _linkbreak = CollabInfo.url.split("/");
-            const getPr = await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}`).then(res => res.json());
+            const getPr = await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}`,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res => res.json());
             _info.collabID = i;
             _info.url = CollabInfo.url;
             _info.collaborator = CollabInfo.collaborator;
@@ -80,7 +84,10 @@ const IssueVote: React.FC<IssueVoteProps> = ({setPopupState,DaoInfo,popupIssueID
         }
 
         const apiURL = issueRes.issueURL.replace('github.com','api.github.com/repos');
-        const githubRes = await fetch(apiURL).then(res=>res.json()).catch(err=>console.log(err));
+        const githubRes = await fetch(apiURL,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res=>res.json()).catch(err=>console.log(err));
         const IterIssue = {
             issueInfo: issueRes,
             githubInfo: githubRes,

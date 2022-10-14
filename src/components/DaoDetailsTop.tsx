@@ -1,5 +1,6 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
+import {useSession} from 'next-auth/react'
 
 import {ethers} from 'ethers'
 import { Contract as MultiContract, Provider, setMulticallAddress } from "ethers-multicall";
@@ -145,6 +146,7 @@ interface DaoDetailsTopProps {
 }
 
 const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour}) => {
+    const {data:session} = useSession()
 
     const [TopStaker, setTopStaker] = useState<string>()
     const [TopSolver, setTopSolver] = useState<string>()
@@ -248,7 +250,10 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
         let gitMapperContract : ethers.Contract = new ethers.Contract(namesDefiOSAddress, DefiOSNamesRouterABI, signer);
 
         const topSolverName = await gitMapperContract.address_to_name_map(topSolver).then((res:any)=>res).catch(()=>topSolver);
-        const UserInfo = await fetch('https://api.github.com/user/'+topSolverName).then((res)=>res.json()).catch((err:any)=>console.log(err))
+        const UserInfo = await fetch('https://api.github.com/user/'+topSolverName,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then((res)=>res.json()).catch((err:any)=>console.log(err))
 
         setTopSolver(UserInfo.login);
     }
@@ -283,7 +288,10 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
             const _issueArr:any = []
             for(let i = 0;i<multiRes.length;i++){
                 const apiURL = multiRes[i].issueURL.replace('github.com','api.github.com/repos');
-                const _issueInfo = await fetch(apiURL).then((res)=>res.json()).catch((err:any)=>console.log(err))
+                const _issueInfo = await fetch(apiURL,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then((res)=>res.json()).catch((err:any)=>console.log(err))
                 _issueArr.push({
                     issueUrl:multiRes[i].issueURL,
                     issueStaked:parseInt(ethers.utils.formatEther(multiRes[i].totalStaked)),
