@@ -1,6 +1,7 @@
 import React from 'react'
 import {useState,useEffect,useMemo} from 'react'
 import {SearchIcon} from '@heroicons/react/outline'
+import {useSession} from 'next-auth/react'
 
 import DaoDetailsMetadata from './DaoDetailsMetadata'
 import DaoDetailsTop from './DaoDetailsTop'
@@ -24,6 +25,7 @@ interface DaoDetailsBottomProps {
 const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupState,DaoInfo,setPopupIssue,setRunTour,runTour,setInlineTrigger}) => {
 
     const [IssuesList,setIssuesList] = useState<any>()
+    const {data:session} = useSession()
 
     const listAllIssues = async () => {
         //web3
@@ -36,7 +38,10 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
         for (let i = 1; i <= IssuesCount; i++) {
             const issueRes = await DaoContract.repoIssues(i);
             const apiURL = issueRes.issueURL.replace('github.com','api.github.com/repos');
-            const githubRes = await fetch(apiURL).then(res=>res.json()).catch(err=>console.log(err));
+            const githubRes = await fetch(apiURL,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res=>res.json()).catch(err=>console.log(err));
             const collabCount = await DaoContract.getCollaboratorCount(i);
             const IterIssue = {
                 collabCount:Number(collabCount),

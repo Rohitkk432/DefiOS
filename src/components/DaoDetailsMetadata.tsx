@@ -85,7 +85,10 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
             const _info:any = {}
             const CollabInfo = await DaoContract.collaborators(metadata.contractIssueID,i);
             const _linkbreak = CollabInfo.url.split("/");
-            const getPr = await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}`).then(res => res.json());
+            const getPr = await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}`,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res => res.json());
             _info.collabID = i;
             _info.url = CollabInfo.url;
             _info.collaborator = CollabInfo.collaborator;

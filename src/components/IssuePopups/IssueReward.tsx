@@ -1,5 +1,7 @@
 import React from 'react'
 import {useState,useEffect} from 'react'
+import {useSession} from 'next-auth/react'
+
 import LoadingScreen from '../utils/LoadingScreen';
 
 import { XIcon } from '@heroicons/react/outline';
@@ -20,6 +22,7 @@ interface IssueRewardProps {
 }
 
 const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIssueID}) => {
+    const {data:session} = useSession()
 
     const [load, setLoad] = useState(false)
     const [errorMsg, setErrorMsg] = useState<string>()
@@ -54,7 +57,10 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
             const _info:any = {}
             const CollabInfo = await DaoContract.collaborators(popupIssueID,i);
             const _linkbreak = CollabInfo.url.split("/");
-            const getPr = await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}`).then(res => res.json());
+            const getPr = await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}`,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res => res.json());
             _info.collabID = i;
             _info.url = CollabInfo.url;
             _info.collaborator = CollabInfo.collaborator;
@@ -67,7 +73,10 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
         }
 
         const apiURL = issueRes.issueURL.replace('github.com','api.github.com/repos');
-        const githubRes = await fetch(apiURL).then(res=>res.json()).catch(err=>console.log(err));
+        const githubRes = await fetch(apiURL,{
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                    }).then(res=>res.json()).catch(err=>console.log(err));
         const IterIssue = {
             issueInfo:issueRes,
             githubInfo: githubRes,
