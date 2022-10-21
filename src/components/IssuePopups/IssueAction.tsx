@@ -117,8 +117,8 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
 
         //metadata of DAO
         const DaoMetadata = await DaoContract.METADATA();
-        const DaoRes = await fetch(`https://gateway.ipfs.io/ipfs/${DaoMetadata}`).then(res=>res.json());
-        DaoRes.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoRes.tokenImg}`
+        const DaoRes = await fetch(`https://tan-legal-bear-46.mypinata.cloud/ipfs/${DaoMetadata}`).then(res=>res.json());
+        DaoRes.tokenImg = `https://tan-legal-bear-46.mypinata.cloud/ipfs/${DaoRes.tokenImg}`
 
         //Token Balance of user
         const DaoTokenAddress = await DaoContract.TOKEN();

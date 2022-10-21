@@ -73,8 +73,8 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                 "metadata":daoInfo.metadata,
                 "metaHash":daoInfo.metadata
             }
-            DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
-            DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
+            DaoInfoObj.metadata = await fetch(`https://tan-legal-bear-46.mypinata.cloud/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
+            DaoInfoObj.metadata.tokenImg = `https://tan-legal-bear-46.mypinata.cloud/ipfs/${DaoInfoObj.metadata.tokenImg}`
             const creatorOfDao = await fetch(`https://api.github.com/user/${DaoInfoObj.metadata.partners[0]}`,{
                         method: 'GET',
                         headers: { 'Authorization': `Bearer ${session?.accessToken}` },
@@ -136,8 +136,8 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
                 "metadata":daoInfo.metadata,
                 "metaHash":daoInfo.metadata
             }
-            DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
-            DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
+            DaoInfoObj.metadata = await fetch(`https://tan-legal-bear-46.mypinata.cloud/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
+            DaoInfoObj.metadata.tokenImg = `https://tan-legal-bear-46.mypinata.cloud/ipfs/${DaoInfoObj.metadata.tokenImg}`
             const creatorOfDao = await fetch(`https://api.github.com/user/${DaoInfoObj.metadata.partners[0]}`,{
                         method: 'GET',
                         headers: { 'Authorization': `Bearer ${session?.accessToken}` },

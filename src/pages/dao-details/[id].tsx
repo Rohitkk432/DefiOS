@@ -102,8 +102,8 @@ const DaoDetails: React.FC<DaoDetailsProps> = ({}) => {
             "team":daoInfo.team,
             "metadata":daoInfo.metadata,
         }
-        DaoInfoObj.metadata = await fetch(`https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
-        DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
+        DaoInfoObj.metadata = await fetch(`https://tan-legal-bear-46.mypinata.cloud/ipfs/${DaoInfoObj.metadata}`).then(res=>res.json())
+        DaoInfoObj.metadata.tokenImg = `https://tan-legal-bear-46.mypinata.cloud/ipfs/${DaoInfoObj.metadata.tokenImg}`
 
         // console.log(DaoInfoObj)
         setDaoInfo(DaoInfoObj)

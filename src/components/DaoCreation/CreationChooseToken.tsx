@@ -89,14 +89,14 @@ const CreationChooseToken: React.FC<CreationChooseTokenProps> = ({setTourSteps})
             "tokenName": tokenName,
             "tokenSymbol": tokenSymbol,
             "tokenImgFile": tokenImgFile,
-            "tokenImgIpfsURL":`https://gateway.ipfs.io/ipfs/${imgHash}`,
+            "tokenImgIpfsURL":`https://tan-legal-bear-46.mypinata.cloud/ipfs/${imgHash}`,
             "tokenImgIpfsHash":imgHash,
         }
         const data = {...dataBefore,...dataAdd}
         localStorage.setItem('DaoCreationData',JSON.stringify(data))
         setSuccessMsg('Image Uploaded Successfully');
         setInfoToLoad({
-            "Image Uploaded at Url:" : `https://gateway.ipfs.io/ipfs/${imgHash}`
+            "Image Uploaded at Url:" : `https://tan-legal-bear-46.mypinata.cloud/ipfs/${imgHash}`
         })
     }
 
