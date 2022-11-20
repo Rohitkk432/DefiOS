@@ -77,7 +77,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
             DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
             const creatorOfDao = await fetch(`https://api.github.com/user/${DaoInfoObj.metadata.partners[0]}`,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then(res=>res.json()).catch(err=>console.log(err))
 
             DaoInfoObj.metadata.creatorGithub = creatorOfDao.login;
@@ -140,7 +140,7 @@ const DashboardMain: React.FC<DashboardMainProps> = ({currentAccount,network,cha
             DaoInfoObj.metadata.tokenImg = `https://gateway.ipfs.io/ipfs/${DaoInfoObj.metadata.tokenImg}`
             const creatorOfDao = await fetch(`https://api.github.com/user/${DaoInfoObj.metadata.partners[0]}`,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then(res=>res.json()).catch(err=>console.log(err))
 
             DaoInfoObj.metadata.creatorGithub = creatorOfDao.login;

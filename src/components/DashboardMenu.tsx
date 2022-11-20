@@ -63,7 +63,7 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({DaoInfo}) => {
     const checkIfUnclaimed = async()=>{
         const requestOptions = {
             method: 'GET',
-            headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+            headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
         };
         const idGithub = await fetch('https://api.github.com/user',requestOptions).then(res=>res.json())
         .then(res=>{

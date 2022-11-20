@@ -104,7 +104,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                 {
                     "pub_key": localStorage.getItem('currentAccount'),
                     "github_uid": github_uid,
-                    "github_access_token": session?.accessToken
+                    "github_access_token": (session as any)?.accessToken
                 }
             )
         };

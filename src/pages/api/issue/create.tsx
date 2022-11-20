@@ -11,7 +11,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
     const session = await getSession({ req });
     const octokit = new Octokit(
         {
-            auth: session?.accessToken 
+            auth: (session as any)?.accessToken 
         }
     );
     const {title, body, labels, owner, repo } = req.body;

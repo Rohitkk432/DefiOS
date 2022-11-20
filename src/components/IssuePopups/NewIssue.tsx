@@ -87,7 +87,7 @@ const NewIssue: React.FC<NewIssueProps> = ({setPopupState,DaoInfo}) => {
 
         const requestOptions = {
             method: 'GET',
-            headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+            headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
         };
 
         const user = await fetch(`https://api.github.com/user/${DaoInfo.metadata.partners[0]}`,requestOptions).then(res=>res.json()).catch(err=>console.log(err))
