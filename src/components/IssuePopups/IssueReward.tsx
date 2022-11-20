@@ -59,7 +59,7 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
             const _linkbreak = CollabInfo.url.split("/");
             const getPr = await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}`,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then(res => res.json());
             _info.collabID = i;
             _info.url = CollabInfo.url;
@@ -75,7 +75,7 @@ const IssueReward: React.FC<IssueRewardProps> = ({setPopupState,DaoInfo,popupIss
         const apiURL = issueRes.issueURL.replace('github.com','api.github.com/repos');
         const githubRes = await fetch(apiURL,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then(res=>res.json()).catch(err=>console.log(err));
         const IterIssue = {
             issueInfo:issueRes,

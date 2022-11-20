@@ -91,7 +91,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
         const data = await fetch(`https://api.github.com/repos/${repoFullName}/stats/contributors`,{
             method:"GET",
             headers:{
-                "Authorization":`token ${session?.accessToken}`,
+                "Authorization":`token ${(session as any)?.accessToken}`,
                 "Accept":"application/vnd.github.v3+json"
             }
         }).then(res=>res.json()).catch(err => console.log(err));
@@ -99,7 +99,7 @@ const CreationDistribution: React.FC<CreationDistributionProps> = ({triggerToMai
         const myInfo = await fetch(`https://api.github.com/user`,{
             method:"GET",
             headers:{
-                "Authorization":`token ${session?.accessToken}`,
+                "Authorization":`token ${(session as any)?.accessToken}`,
                 "Accept":"application/vnd.github.v3+json"
             }
         }).then(res=>res.json()).catch(err => console.log(err));

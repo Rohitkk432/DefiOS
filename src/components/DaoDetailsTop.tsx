@@ -252,7 +252,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
         const topSolverName = await gitMapperContract.address_to_name_map(topSolver).then((res:any)=>res).catch(()=>topSolver);
         const UserInfo = await fetch('https://api.github.com/user/'+topSolverName,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then((res)=>res.json()).catch((err:any)=>console.log(err))
 
         setTopSolver(UserInfo.login);
@@ -290,7 +290,7 @@ const DaoDetailsTop: React.FC<DaoDetailsTopProps> = ({DaoInfo,setRunTour,runTour
                 const apiURL = multiRes[i].issueURL.replace('github.com','api.github.com/repos');
                 const _issueInfo = await fetch(apiURL,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then((res)=>res.json()).catch((err:any)=>console.log(err))
                 _issueArr.push({
                     issueUrl:multiRes[i].issueURL,

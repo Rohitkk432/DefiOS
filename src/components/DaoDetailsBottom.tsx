@@ -40,7 +40,7 @@ const DaoDetailsBottom: React.FC<DaoDetailsBottomProps> = ({popupState,setPopupS
             const apiURL = issueRes.issueURL.replace('github.com','api.github.com/repos');
             const githubRes = await fetch(apiURL,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then(res=>res.json()).catch(err=>console.log(err));
             const collabCount = await DaoContract.getCollaboratorCount(i);
             const IterIssue = {
