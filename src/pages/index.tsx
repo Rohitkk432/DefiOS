@@ -41,15 +41,15 @@ const Homepage: React.FC<HomepageProps> = ({ }) => {
         <div className='w-full flex flex-row justify-between items-center h-[7vh] z-20'>
           <img src="/assets/images/defi-os-logo.png" className='h-full' />
           <div className='flex flex-row justify-end items-center w-full h-full' >
-            <a href='#' target="_blank" className='mx-[2%] text-[1.5vh] text-[#90A9FC] font-bold'>Alpha 🚀</a>
-            <a href='#' target="_blank" className='mx-[2%] text-[1.5vh]'>For Projects 👨‍💻</a>
-            <a href='#' target="_blank" className='mx-[2%] text-[1.5vh]'>For Entrepreneurs 🤔</a>
-            <a href='#' target="_blank" className='mx-[2%] text-[1.5vh]'>For Enterprise 🏦</a>
-            <a href="mailto:abhi@defi-os.com?Subject=Product%20Query" className='mx-[2%] text-[1.5vh]'>Contact Us</a>
+            <a href='#' target="_blank" className='mx-[2%] text-[2vh] text-[#90A9FC] font-bold'>Alpha 🚀</a>
+            <a href='#' target="_blank" className='mx-[2%] text-[2vh]'>For Projects 👨‍💻</a>
+            <a href='#' target="_blank" className='mx-[2%] text-[2vh]'>For Entrepreneurs 🤔</a>
+            <a href='#' target="_blank" className='mx-[2%] text-[2vh]'>For Enterprise 🏦</a>
+            <a href="mailto:abhi@defi-os.com?Subject=Product%20Query" className='mx-[2%] text-[2vh]'>Contact Us</a>
           </div>
         </div>
 
-        <div className='h-screen w-full flex flex-row-reverse items-center absolute z-10 overflow-hidden px-[6%]'>
+        <div className='h-screen w-full hidden lg:flex flex-row-reverse items-center absolute z-10 overflow-hidden'>
           <Globe />
         </div>
 
