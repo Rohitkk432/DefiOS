@@ -31,7 +31,7 @@ const Homepage: React.FC<HomepageProps> = ({ }) => {
     ]
   }
   return (
-    <div>
+    <div className='min-h-full bg-red-500'>
       <div className='w-full h-screen homepageGradient px-[6%] py-[2%] text-white flex flex-col justify-start items-center'>
         <Head>
           <title>DefiOS</title>
@@ -90,33 +90,33 @@ const Homepage: React.FC<HomepageProps> = ({ }) => {
         </div>
       </div>
       <div className='w-full h-screen homepageGradient px-[6%] py-[2%] text-white flex flex-col justify-start items-center'>
-        <div className="flex justify-center items-center leading-[12vh] text-6xl font-bold  workSansFont w-full">
-          <div>Every Repository has a Token</div>
+        <div className="flex justify-center items-center leading-[12vh] text-[4vh] md:text-[5vh] lg:text-[6vh] font-bold workSansFont w-full">
+          Every Repository has a Token
         </div>
-        <div className='w-full flex justify-center'>
-          <table className="glass-table table-auto w-[65%] p-6">
+        <div className='w-full flex justify-center overflow-auto'>
+          <table className="glass-table table-auto w-[85%] xl:w-[70%]">
             <thead>
               <tr className='border-b border-b-slate-700'>
                 {tableData.columns.map(col => (
-                  <th key={col} className='text-start p-6'>{col}</th>
+                  <th key={col} className='text-start p-6 truncate'>{col}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {tableData.rows.map((row, index) => (
                 <tr key={row.id} className={index < (tableData.rows.length - 1) ? 'border-b border-b-slate-700' : ""}>
-                  <td className='px-5 py-4'>{row.name}</td>
-                  <td className='px-5 py-4'>{row.price}</td>
-                  <td className='px-5 py-4'>{row.contributors}</td>
-                  <td className='px-5 py-4'>{row.buyDate}</td>
-                  <td className='px-5 py-4'>{row.untility}</td>
-                  <td className='px-5 py-4'>{row.actions()}</td>
+                  <td className='px-5 py-4 truncate'>{row.name}</td>
+                  <td className='px-5 py-4 truncate'>{row.price}</td>
+                  <td className='px-5 py-4 truncate'>{row.contributors}</td>
+                  <td className='px-5 py-4 truncate'>{row.buyDate}</td>
+                  <td className='px-5 py-4 truncate'>{row.untility}</td>
+                  <td className='px-5 py-4 truncate'>{row.actions()}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <button className='bg-[#90A9FC] py-7 px-12 rounded font-semibold leading-5 text-xl mt-12' >
+        <button className='bg-[#90A9FC] py-[1.5%] px-[2.5%] rounded font-semibold leading-5 text-[2vh] mt-12' >
           EXPLORE DEFIOS ALPHA 🚀
         </button>
       </div>
