@@ -20,14 +20,12 @@ const Homepage: React.FC<HomepageProps> = ({ }) => {
   const tableData = {
     columns: ["Name", "Price", "Contributors", "Buy Date", "Untility", "Actions"],
     rows: [
-      { id: 1, name: "1.27 BRISE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Digglex", actions: actionButtons },
-      { id: 2, name: "1.27 BRISE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Digglex", actions: actionButtons },
-      { id: 3, name: "1.27 BRISE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Digglex", actions: actionButtons },
-      { id: 4, name: "1.27 BRISE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Digglex", actions: actionButtons },
-      { id: 5, name: "1.27 BRISE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Digglex", actions: actionButtons },
-      { id: 6, name: "1.27 BRISE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Digglex", actions: actionButtons },
-      { id: 7, name: "1.27 BRISE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Digglex", actions: actionButtons },
-      { id: 8, name: "1.27 BRISE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Digglex", actions: actionButtons },
+      { id: 1, name: "1.47 DoS", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "BugFix", actions: actionButtons },
+      { id: 2, name: "3.25 SNE", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Fix", actions: actionButtons },
+      { id: 3, name: "6.22 FFx", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Header", actions: actionButtons },
+      { id: 4, name: "4.21 LNX", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "New Feature", actions: actionButtons },
+      { id: 5, name: "1.28 GIMP", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "Fix", actions: actionButtons },
+      { id: 6, name: "1.57 CeL", price: 5291.77, contributors: 1, buyDate: "in 6 months", untility: "BugFix", actions: actionButtons },
     ]
   }
   return (
