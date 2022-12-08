@@ -20,12 +20,12 @@ const Homepage: React.FC<HomepageProps> = ({ }) => {
   const tableData = {
     columns: ["Name", "Price", "Contributors", "Buy Date", "Name", "Actions"],
     rows: [
-      { id: 1, name: "1.47 DoS", price: 4535.23, contributors: 1, buyDate: "in 6 months", untility: "DeFiOS", actions: actionButtons },
-      { id: 2, name: "3.25 SNE", price: 3456.66, contributors: 1, buyDate: "in 6 months", untility: "Superteam Earn", actions: actionButtons },
-      { id: 3, name: "6.22 FFx", price: 1343.33, contributors: 1, buyDate: "in 6 months", untility: "Firefox", actions: actionButtons },
-      { id: 4, name: "4.21 LNX", price: 465.23, contributors: 1, buyDate: "in 6 months", untility: "Linux", actions: actionButtons },
-      { id: 5, name: "1.28 GMP", price: 3425.54, contributors: 1, buyDate: "in 6 months", untility: "GIMP", actions: actionButtons },
-      { id: 6, name: "1.57 VLC", price: 546.23, contributors: 1, buyDate: "in 6 months", untility: "VLC", actions: actionButtons },
+      { id: 1, name: "$DoS", price: 4535.23, contributors: 2, buyDate: "in 6 months", untility: "DeFiOS", actions: actionButtons },
+      { id: 2, name: "$SNE", price: 3456.66, contributors: 5, buyDate: "in 6 months", untility: "Superteam Earn", actions: actionButtons },
+      { id: 3, name: "$FFx", price: 1343.33, contributors: 77, buyDate: "in 6 months", untility: "Firefox", actions: actionButtons },
+      { id: 4, name: "$LNX", price: 465.23, contributors: 1820, buyDate: "in 6 months", untility: "Linux", actions: actionButtons },
+      { id: 5, name: "$GMP", price: 3425.54, contributors: 65, buyDate: "in 6 months", untility: "GIMP", actions: actionButtons },
+      { id: 6, name: "$VLC", price: 546.23, contributors: 772, buyDate: "in 6 months", untility: "VLC", actions: actionButtons },
     ]
   }
   return (
