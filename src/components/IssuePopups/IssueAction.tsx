@@ -128,7 +128,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         const apiURL = await issueRes.issueURL.replace('github.com','api.github.com/repos');
         const githubRes = await fetch(apiURL,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then(res=>res.json()).catch(err=>console.log(err));
         const IterIssue = {
             tokenBalance: userTokenBalance,
@@ -244,7 +244,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
         //PrChecker
         const requestOptions = {
             method: 'GET',
-            headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+            headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
         };
         const GithubUser = await fetch('https://api.github.com/user',requestOptions).then(res=>res.json());
 
@@ -252,7 +252,7 @@ const IssueAction: React.FC<IssueActionProps> = ({setPopupState,DaoInfo,popupIss
 
         const PrDetails = await fetch(`https://api.github.com/repos/${PrlinkBreakdown[3]}/${PrlinkBreakdown[4]}/pulls/${PrlinkBreakdown[6]}`,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then(res=>res.json());
 
         if(PrDetails.user.login!==GithubUser.login){

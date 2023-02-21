@@ -48,7 +48,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
                 {
                     "pub_key": localStorage.getItem('currentAccount'),
                     "github_uid": github_uid,
-                    "github_access_token": session?.accessToken
+                    "github_access_token": (session as any)?.accessToken
                 }
             )
         };
@@ -68,7 +68,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
         const repoInfo = await fetch(`https://api.github.com/repos/${data.repoFullName}`,{
                 method:"GET",
                 headers:{
-                    "Authorization":`token ${session?.accessToken}`,
+                    "Authorization":`token ${(session as any)?.accessToken}`,
                     "Accept":"application/vnd.github.v3+json"
                 }
             })
@@ -87,7 +87,7 @@ const CreationProcess: React.FC<CreationProcessProps> = ({creationStarter}) => {
             const userGithub:any = await fetch(`https://api.github.com/users/${partnerKeys[i]}`,{
                 method:"GET",
                 headers:{
-                    "Authorization":`token ${session?.accessToken}`,
+                    "Authorization":`token ${(session as any)?.accessToken}`,
                     "Accept":"application/vnd.github.v3+json"
                 }
             })

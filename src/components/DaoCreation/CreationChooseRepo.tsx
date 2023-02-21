@@ -81,7 +81,7 @@ const CreationChooseRepo: React.FC<CreationChooseRepoProps> = ({setTourSteps}) =
             const res = await fetch(`https://api.github.com/user/repos?affiliation=${affiliation}&sort=pushed&per_page=100&page=${pagination}`,{
                 method:"GET",
                 headers:{
-                    "Authorization":`token ${session?.accessToken}`,
+                    "Authorization":`token ${(session as any)?.accessToken}`,
                     "Accept":"application/vnd.github.v3+json"
                 }
             }).then(res => res.json()).catch(err => console.log(err));

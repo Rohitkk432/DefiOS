@@ -87,7 +87,7 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
             const _linkbreak = CollabInfo.url.split("/");
             const getPr = await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}`,{
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).then(res => res.json());
             _info.collabID = i;
             _info.url = CollabInfo.url;
@@ -120,14 +120,14 @@ const DaoDetailsMetadata: React.FC<DaoDetailsMetadataProps> = ({metadata,DaoInfo
                     const _linkbreak = collabInfo[i].url.split("/");
                     await fetch(`https://api.github.com/repos/${_linkbreak[3]}/${_linkbreak[4]}/pulls/${_linkbreak[6]}/merge`,{
                         method: 'PUT',
-                        headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                        headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                     }).catch(err=>console.log(err));
                 }
             }
             // close issue
             const requestOptions = {
                 method: 'PATCH',
-                headers: { 'Authorization': `Bearer ${session?.accessToken}` },
+                headers: { 'Authorization': `Bearer ${(session as any)?.accessToken}` },
                 body: JSON.stringify({ state: "closed" })
             };
             const issueUrlToClose = metadata.issueInfo.issueURL.replace("github.com","api.github.com/repos")
